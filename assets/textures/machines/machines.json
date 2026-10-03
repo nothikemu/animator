@@ -1,0 +1,122 @@
+{
+ "old_well": {
+  "w": 20,
+  "h": 28,
+  "frames": 5,
+  "emit": true
+ },
+ "wick_mains": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "station_pump": {
+  "w": 64,
+  "h": 64,
+  "frames": 5,
+  "emit": true
+ },
+ "intake": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "pump": {
+  "w": 16,
+  "h": 32,
+  "frames": 5,
+  "emit": true
+ },
+ "outlet": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "burner": {
+  "w": 32,
+  "h": 32,
+  "frames": 5,
+  "emit": true
+ },
+ "turbine": {
+  "w": 16,
+  "h": 32,
+  "frames": 5,
+  "emit": true
+ },
+ "crank": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "heat_cell": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": true
+ },
+ "lamp": {
+  "w": 16,
+  "h": 28,
+  "frames": 5,
+  "emit": true
+ },
+ "sprinkler": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "scrubber": {
+  "w": 32,
+  "h": 32,
+  "frames": 5,
+  "emit": true
+ },
+ "fan": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "compost": {
+  "w": 32,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "exchanger": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": true
+ },
+ "tank": {
+  "w": 32,
+  "h": 32,
+  "frames": 5,
+  "emit": false
+ },
+ "crew_locker": {
+  "w": 16,
+  "h": 24,
+  "frames": 5,
+  "emit": false
+ },
+ "gauge": {
+  "w": 16,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ },
+ "trunk_valve": {
+  "w": 32,
+  "h": 16,
+  "frames": 5,
+  "emit": false
+ }
+}
