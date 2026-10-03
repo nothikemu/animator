@@ -447,6 +447,49 @@ def bedroll():
     return c
 
 
+def lampmoth():
+    """Two frames, wings up / wings down. The body glows; that's how the grove finds them."""
+    fw, fh = 9, 7
+    c, g = blank(fw * 2, fh), blank(fw * 2, fh)
+    wing = mix(pal("cream"), pal("glow"), 0.35)
+    for f in range(2):
+        ox = f * fw
+        c.set(ox + 4, 3, pal("amber_light"))
+        c.set(ox + 4, 4, pal("amber"))
+        g.set(ox + 4, 3, pal("amber_light"))
+        g.set(ox + 4, 4, shade(pal("amber"), -0.2))
+        if f == 0:   # wings up
+            for (x, y) in [(2, 1), (3, 2), (1, 0), (6, 1), (5, 2), (7, 0)]:
+                c.set(ox + x, y, wing)
+                g.set(ox + x, y, shade(wing, -0.5))
+        else:        # wings down
+            for (x, y) in [(2, 4), (3, 4), (1, 5), (6, 4), (5, 4), (7, 5)]:
+                c.set(ox + x, y, wing)
+                g.set(ox + x, y, shade(wing, -0.5))
+    return c, g
+
+
+def rocklouse():
+    """Two frames of a flat, many-legged grazer the colour of wet slate."""
+    fw, fh = 10, 6
+    c = blank(fw * 2, fh)
+    shell = ramp(mix(pal("slate"), pal("moss_dark"), 0.3), 3, 0.35)
+    for f in range(2):
+        ox = f * fw
+        for x in range(2, 8):
+            c.set(ox + x, 2, shell[2] if x % 2 else shell[1])
+            c.set(ox + x, 3, shell[1])
+        c.set(ox + 8, 3, shell[0])
+        c.set(ox + 1, 3, shell[0])
+        c.set(ox + 8, 2, pal("cream"))           # a tiny eye
+        for i, x in enumerate(range(2, 8, 2)):
+            dy = (i + f) % 2
+            c.set(ox + x, 4 + dy, shell[0])
+            c.set(ox + x + 1, 5 - dy, shell[0])
+    c.outline(-0.6)
+    return c
+
+
 def crate(seed, broken=False):
     w, h = 18, 16
     c = blank(w, h)
@@ -627,6 +670,9 @@ def build():
     save("lore_page", c, g)
     c, g = story_cache()
     save("story_cache", c, g)
+    c, g = lampmoth()
+    save("lampmoth", c, g, frames=2)
+    save("rocklouse", rocklouse(), frames=2)
     save("bedroll", bedroll())
     save("crate_broken", crate(740, True))
     save("crate_small", crate(741))

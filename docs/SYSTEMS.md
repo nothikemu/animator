@@ -96,6 +96,10 @@ at zero the crop dies. Light comes from glowroots, lamps, the player's headlamp 
 glowbeets. Harvested yield scales with health, and pollination (from the lampmoth swarm
 event) adds 25%.
 
+**Critters** (`src/world/critters.gd`) are the visible half of the ecology: lampmoths circle
+lights from Dimming to night and thin out as the town's air fouls; rock-lice graze damp ground,
+scurry from the player and dwindle as sulfur ferns go in.
+
 Crops act as instruments. Sulfur ferns eat sour air. Moss scrubs and its fibre makes filter
 pads. Emberroot needs the burner's heat. Bellcaps want darkness. Glowbeets light their
 neighbours.

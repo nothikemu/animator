@@ -70,13 +70,15 @@ godot --headless --path . res://tests/test_runner.tscn               # everythin
 godot --headless --path . res://tests/test_runner.tscn -- --only=story
 ```
 
-The 85 tests cover:
+The 91 tests cover:
 - simulation conservation and behaviour
 - networks, machines, crops and the economy
 - saves (round trip, migration, corruption fallback)
 - procgen connectivity
 - a content linter over every dialogue rule, effect, thread and event
 - every panel opening cleanly, and every sound the code asks for existing
+- a smoke test that boots the real game and drives every interactable, tool, cavern,
+  conversation and cut-view inspection
 - a full-arc playthrough from the dry well to the knock
 
 ## Regenerating assets
@@ -108,7 +110,7 @@ godot --path . -- --scene=res://scenes/test/stress_test.tscn   # sim + render be
 The scenarios live in `src/debug/scenarios.gd`:
 - `wick_day`, `wick_night`, `commons`, `lake`, `opening`
 - `cut[:overlay[:tool[:machine]]]`, `cut_demo`, `cut_exit`
-- `midgame`, `talk:<npc>`, `quietlight`, `tremor`
+- `midgame`, `talk:<npc>`, `quietlight`, `tremor`, `harvest`, `trunk`
 - `reach:<id>`, `pos:x:z`
 
 ## Documentation

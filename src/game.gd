@@ -90,6 +90,9 @@ func load_area(id: String, initial := false) -> void:
 	add_child(area_view)
 	area_view.build(area)
 	Fx.ambient(area_view, area.biome, area.w, area.d)
+	var critters := Critters.new()
+	area_view.add_child(critters)
+	critters.setup(area, player)
 	interact_root = Node3D.new()
 	interact_root.name = "Interactables"
 	area_view.add_child(interact_root)

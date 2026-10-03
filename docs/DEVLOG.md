@@ -81,6 +81,20 @@ Concise record of decisions, problems, solutions and discoveries.
   muted the lime moss; Barnaby's eye glints went from cyan to cream so the moss in his helmet
   crack reads as the only living cyan on him; more light in waking hours.
 
+## 2026-10-03 — Bugs a player would have hit
+* **Three crops crashed the farm.** Moss, fern and emberroot named sprites that didn't exist;
+  only glowbeets had ever been planted in a capture. Found by a harvest scenario, fixed in data,
+  and the farm view now falls back with a warning.
+* **The key pickup was invisible.** The governor coil lived in a resource with no sprite, and
+  unsprited resources are skipped. Now a glowing Station 7 spares crate beside Wren's camp
+  (bedroll, tin cup, her work lamp still lit).
+* **A smoke test** now boots the real game and drives every interactable, tool, cavern (with a
+  sprite check for every resource), conversation (both extremes of every choice) and cut-view
+  inspection. Both bugs above would have failed it.
+* **The Reach** hid the player behind 8 m walls. Cavern rock is now drawn as a low dark
+  plateau: you look into the cave, diorama style.
+* **Critters**: lampmoths and rock-lice, so the ecology the dialogue talks about is visible.
+
 ## Critique of the vertical slice
 What works:
 * The cut is the identity. The moment the lane's ground drops and the camera swings down to the
@@ -93,11 +107,11 @@ What doesn't yet:
 * **The opening hour is light on farming feel.** Tilling and watering work, but there's no
   satisfying harvest animation beyond a pop and a toast; crops need more visual growth stages.
 * **The Reach is functional rather than memorable.** Procedural caverns connect and carry ore
-  and ruins, but they lack set pieces; the Trunk chamber deserves a hand-built room.
+  and ruins; the Trunk chamber now has Wren's camp, but the other tiers lack set pieces.
 * **Audio is unheard.** It's composed and checked, but nobody has listened. Expect the mix to
   need a pass.
 * **Controller play** is designed for but unproven on hardware.
 * **Balance** is tuned by tests. The cistern drain, crank output and prices need real sessions.
 
-Next, in order: a listening pass; a hand-built Trunk chamber; harvest feel; a first-hour
+Next, in order: a listening pass; set pieces for each Reach tier; harvest feel; a first-hour
 playtest with three people who've never seen it, watching where they stop reading.

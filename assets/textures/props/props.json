@@ -185,6 +185,18 @@
   "frames": 1,
   "emit": true
  },
+ "lampmoth": {
+  "w": 9,
+  "h": 7,
+  "frames": 2,
+  "emit": true
+ },
+ "rocklouse": {
+  "w": 10,
+  "h": 6,
+  "frames": 2,
+  "emit": false
+ },
  "bedroll": {
   "w": 24,
   "h": 10,
