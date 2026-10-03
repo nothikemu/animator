@@ -1,0 +1,12 @@
+# Godot 4
+.godot/
+*.translation
+export_presets.cfg.bak
+/build/
+# Tools
+__pycache__/
+*.pyc
+/tools/**/.cache/
+# OS
+.DS_Store
+Thumbs.db
