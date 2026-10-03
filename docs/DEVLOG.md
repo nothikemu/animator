@@ -21,3 +21,18 @@ Concise record of decisions, problems, solutions and discoveries.
   buoyancy over mixtures gives smoother visuals and simpler code on a 48×24 slice.
 * **Decision: no health bar.** Hazards use a breath meter that only appears in bad air; blacking
   out creates a memory instead of a game over.
+
+## 2026-10-03 — First render
+* **Art pipeline**: `tools/art/px.py` (palette ramps with hue-shifted shading, periodic noise,
+  ordered dither, selective outlines), `tiles.py` (98-tile atlas), `props.py` (40 sprites),
+  `chars.py` (paper-doll characters: player, Barnaby).
+* **Bug: whole sprites glowing.** Emission maps lit entire silhouettes. Cause: Godot's texture
+  importer *Fix Alpha Border* (on by default) copies neighbouring opaque RGB into transparent
+  texels; the shader used `emit.rgb` without alpha. Fix: `EMISSION = e.rgb * e.a`. Found by
+  bisecting in the new visual test scene (unshaded vs. default light vs. custom light).
+* **Engine fact verified**: in Forward+ a custom `light()` writes `DIFFUSE_LIGHT` which the
+  engine multiplies by albedo afterwards; rim light goes to `SPECULAR_LIGHT` to keep its colour.
+* **Readability**: underground scenes were unreadably dark. Added a weak, cool, shadowed
+  directional "cavern fill" (the ceiling's bioluminescence) and raised ambient; emissive plants
+  and lamps sit on render layer 2 and their own lights skip that layer (no self-washout); the
+  player's headlamp skips the player sprite, a tiny fill light lights only the player.

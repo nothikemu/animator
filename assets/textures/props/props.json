@@ -1,0 +1,242 @@
+{
+ "glowroot_0": {
+  "w": 40,
+  "h": 60,
+  "frames": 1,
+  "emit": true
+ },
+ "glowroot_1": {
+  "w": 40,
+  "h": 60,
+  "frames": 1,
+  "emit": true
+ },
+ "glowroot_2": {
+  "w": 40,
+  "h": 60,
+  "frames": 1,
+  "emit": true
+ },
+ "glowroot_small_0": {
+  "w": 18,
+  "h": 22,
+  "frames": 1,
+  "emit": true
+ },
+ "glowroot_small_1": {
+  "w": 18,
+  "h": 22,
+  "frames": 1,
+  "emit": true
+ },
+ "moss_tuft_0": {
+  "w": 16,
+  "h": 10,
+  "frames": 1,
+  "emit": false
+ },
+ "moss_tuft_1": {
+  "w": 16,
+  "h": 10,
+  "frames": 1,
+  "emit": false
+ },
+ "moss_tuft_2": {
+  "w": 16,
+  "h": 10,
+  "frames": 1,
+  "emit": false
+ },
+ "mushroom_0": {
+  "w": 14,
+  "h": 16,
+  "frames": 1,
+  "emit": true
+ },
+ "mushroom_1": {
+  "w": 14,
+  "h": 16,
+  "frames": 1,
+  "emit": true
+ },
+ "stalagmite_0": {
+  "w": 26,
+  "h": 60,
+  "frames": 1,
+  "emit": false
+ },
+ "stalagmite_1": {
+  "w": 26,
+  "h": 60,
+  "frames": 1,
+  "emit": false
+ },
+ "stalagmite_2": {
+  "w": 26,
+  "h": 60,
+  "frames": 1,
+  "emit": false
+ },
+ "shore_rock_0": {
+  "w": 26,
+  "h": 18,
+  "frames": 1,
+  "emit": false
+ },
+ "shore_rock_1": {
+  "w": 26,
+  "h": 18,
+  "frames": 1,
+  "emit": false
+ },
+ "rubble": {
+  "w": 32,
+  "h": 26,
+  "frames": 1,
+  "emit": false
+ },
+ "rubble_small": {
+  "w": 16,
+  "h": 12,
+  "frames": 1,
+  "emit": false
+ },
+ "town_lamp": {
+  "w": 14,
+  "h": 40,
+  "frames": 1,
+  "emit": true
+ },
+ "porch_lamp": {
+  "w": 14,
+  "h": 30,
+  "frames": 1,
+  "emit": true
+ },
+ "work_lamp": {
+  "w": 14,
+  "h": 34,
+  "frames": 1,
+  "emit": true
+ },
+ "jars": {
+  "w": 18,
+  "h": 22,
+  "frames": 1,
+  "emit": true
+ },
+ "gear_pile": {
+  "w": 20,
+  "h": 12,
+  "frames": 1,
+  "emit": false
+ },
+ "salvage_harness": {
+  "w": 18,
+  "h": 10,
+  "frames": 1,
+  "emit": false
+ },
+ "glowglass_node": {
+  "w": 18,
+  "h": 22,
+  "frames": 1,
+  "emit": true
+ },
+ "ember_crystal": {
+  "w": 18,
+  "h": 24,
+  "frames": 1,
+  "emit": true
+ },
+ "blackstone_node": {
+  "w": 22,
+  "h": 18,
+  "frames": 1,
+  "emit": false
+ },
+ "thermal_node": {
+  "w": 22,
+  "h": 18,
+  "frames": 1,
+  "emit": true
+ },
+ "scrap_pile": {
+  "w": 24,
+  "h": 16,
+  "frames": 1,
+  "emit": false
+ },
+ "moss_patch": {
+  "w": 24,
+  "h": 14,
+  "frames": 1,
+  "emit": false
+ },
+ "lore_page": {
+  "w": 12,
+  "h": 14,
+  "frames": 1,
+  "emit": true
+ },
+ "crate_broken": {
+  "w": 18,
+  "h": 16,
+  "frames": 1,
+  "emit": false
+ },
+ "crate_small": {
+  "w": 18,
+  "h": 16,
+  "frames": 1,
+  "emit": false
+ },
+ "crop_glowbeet": {
+  "w": 18,
+  "h": 22,
+  "frames": 5,
+  "emit": true
+ },
+ "crop_cave_moss": {
+  "w": 18,
+  "h": 22,
+  "frames": 5,
+  "emit": true
+ },
+ "crop_sulfur_fern": {
+  "w": 18,
+  "h": 22,
+  "frames": 5,
+  "emit": true
+ },
+ "crop_emberroot": {
+  "w": 18,
+  "h": 22,
+  "frames": 5,
+  "emit": true
+ },
+ "crop_bellcap": {
+  "w": 18,
+  "h": 22,
+  "frames": 5,
+  "emit": true
+ },
+ "emberroot_wild": {
+  "w": 18,
+  "h": 22,
+  "frames": 1,
+  "emit": true
+ },
+ "bellcap_wild": {
+  "w": 18,
+  "h": 22,
+  "frames": 1,
+  "emit": true
+ },
+ "pale_fungus": {
+  "w": 16,
+  "h": 24,
+  "frames": 1,
+  "emit": true
+ }
+}
