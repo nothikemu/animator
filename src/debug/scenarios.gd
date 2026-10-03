@@ -33,8 +33,61 @@ static func run(game: Node, name: String) -> void:
 			game.load_area(id)
 		"pos":
 			_place(game, Vector2(float(parts[1]), float(parts[2])))
+		"cut_demo":
+			# A small working circuit in the locker cavity: crank -> wire -> two lamps.
+			Clock.start(1, 11 * 60)
+			_place(game, Vector2(24.5, 19.5))
+			GameState.add_tool("glass")
+			_kit()
+			for b in [["crank", Vector2i(21, 13)], ["lamp", Vector2i(23, 13)], ["lamp", Vector2i(25, 13)]]:
+				var err: String = Sim.build(String(b[0]), b[1])
+				if err != "":
+					Log.warn("scenario", "build %s: %s" % [b[0], err])
+			Sim.lay_conduit("wire", [Vector2i(21, 13), Vector2i(22, 13), Vector2i(23, 13), Vector2i(24, 13), Vector2i(25, 13)])
+			var cr := Sim.find_machine("crank")
+			if cr:
+				for i in 4:
+					Sim.crank(cr.id)
+			Sim._tick_machines(1.0)
+			game.toggle_cut_view.call_deferred()
+			if parts.size() > 1:
+				game.get_tree().create_timer(0.1).timeout.connect(func() -> void:
+					if game.engineering:
+						game.engineering.overlay = parts[1])
+		"cut_exit":
+			# Enters the cut, then leaves it again: checks the return transition restores the town.
+			Clock.start(1, 11 * 60)
+			_place(game, Vector2(24.5, 19.5))
+			GameState.add_tool("glass")
+			game.toggle_cut_view.call_deferred()
+			game.get_tree().create_timer(4.0).timeout.connect(func() -> void: game.toggle_cut_view())
+		"cut":
+			# cut[:overlay[:tool]] — opens the Undercroft view from the well.
+			Clock.start(1, 11 * 60)
+			_place(game, Vector2(24.5, 19.5))
+			GameState.add_tool("glass")
+			_kit()
+			game.toggle_cut_view.call_deferred()
+			if parts.size() > 1:
+				game.get_tree().create_timer(0.1).timeout.connect(func() -> void:
+					var e: Node = game.engineering
+					if e:
+						e.overlay = parts[1]
+						if parts.size() > 2:
+							e.build_def = parts[3] if parts.size() > 3 else ""
+							e.tool = parts[2])
 	if game.has_method("on_scenario"):
 		game.on_scenario(name)
+
+
+## Materials and schematics for engineering tests.
+static func _kit() -> void:
+	for item in ["pipe_section", "wire_coil", "brass_scrap", "blackstone", "glowglass", "seal_gum", "glowbeet", "filter_pad", "moss_fiber", "thermal_ore"]:
+		GameState.give(item, 12, true)
+	for m: String in Content.machines:
+		var u := String(Content.machine(m).get("unlock", ""))
+		if u != "" and u != "start":
+			GameState.set_flag(u)
 
 
 static func _place(game: Node, p: Vector2) -> void:

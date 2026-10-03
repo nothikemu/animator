@@ -45,31 +45,51 @@ void fragment() {
 		float wave = (noise(vec2(q.x * 3.0 + world_time * 0.8, world_time * 0.5)) - 0.5) * 0.12 * step(above, 0.05);
 		if (fill < 0.02 || local_y > fill + wave) { discard; }
 		float depth = clamp(cell.y / grid_size.y, 0.0, 1.0);
-		vec3 deep = vec3(0.07, 0.18, 0.28);
-		vec3 shallow = vec3(0.2, 0.45, 0.6);
+		vec3 deep = vec3(0.04, 0.1, 0.17);
+		vec3 shallow = vec3(0.11, 0.27, 0.38);
 		vec3 col = mix(shallow, deep, depth * 0.8 + (1.0 - fill) * 0.1);
 		// Surface line.
-		if (local_y > fill + wave - 0.08 && above < 0.05) { col = vec3(0.55, 0.82, 0.88); }
+		if (local_y > fill + wave - 0.07 && above < 0.05) { col = vec3(0.45, 0.72, 0.8); }
 		float flow = texture(field_nearest, cuv).g;
 		float foam = step(0.75, noise(q * 5.0 + vec2(0.0, -world_time * 3.0))) * clamp(flow * 20.0, 0.0, 1.0);
 		col = mix(col, vec3(0.8, 0.92, 0.95), foam * 0.6);
 		ALBEDO = col;
-		ALPHA = 0.88 * alpha_scale;
+		ALPHA = 0.72 * alpha_scale;
 	} else if (mode == 1) {
 		if (open < 0.5) { discard; }
-		vec4 g = texture(field_linear, UV);
-		float sour = g.r;
-		float stale = g.g;
-		float damp = g.b;
-		float total = sour + stale + damp;
-		if (total < 0.004) { discard; }
-		vec2 drift = vec2(world_time * 0.25, -world_time * 0.12);
-		float n = noise(q * 0.9 + drift) * 0.6 + noise(q * 2.3 - drift * 1.7) * 0.4;
-		vec3 col = (vec3(0.71, 0.72, 0.29) * sour + vec3(0.55, 0.59, 0.66) * stale + vec3(0.65, 0.55, 0.84) * damp) / max(total, 0.0001);
-		float a = clamp(total * 2.2 * strength, 0.0, 0.85) * (0.45 + 0.75 * n);
-		a = floor(a * 6.0) / 6.0;
-		ALBEDO = col;
-		ALPHA = a * alpha_scale;
+		if (strength > 1.5) {
+			// Overlay: an exact per-cell reading. Hue = dominant species, strength = how much
+			// of the cell isn't fresh air; a 1 px darker rim keeps cells countable.
+			vec4 g = texture(field_nearest, cuv);
+			float tot = g.r + g.g + g.b;
+			vec3 col = vec3(0.62, 0.78, 0.9);
+			if (tot > 0.01) {
+				col = (vec3(0.8, 0.82, 0.25) * g.r + vec3(0.62, 0.66, 0.74) * g.g + vec3(0.72, 0.56, 0.95) * g.b) / tot;
+			}
+			float a = tot > 0.01 ? 0.22 + 0.5 * clamp(tot * 1.5, 0.0, 1.0) : 0.12 * g.a;
+			vec2 f = fract(cellf);
+			if (f.x < 1.0 / 16.0 || f.y < 1.0 / 16.0) { col *= 0.6; }
+			ALBEDO = col;
+			ALPHA = a * alpha_scale;
+		} else {
+			vec4 g = texture(field_linear, UV);
+			float sour = g.r;
+			float stale = g.g;
+			float damp = g.b;
+			float total = sour + stale + damp;
+			if (total < 0.02) { discard; }
+			// Domain-warped noise: slow curling wisps rather than a flat tint.
+			vec2 drift = vec2(world_time * 0.18, -world_time * 0.07);
+			vec2 warp = vec2(noise(q * 0.7 + drift), noise(q * 0.7 - drift + 5.2)) - 0.5;
+			float n = noise(q * 1.3 + warp * 2.2 + drift) * 0.65 + noise(q * 3.1 - drift * 1.6) * 0.35;
+			n = smoothstep(0.25, 0.85, n);
+			vec3 col = (vec3(0.74, 0.76, 0.3) * sour + vec3(0.6, 0.64, 0.72) * stale + vec3(0.7, 0.58, 0.9) * damp) / max(total, 0.0001);
+			float dens = clamp((total - 0.02) * 0.85, 0.0, 0.62);
+			float a = dens * (0.25 + 0.95 * n);
+			a = floor(a * 10.0) / 10.0;
+			ALBEDO = col;
+			ALPHA = a * alpha_scale;
+		}
 	} else {
 		vec4 h = texture(field_linear, UV);
 		float t = h.r;     // 0 = -20 C, 1 = 120 C

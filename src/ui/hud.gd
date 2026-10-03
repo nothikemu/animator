@@ -107,21 +107,27 @@ func _build() -> void:
 	th.add_child(tool_label)
 	tp.add_child(th)
 	root.add_child(tp)
+	# The hand tool means nothing in the cut view, which has its own tool strip.
+	Events.view_mode_changed.connect(func(m: StringName) -> void: tp.visible = m != &"cut")
 	# Prompt (bottom-centre).
+	# A bottom-wide centring strip keeps the prompt centred whatever its width.
+	var prompt_strip := CenterContainer.new()
+	prompt_strip.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	prompt_strip.offset_top = -124
+	prompt_strip.offset_bottom = -76
+	prompt_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(prompt_strip)
 	prompt_panel = PanelContainer.new()
-	prompt_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	prompt_panel.position = Vector2(-140, -96)
-	prompt_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	prompt_label = Label.new()
 	prompt_label.add_theme_font_size_override("font_size", UiTheme.size(20))
 	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	prompt_panel.add_child(prompt_label)
 	prompt_panel.visible = false
-	root.add_child(prompt_panel)
+	prompt_strip.add_child(prompt_panel)
 	caption_label = Label.new()
-	caption_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	caption_label.position = Vector2(-400, -150)
-	caption_label.size = Vector2(800, 30)
+	caption_label.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	caption_label.offset_top = -164
+	caption_label.offset_bottom = -134
 	caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caption_label.add_theme_font_size_override("font_size", UiTheme.size(18))
 	caption_label.add_theme_color_override("font_color", UiTheme.DIM)
@@ -218,8 +224,6 @@ func set_prompt(text: String) -> void:
 		return
 	prompt_label.text = text
 	prompt_panel.visible = true
-	prompt_panel.reset_size()
-	prompt_panel.position.x = -prompt_panel.size.x * 0.5
 
 
 func toast(text: String, kind: StringName = &"info") -> void:

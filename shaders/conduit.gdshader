@@ -8,6 +8,7 @@ uniform vec3 flow_color : source_color = vec3(0.5, 0.85, 0.9);
 instance uniform float flow = 0.0;          // 0..1 how much is moving
 instance uniform float highlight = 0.0;     // overlay emphasis
 uniform bool is_wire = false;
+uniform float dim = 0.0;                 // fades conduits that aren't the current overlay's subject
 
 global uniform float world_time;
 
@@ -22,8 +23,8 @@ void fragment() {
 		col = mix(col, vec3(0.9, 0.2, 0.12), damage * 0.8);
 		emit += vec3(0.9, 0.15, 0.08) * damage * throb * 0.9;
 	}
-	ALBEDO = col;
-	EMISSION = emit + base_color * highlight * 0.6;
+	ALBEDO = col * (1.0 - dim * 0.7);
+	EMISSION = (emit + base_color * highlight * 0.6) * (1.0 - dim);
 	ROUGHNESS = 0.45;
 	METALLIC = 0.4;
 }

@@ -46,7 +46,7 @@ func _ready() -> void:
 		if only != "" and not f.contains(only):
 			continue
 		var script: GDScript = load("res://tests/suites/" + f)
-		if script == null:
+		if script == null or not script.can_instantiate():
 			lines.append("LOAD FAIL %s" % f)
 			failed += 1
 			continue

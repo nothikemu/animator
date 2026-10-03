@@ -3,6 +3,7 @@
 Outputs assets/textures/terrain.png, terrain_emit.png and terrain.json (name -> [col, row]).
 Each tile is seamless (periodic noise) and uses 3-5 colours from hue-shifted ramps.
 """
+import zlib
 import json
 import math
 import os
@@ -321,13 +322,47 @@ def earth_side(seed, top=None):
     return c
 
 
+def level_mean(c, target):
+    """Shift a tile so its mean luminance matches `target`'s: variants then tile without
+    reading as a checkerboard from across the cross-section."""
+    def lum(col):
+        return 0.299 * col[0] + 0.587 * col[1] + 0.114 * col[2]
+    px = [c.get(x, y) for y in range(c.h) for x in range(c.w)]
+    mean = sum(lum(p) for p in px) / len(px)
+    d = lum(target) - mean
+    for y in range(c.h):
+        for x in range(c.w):
+            r, g, b, a = c.get(x, y)
+            c.set(x, y, (max(0, min(255, int(r + d))), max(0, min(255, int(g + d))), max(0, min(255, int(b + d))), a))
+    return c
+
+
 def strata(name, seed):
+    t, g = _strata(name, seed)
+    if name in ("soil", "clay", "rock", "bedrock", "air_back"):
+        base = {"soil": shade(pal("earth"), -0.12), "clay": shade(pal("clay"), -0.05),
+                "rock": STRATA_ROCK, "bedrock": shade(pal("charcoal"), 0.12),
+                "air_back": shade(pal("basalt"), -0.2)}[name]
+        t = level_mean(t, base)
+    return t, g
+
+
+STRATA_ROCK = shade(mix(pal("slate"), pal("earth"), 0.45), 0.03)
+
+
+def _strata(name, seed):
     """Undercroft cross-section materials (front faces of the cut)."""
     if name == "topsoil":
         c = earth_side(seed, top=pal("moss"))
         return c, None
     if name == "soil":
-        return noise_fill(shade(pal("earth"), -0.15), seed, 0.28, 4, 1.1), None
+        c = noise_fill(shade(pal("earth"), -0.12), seed, 0.22, 4, 0.8)
+        r = rng(seed)
+        for _ in range(3):  # pebbles
+            x, y = r.randrange(T), r.randrange(T)
+            wrap(c, x, y, shade(pal("ash"), -0.2))
+            wrap(c, x + 1, y, shade(pal("ash"), -0.35))
+        return c, None
     if name == "clay":
         c = noise_fill(shade(pal("clay"), -0.05), seed, 0.22, 4, 0.9)
         for y in range(0, T, 5):
@@ -336,7 +371,7 @@ def strata(name, seed):
                     c.set(x, y, shade(pal("clay"), -0.25))
         return c, None
     if name == "rock":
-        return rock_side(seed)
+        return rock_side(seed, STRATA_ROCK)
     if name == "brick":
         return brick(seed, shade(mix(pal("clay"), pal("danger"), 0.22), -0.12)), None
     if name == "stone":
@@ -362,17 +397,20 @@ def strata(name, seed):
         c = noise_fill(shade(pal("charcoal"), 0.1), seed, 0.25, 3, 1.3)
         return c, None
     if name == "ember":
-        c, _ = rock_side(seed, pal("basalt"))
+        c, _ = rock_side(seed, shade(mix(pal("basalt"), pal("danger"), 0.18), 0.04))
         g = Canvas(T, T)
         r = rng(seed)
-        for _ in range(4):
+        for _ in range(3):  # continuous glowing veins that run off the tile edges
             x, y = r.randrange(T), r.randrange(T)
-            for k in range(r.randint(4, 8)):
-                col = pal("ember") if k % 3 else pal("amber_light")
+            dx = r.choice([-1, 1])
+            for k in range(T + 4):
+                col = pal("ember") if k % 4 else pal("amber_light")
                 wrap(c, x, y, col)
-                g.set(x % T, y % T, col)
-                x += r.choice([-1, 0, 1])
-                y += r.choice([0, 1])
+                g.set(x % T, y % T, shade(col, -0.15))
+                wrap(c, x, y + 1, shade(mix(pal("basalt"), pal("ember"), 0.45), -0.1))
+                x += dx
+                if r.random() < 0.35:
+                    y += r.choice([-1, 1])
         return c, g
     if name == "seal":
         c = noise_fill(shade(pal("sour"), -0.35), seed, 0.25, 4, 1.2)
@@ -537,7 +575,7 @@ def build():
     # Strata (cross-section)
     for name in ["topsoil", "soil", "clay", "rock", "brick", "stone", "metal", "insulation", "bedrock", "ember", "seal", "air_back"]:
         for i in range(2):
-            t, g = strata(name, 200 + hash(name) % 97 + i * 13)
+            t, g = strata(name, 200 + zlib.crc32(name.encode()) % 97 + i * 13)
             put(f"strata_{name}_{i}", t, g)
     # Building surfaces
     for i in range(2):

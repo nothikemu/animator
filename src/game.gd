@@ -321,6 +321,8 @@ func _on_dialogue_ended(_id: StringName) -> void:
 	if _talking_npc:
 		_talking_npc.talking = false
 		_talking_npc = null
+	if engineering and engineering.is_active():
+		return   # the cut view owns the camera and keeps the player parked
 	player.frozen = false
 	rig.focus_override = null
 	rig.mode = "explore"

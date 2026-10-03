@@ -139,8 +139,12 @@ def station_pump(c, g, f):
     py = 22 + (0 if dead else [0, 4, 8, 4][f % 4])
     c.rect(37, py, 12, 3, IRON[3])
     # gauges
-    gauge(c, 18, 24, 4, math.pi * (0.9 if dead else 1.4 + 0.15 * f))
-    gauge(c, 30, 24, 4, math.pi * (0.85 if dead else 1.6))
+    # One big pressure gauge and a small one set low, plus a sight glass: asymmetric so the
+    # cylinder never reads as a face.
+    gauge(c, 18, 24, 5, math.pi * (0.9 if dead else 1.4 + 0.15 * f))
+    gauge(c, 29, 37, 3, math.pi * (0.85 if dead else 1.6))
+    c.rect(31, 20, 3, 9, IRON[1])
+    c.rect(32, 21, 1, 7, shade(pal("water"), -0.3) if dead else pal("water_light"))
     # outlet pipes
     c.rect(0, 46, 10, 5, COPPER[2])
     c.hline(0, 9, 46, COPPER[3])
@@ -150,10 +154,11 @@ def station_pump(c, g, f):
             c.set(12 + k * 2, 50 - (k % 3), pal("verdigris"))
         c.line(14, 34, 22, 40, shade(pal("charcoal"), 0.1))
     else:
-        for (x, y) in [(18, 24), (30, 24)]:
+        for (x, y) in [(18, 24), (29, 37)]:
             g.set(x, y, pal("amber"))
-        c.rect(22, 36, 4, 2, pal("glow"))
-        g.rect(22, 36, 4, 2, pal("glow"))
+        lvl = 24 - [0, 2, 3, 2][f % 4]
+        c.rect(32, lvl, 1, 28 - lvl, pal("glow"))
+        g.rect(32, lvl, 1, 28 - lvl, pal("glow"))
 
 
 def intake(c, g, f):

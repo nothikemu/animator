@@ -125,6 +125,14 @@ func _update_transform(delta: float) -> void:
 	attrs.dof_blur_near_transition = 3.5
 
 
+## The transform explore mode would use right now, without shake (cut transition endpoint).
+func explore_transform() -> Transform3D:
+	var pitch := deg_to_rad(PITCH)
+	var focus := _pos + Vector3(0, 0.9, 0)
+	var cam_pos := focus + Vector3(0, -sin(pitch), cos(pitch)) * distance
+	return Transform3D(Basis.looking_at(focus - cam_pos, Vector3.UP), cam_pos)
+
+
 ## World point under a screen position on the ground plane y = plane_y.
 func screen_to_ground(screen_pos: Vector2, plane_y := 0.0) -> Variant:
 	var from := camera.project_ray_origin(screen_pos)

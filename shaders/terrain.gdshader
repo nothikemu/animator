@@ -34,8 +34,11 @@ void vertex() {
 
 void fragment() {
 	if (cuttable && cut_amount > 0.0 && wpos.z > cut_z + 0.01) {
+		// Recompute the sink per fragment from the original position: faces that straddle
+		// the cut line get stretched by the vertex sink, and must dissolve with their cell.
+		float k = clamp(cut_amount * 1.8 - (wpos.z - cut_z) * 0.035, 0.0, 1.0);
 		float n = hash2(floor(wpos.xz * 4.0));
-		if (n < sink * 1.15) {
+		if (n < max(k, sink) * 1.15) {
 			discard;
 		}
 	}
