@@ -33,10 +33,12 @@ src/
   engineering/     cross-section view, build tool, overlays, inspection
   social/          relationships, memory, dialogue rule matcher, schedules
   economy/         markets
-  ui/              HUD, dialogue box, menus, journal, map, theme
-  audio/           music director, ambience, sfx
-  save/            codec + migrations
-  debug/           overlay, console
+  ui/              HUD, dialogue box, panels (pack, workbench, shops, board, journal, map,
+                   lore, pause, saves), settings tabs, title screen, theme
+  save/            codec + migrations (save_codec.gd)
+  debug/           dev overlay + console, scenarios, visual/audio/stress test scenes
+  game.gd          the game scene: areas, actors, camera, story sequences, adaptive music
+  game_flow.gd     new game / continue / quit to title (one reset path for everything)
 tests/             headless test runner + suites
 tools/             Python content generators (art, audio, fonts) and capture scripts
 docs/
@@ -156,13 +158,14 @@ Validation runs at boot and in tests (missing keys, unknown references); errors 
   reverb with a synthetic cave IR) into OGG Vorbis; loops are cut to exact bar lengths.
 * Buses: `Master → {Music, Ambience, SFX, UI, Voice}`; Music bus has a low-pass + distortion used by
   the crisis state.
-* `MusicDirector`: two players (A/B) holding `AudioStreamSynchronized` cues; stem gains follow a
-  target vector derived from game state; cue changes crossfade over ~3 s aligned to the next bar.
+* The `Audio` autoload: two players (A/B) holding `AudioStreamSynchronized` cues; stem gains glide
+  toward a target vector that `game._update_music()` derives from state (place, phase, view,
+  dialogue, crisis, Quietlight, the finale); cue changes crossfade over 3 s. See SYSTEMS.md §11.
 
 ## 9. Save system
 * JSON, `user://saves/slot_{n}.json`, written to `*.tmp` then renamed; the previous file kept as
   `*.bak`. Header: `{format, version, meta{name, day, place, playtime, saved_at}}`.
-* `src/save/migrations.gd` upgrades older versions step by step; unknown future versions are refused
+* `SaveCodec.migrate()` upgrades older versions step by step; unknown future versions are refused
   with a readable message instead of being loaded.
 * All values are clamped and validated on load; a corrupt slot falls back to its backup.
 * Never loads `Resource` files from `user://` (avoids embedded-script execution).
@@ -170,7 +173,7 @@ Validation runs at boot and in tests (missing keys, unknown references); errors 
 ## 10. Input
 Named actions only (`move_*`, `interact`, `context`, `inventory`, `tool_next`, `tool_prev`,
 `confirm`, `cancel`, `menu`, `primary`, `secondary`, `cut_view`, `journal`, `map`, `time_pause`,
-`time_fast`, `overlay_next`…). Defaults define keyboard/mouse **and** gamepad bindings together.
+`time_speed`, `overlay_next`, `build_menu`…). Defaults define keyboard/mouse **and** gamepad bindings together.
 Remaps persist in `settings.cfg`. UI uses focus navigation, so mouse, keyboard and gamepad all work.
 
 ## 11. Testing
@@ -185,5 +188,6 @@ scripted full-arc playthrough.
 * `tools/art/*.py`: pixel-art generators (palette-locked tiles, prop textures, character sheets
   authored as layered ASCII pixel maps with per-frame transforms, UI icons).
 * `tools/audio/*.py`: synthesiser, instruments, sequencer, cues, SFX, ambience.
-* `tools/capture.sh`: runs the game under Xvfb with `--capture` scenarios to produce screenshots for
-  visual review.
+* `tools/capture.sh`: runs the game (or the title screen) under Xvfb with `--capture` and a scenario
+  to produce screenshots for visual review; `--ui=<panel>` opens a panel first.
+* `tools/maps/build_maps.py`: the authored Wick map and its Undercroft.
