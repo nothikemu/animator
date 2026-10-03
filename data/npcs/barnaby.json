@@ -1,0 +1,46 @@
+{
+	"name": "Barnaby Coil",
+	"short": "Barnaby",
+	"role": "mechanic",
+	"title": "Wick's unofficial mechanic",
+	"home": "annex_door",
+	"sprite": "barnaby",
+	"portrait": "barnaby",
+	"color": "brass_light",
+	"voice": {"timbre": "brass_muffled", "pitch": 0.78, "rate": 0.9},
+	"motif": "barnaby",
+	"profile": {
+		"personality": "Dry, precise, quietly funny. States an opinion once and lets it sit.",
+		"history": "Trunk crew until the Sump flood eleven years ago. Sealed the Trunk valve with his partner Wren Askew on the far side.",
+		"goals": "Keep Wick's water running. Not be asked about the valve.",
+		"fears": "Floods. The valve. Being needed.",
+		"contradiction": "Cynical about Wick; quietly keeps it alive. Mends other people's lines at night and denies it.",
+		"problem": "His hands shake on cold mornings. The helmet's crack is getting longer."
+	},
+	"values": {
+		"good_engineering": {"respect": 4},
+		"kept_word": {"trust": 5},
+		"broke_word": {"trust": -8, "resentment": 4},
+		"wasted_water": {"respect": -3},
+		"leak_caused": {"respect": -4, "fear": 2},
+		"endangered_people": {"trust": -6, "fear": 4},
+		"pollution": {"respect": -1},
+		"gift_liked": {"affection": 4},
+		"helped_him": {"trust": 3, "shared": 4}
+	},
+	"likes": ["moss_tea", "seal_gum", "ember_resin"],
+	"loves": ["glowbeet_stew"],
+	"dislikes": ["sludge", "fertiliser"],
+	"tolerance": {"sour": 0.9, "heat": 45, "noise": 9},
+	"schedule": [
+		{"from": "06:00", "to": "09:00", "at": "annex_door", "do": "tea", "why": "Tea before anyone can ask him for anything."},
+		{"from": "09:00", "to": "12:30", "at": "annex_bench", "do": "work", "why": "Bench work: valves, gaskets, other people's mistakes."},
+		{"from": "12:30", "to": "15:00", "at": "pipe_heads", "do": "inspect", "why": "Midday rounds of the pipe-heads along the lane."},
+		{"from": "15:00", "to": "18:00", "at": "annex_bench", "do": "work", "why": "More bench work."},
+		{"from": "18:00", "to": "21:30", "at": "commons_table", "do": "sit", "why": "Sits at the Lantern House table. Alone, mostly."},
+		{"from": "21:30", "to": "01:00", "at": "lane_west", "do": "rounds", "why": "Night rounds. He will tell you he's 'walking'."},
+		{"from": "01:00", "to": "06:00", "at": "annex_door", "do": "sleep", "why": "Asleep, or pretending."},
+		{"from": "06:00", "to": "12:00", "at": "barnaby_well", "do": "crank", "why": "Fighting the well.", "when": ["!flag:well_fixed"]},
+		{"from": "09:00", "to": "18:00", "at": "pumphall_door", "do": "work", "why": "Measuring the Station pump.", "when": ["thread:station7>=1", "!flag:station_running"]}
+	]
+}

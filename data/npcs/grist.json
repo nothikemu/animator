@@ -1,0 +1,36 @@
+{
+	"name": "Grist",
+	"short": "Grist",
+	"role": "trader",
+	"title": "A Knapper from the Blackstone",
+	"home": "reach_gate",
+	"sprite": "grist",
+	"portrait": "grist",
+	"color": "stone",
+	"voice": {"timbre": "stone_marimba", "pitch": 0.6, "rate": 0.7},
+	"motif": "grist",
+	"nonhuman": true,
+	"profile": {
+		"personality": "Slow, careful, timid. Hears through its hands. Speaks in short, considered pieces.",
+		"history": "Knappers eat stone and carve the tunnels everyone else uses. Grist has traded with Wick for nine years.",
+		"goals": "Trade ore for glowbeets (Knappers find them delicious and slightly intoxicating).",
+		"fears": "Loud machines. Knappers feel them in the rock like screaming.",
+		"contradiction": "Terrifying to look at; frightened of almost everything.",
+		"problem": "The rock has been 'singing wrong' near the Sump for a season."
+	},
+	"values": {
+		"noise": {"fear": 3, "affection": -1},
+		"gift_liked": {"affection": 5, "trust": 2},
+		"curious_about_life": {"respect": 2},
+		"kept_word": {"trust": 4}
+	},
+	"likes": ["glowbeet", "blackstone"],
+	"loves": ["glowbeet_stew"],
+	"dislikes": ["thermal_ore", "brass_scrap"],
+	"tolerance": {"sour": 0.6, "heat": 60, "noise": 3},
+	"visits": "market",
+	"schedule": [
+		{"from": "00:00", "to": "23:59", "at": "away", "do": "away", "why": "In the Blackstone."},
+		{"from": "10:00", "to": "17:00", "at": "board", "do": "trade", "why": "Market day in Wick.", "when": ["market_day", "noise_lane<6"]}
+	]
+}

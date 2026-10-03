@@ -1,0 +1,120 @@
+{
+	"_comment": "Machines are assembled from optional components; see src/sim/machine_world.gd. Rates are per in-game minute. Power in pw, water in cell-volumes.",
+
+	"old_well": {
+		"name": "Wick Well", "desc": "The town hand pump. Crank it and the cistern answers — if the line holds.",
+		"size": [1, 1], "cost": {}, "fixed": true, "placement": "surface",
+		"pump": {"rate": 0.45, "manual": true}, "well": {"capacity": 3.0},
+		"sprite": "well", "sound": "well"
+	},
+	"wick_mains": {
+		"name": "Wick Mains", "desc": "Old gravity lines from the cistern to every house in Wick.",
+		"size": [1, 1], "cost": {}, "fixed": true, "placement": "any", "waterproof": true,
+		"drain": {"rate": 0.0045},
+		"sprite": "mains", "sound": ""
+	},
+	"station_pump": {
+		"name": "Station 7 Pump", "desc": "The great pump. Built to lift a river. Dead for as long as anyone remembers.",
+		"size": [4, 4], "cost": {}, "fixed": true, "placement": "floor", "waterproof": true,
+		"power": {"consume": 55}, "pump": {"rate": 2.5},
+		"requires": {"governor_coil": 1, "seal_gum": 4},
+		"heat": 4.0, "noise": 6.0,
+		"sprite": "station_pump", "sound": "station_pump"
+	},
+
+	"intake": {
+		"name": "Pipe Intake", "desc": "A strainer for the end of a pipe. Sits in water; feeds the line when something pulls.",
+		"size": [1, 1], "cost": {"brass_scrap": 1}, "placement": "water", "waterproof": true,
+		"intake": {"rate": 0.8},
+		"sprite": "intake", "unlock": "start"
+	},
+	"pump": {
+		"name": "Electric Pump", "desc": "Pulls water out of whatever it stands in and pushes it down the pipe.",
+		"size": [1, 2], "cost": {"brass_scrap": 3, "wire_coil": 2, "blackstone": 1}, "placement": "water", "waterproof": true,
+		"power": {"consume": 15}, "pump": {"rate": 0.6},
+		"heat": 0.5, "noise": 2.0,
+		"sprite": "pump", "sound": "pump", "unlock": "start"
+	},
+	"outlet": {
+		"name": "Pipe Outlet", "desc": "Lets the pipe empty into the space around it.",
+		"size": [1, 1], "cost": {"brass_scrap": 1}, "placement": "any", "waterproof": true,
+		"outlet": {"rate": 1.2},
+		"sprite": "outlet", "unlock": "start"
+	},
+	"burner": {
+		"name": "Glowbeet Burner", "desc": "Burns beets or resin for strong, steady power. Runs hot and breathes out sour gas.",
+		"size": [2, 2], "cost": {"brass_scrap": 4, "blackstone": 3, "wire_coil": 2}, "placement": "floor",
+		"power": {"produce": 40}, "fuel": {"items": {"glowbeet": 90, "ember_resin": 240}, "capacity": 10},
+		"needs_air": true, "dirty": true, "max_temp": 85,
+		"heat": 6.0, "emit_gas": {"sour": 0.02, "stale": 0.01}, "exhaust": [1, 0],
+		"light": {"color": "ember", "energy": 1.3, "range": 4.0}, "noise": 5.0,
+		"sprite": "burner", "sound": "burner", "unlock": "schematic_burner"
+	},
+	"turbine": {
+		"name": "Drip Turbine", "desc": "Glowglass vanes in falling water. Clean, quiet, and only as strong as the fall.",
+		"size": [1, 2], "cost": {"brass_scrap": 3, "glowglass": 2, "wire_coil": 2}, "placement": "any", "waterproof": true,
+		"turbine": {"per_flow": 700.0, "max": 14.0},
+		"noise": 0.5,
+		"sprite": "turbine", "sound": "turbine", "unlock": "schematic_turbine"
+	},
+	"crank": {
+		"name": "Crank Dynamo", "desc": "Turn the handle; get power. Builds character, according to Barnaby.",
+		"size": [1, 1], "cost": {"brass_scrap": 2, "wire_coil": 1}, "placement": "floor",
+		"crank": {"power": 20, "minutes": 30, "max": 20},
+		"sprite": "crank", "sound": "crank", "unlock": "start"
+	},
+	"heat_cell": {
+		"name": "Heat Cell", "desc": "Thermal ore in a brass jacket. Stores power; warms up while charging.",
+		"size": [1, 1], "cost": {"thermal_ore": 3, "wire_coil": 1, "brass_scrap": 1}, "placement": "floor",
+		"battery": {"capacity": 900, "rate": 30},
+		"sprite": "heat_cell", "sound": "", "unlock": "schematic_heat_cell"
+	},
+	"lamp": {
+		"name": "Glow Lamp", "desc": "A glowglass bulb on a post. Crops need light; so do people.",
+		"size": [1, 1], "cost": {"glowglass": 1, "brass_scrap": 1}, "placement": "floor",
+		"power": {"consume": 4}, "light": {"color": "amber", "energy": 1.6, "range": 6.0, "grow": 0.55},
+		"heat": 0.2,
+		"sprite": "lamp", "sound": "", "unlock": "schematic_lamp"
+	},
+	"sprinkler": {
+		"name": "Sprinkler", "desc": "Sits on the surface and wets the soil around it. Too much and the plots drown.",
+		"size": [1, 1], "cost": {"pipe_section": 2, "brass_scrap": 1}, "placement": "surface", "waterproof": true,
+		"water_use": 0.03, "sprinkle": {"radius": 2, "efficiency": 3.0},
+		"sprite": "sprinkler", "sound": "sprinkler", "unlock": "schematic_sprinkler"
+	},
+	"scrubber": {
+		"name": "Moss Scrubber", "desc": "Draws foul air through a moss filter. Wet work: it needs water, power and fresh pads. Leaves sludge.",
+		"size": [2, 2], "cost": {"brass_scrap": 3, "moss_fiber": 4, "wire_coil": 2}, "placement": "floor",
+		"power": {"consume": 10}, "water_use": 0.01,
+		"scrub": {"sour": 0.03, "stale": 0.03, "radius": 2},
+		"filter": {"item": "filter_pad", "minutes": 720}, "waste": {"item": "sludge", "per_unit": 3.0, "capacity": 6},
+		"noise": 2.0,
+		"sprite": "scrubber", "sound": "scrubber", "unlock": "schematic_scrubber"
+	},
+	"fan": {
+		"name": "Vent Fan", "desc": "Pushes air one way. Where it goes is somebody's business.",
+		"size": [1, 1], "cost": {"brass_scrap": 2, "wire_coil": 1}, "placement": "any",
+		"power": {"consume": 6}, "fan": {"dir": [0, -1], "rate": 0.25},
+		"noise": 1.5,
+		"sprite": "fan", "sound": "fan", "unlock": "schematic_fan"
+	},
+	"compost": {
+		"name": "Compost Vat", "desc": "Sludge and time become fertiliser.",
+		"size": [2, 1], "cost": {"blackstone": 3, "pipe_section": 1}, "placement": "floor",
+		"water_use": 0.004, "compost": {"input": "sludge", "output": "fertiliser", "minutes": 180, "capacity": 6},
+		"emit_gas": {"stale": 0.004},
+		"sprite": "compost", "sound": "", "unlock": "schematic_compost"
+	},
+	"exchanger": {
+		"name": "Heat Exchanger", "desc": "Thermal ore fins that lift heat from below to the space above.",
+		"size": [1, 1], "cost": {"thermal_ore": 2, "brass_scrap": 2, "wire_coil": 1}, "placement": "any",
+		"power": {"consume": 5}, "heat_move": {"rate": 6.0},
+		"sprite": "exchanger", "sound": "", "unlock": "schematic_exchanger"
+	},
+	"tank": {
+		"name": "Water Tank", "desc": "Holds water for when the pumps can't keep up.",
+		"size": [2, 2], "cost": {"brass_scrap": 4, "blackstone": 2}, "placement": "floor", "waterproof": true,
+		"tank": {"capacity": 12},
+		"sprite": "tank", "sound": "", "unlock": "schematic_tank"
+	}
+}

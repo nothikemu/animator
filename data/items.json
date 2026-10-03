@@ -1,0 +1,36 @@
+{
+	"_comment": "Every item exists to enable something specific. value = base price in glims.",
+
+	"glowbeet_seed": {"name": "Glowbeet Seed", "desc": "Wants warmth, water and light. In return it glows.", "category": "seed", "value": 3, "stack": 99, "icon": "seed_glowbeet", "crop": "glowbeet"},
+	"moss_spore": {"name": "Cave Moss Spores", "desc": "Grows almost anywhere damp and cool. Breathes in stale air.", "category": "seed", "value": 2, "stack": 99, "icon": "seed_moss", "crop": "cave_moss"},
+	"fern_spore": {"name": "Sulfur Fern Spores", "desc": "A fern that thrives where nothing else will: in sour air. It eats the sour.", "category": "seed", "value": 4, "stack": 99, "icon": "seed_fern", "crop": "sulfur_fern"},
+	"emberroot_seed": {"name": "Emberroot Cutting", "desc": "Needs real heat to take. Plant it near something hot.", "category": "seed", "value": 6, "stack": 99, "icon": "seed_ember", "crop": "emberroot"},
+	"bellcap_spore": {"name": "Bellcap Spores", "desc": "Fruits only in the dark. Light ruins it.", "category": "seed", "value": 8, "stack": 99, "icon": "seed_bellcap", "crop": "bellcap"},
+
+	"glowbeet": {"name": "Glowbeet", "desc": "Sweet, faintly luminous. Food, and a fair fuel for a burner.", "category": "crop", "value": 6, "stack": 99, "icon": "glowbeet", "uses": ["food", "fuel"], "fuel_minutes": 90, "food": true},
+	"moss_fiber": {"name": "Moss Fiber", "desc": "Dried cave moss. Filters, insulation, wire wrapping.", "category": "crop", "value": 3, "stack": 99, "icon": "moss_fiber", "uses": ["filters", "wire", "tea"]},
+	"sulfur": {"name": "Sulfur", "desc": "Yellow crystals a fern left behind after eating the air.", "category": "crop", "value": 5, "stack": 99, "icon": "sulfur", "uses": ["filters", "fertiliser"]},
+	"ember_resin": {"name": "Ember Resin", "desc": "Sticky, slow-burning. Seals pipes. Burns hotter than beets.", "category": "crop", "value": 9, "stack": 99, "icon": "ember_resin", "uses": ["seal", "fuel"], "fuel_minutes": 240},
+	"bellcap": {"name": "Bellcap", "desc": "A pale mushroom that rings faintly when tapped. A delicacy.", "category": "crop", "value": 14, "stack": 99, "icon": "bellcap", "uses": ["food", "gift"], "food": true},
+
+	"blackstone": {"name": "Blackstone", "desc": "Dense basalt. Holds its shape and its heat.", "category": "material", "value": 2, "stack": 99, "icon": "blackstone", "uses": ["housings", "insulation"]},
+	"brass_scrap": {"name": "Brass Scrap", "desc": "Salvage from the old works. Pipe, wire, fittings — everything.", "category": "material", "value": 5, "stack": 99, "icon": "brass_scrap", "uses": ["pipes", "wire", "machines"]},
+	"glowglass": {"name": "Glowglass", "desc": "Crystal that holds a little light. Lenses, lamps, turbine vanes.", "category": "material", "value": 8, "stack": 99, "icon": "glowglass", "uses": ["lamps", "turbines"]},
+	"thermal_ore": {"name": "Thermal Ore", "desc": "Warm to the touch, always. Stores heat; stores charge.", "category": "material", "value": 7, "stack": 99, "icon": "thermal_ore", "uses": ["heat cells", "exchangers"]},
+
+	"pipe_section": {"name": "Pipe Section", "desc": "Lay one per cell of pipe. Also patches a burst segment.", "category": "part", "value": 3, "stack": 99, "icon": "pipe_section"},
+	"wire_coil": {"name": "Wire Coil", "desc": "Lay one per cell of wire.", "category": "part", "value": 3, "stack": 99, "icon": "wire_coil"},
+	"filter_pad": {"name": "Filter Pad", "desc": "Moss and sulfur pressed together. A scrubber eats one every half day.", "category": "part", "value": 12, "stack": 99, "icon": "filter_pad"},
+	"seal_gum": {"name": "Seal Gum", "desc": "Resin worked soft. Seals a cracked pipe without replacing it.", "category": "part", "value": 15, "stack": 99, "icon": "seal_gum"},
+	"fertiliser": {"name": "Fertiliser", "desc": "Rich and unpleasant. A plot dressed with it grows faster for a while.", "category": "part", "value": 4, "stack": 99, "icon": "fertiliser"},
+	"sludge": {"name": "Sludge", "desc": "What a scrubber leaves behind. Compost it, or it becomes someone's problem.", "category": "part", "value": 1, "stack": 99, "icon": "sludge"},
+
+	"moss_tea": {"name": "Moss Tea", "desc": "Bitter, green, steadying. Breath lasts longer in bad air.", "category": "food", "value": 10, "stack": 20, "icon": "moss_tea", "food": true, "effect": "steady"},
+	"glowbeet_stew": {"name": "Glowbeet Stew", "desc": "Mags' recipe, near enough. Warms you through.", "category": "food", "value": 28, "stack": 20, "icon": "glowbeet_stew", "food": true, "effect": "warm"},
+
+	"respirator": {"name": "Respirator", "desc": "Crew pattern. Breathe sour air for much longer.", "category": "gear", "value": 60, "stack": 1, "icon": "respirator", "gear": "respirator"},
+	"lamp_lens": {"name": "Glowglass Lens", "desc": "Fits your headlamp. The dark gets further away.", "category": "gear", "value": 40, "stack": 1, "icon": "lamp_lens", "gear": "lens"},
+
+	"governor_coil": {"name": "Governor Coil", "desc": "A heavy brass coil stamped STN-7 / PRIMARY. It hums when you hold it near iron.", "category": "story", "value": 0, "stack": 1, "icon": "governor_coil"},
+	"wren_token": {"name": "Crew Tag", "desc": "A dented brass tag: W. ASKEW — TRUNK CREW. Warm, like it was held recently.", "category": "story", "value": 0, "stack": 1, "icon": "crew_tag"}
+}

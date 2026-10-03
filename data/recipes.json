@@ -1,0 +1,13 @@
+{
+	"_comment": "Every recipe solves a problem or opens an opportunity. 'unlock' names the flag that reveals it; recipes without one are known from the start.",
+
+	"pipe_section": {"inputs": {"brass_scrap": 1}, "output": {"item": "pipe_section", "n": 3}, "station": "bench", "unlock": "learned_pipes"},
+	"wire_coil": {"inputs": {"brass_scrap": 1, "moss_fiber": 1}, "output": {"item": "wire_coil", "n": 4}, "station": "bench", "unlock": "learned_pipes"},
+	"filter_pad": {"inputs": {"moss_fiber": 2, "sulfur": 1}, "output": {"item": "filter_pad", "n": 1}, "station": "bench", "unlock": "learned_filters"},
+	"seal_gum": {"inputs": {"ember_resin": 2}, "output": {"item": "seal_gum", "n": 2}, "station": "bench", "unlock": "learned_seal"},
+	"spore_mash": {"inputs": {"sulfur": 1, "bellcap": 1}, "output": {"item": "fertiliser", "n": 4}, "station": "bench", "unlock": "experiment_spore_mash", "secret": true},
+	"moss_tea": {"inputs": {"moss_fiber": 2}, "output": {"item": "moss_tea", "n": 1}, "station": "bench"},
+	"glowbeet_stew": {"inputs": {"glowbeet": 2, "bellcap": 1}, "output": {"item": "glowbeet_stew", "n": 1}, "station": "bench", "unlock": "learned_stew"},
+	"respirator": {"inputs": {"filter_pad": 2, "brass_scrap": 2, "glowglass": 1}, "output": {"item": "respirator", "n": 1}, "station": "bench", "unlock": "learned_respirator"},
+	"lamp_lens": {"inputs": {"glowglass": 2, "brass_scrap": 1}, "output": {"item": "lamp_lens", "n": 1}, "station": "bench", "unlock": "learned_lens"}
+}

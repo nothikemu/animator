@@ -1,0 +1,40 @@
+{
+	"name": "Odile Brask",
+	"short": "Odile",
+	"role": "merchant",
+	"title": "Quartermaster of the Exchange",
+	"home": "odile_door",
+	"sprite": "odile",
+	"portrait": "odile",
+	"color": "amber",
+	"voice": {"timbre": "pluck_clock", "pitch": 1.08, "rate": 1.15},
+	"motif": "odile",
+	"profile": {
+		"personality": "Brisk, exact, impatient with sentiment. Generous in ways she hides.",
+		"history": "Lost her brother in the damp winter six years ago. Has run the Exchange since.",
+		"goals": "Restart trade down-river so Wick can buy medicine before the next damp season.",
+		"fears": "Another winter like that one.",
+		"contradiction": "A hard bargainer who carries half the town on credit.",
+		"problem": "The ledger doesn't balance and she knows exactly by how much."
+	},
+	"values": {
+		"industrial_power": {"respect": 3},
+		"good_engineering": {"respect": 3},
+		"sold_goods": {"trust": 1},
+		"kept_word": {"trust": 5},
+		"broke_word": {"trust": -7},
+		"hoarding": {"respect": -2},
+		"community_help": {"affection": 2},
+		"gift_liked": {"affection": 3}
+	},
+	"likes": ["glowglass", "bellcap", "ember_resin"],
+	"loves": ["glowbeet_stew"],
+	"dislikes": ["moss_fiber", "sludge"],
+	"tolerance": {"sour": 0.35, "heat": 36, "noise": 7},
+	"schedule": [
+		{"from": "06:00", "to": "08:00", "at": "odile_door", "do": "ledger", "why": "Counting before the counting starts."},
+		{"from": "08:00", "to": "17:30", "at": "exchange_counter", "do": "trade", "why": "The Exchange is open."},
+		{"from": "17:30", "to": "21:00", "at": "commons", "do": "talk", "why": "Collecting debts disguised as conversation."},
+		{"from": "21:00", "to": "06:00", "at": "odile_door", "do": "sleep", "why": "Home. Ledger on the pillow."}
+	]
+}

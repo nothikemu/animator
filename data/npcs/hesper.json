@@ -1,0 +1,42 @@
+{
+	"name": "Hesper Mott",
+	"short": "Hesper",
+	"role": "moss-tender",
+	"title": "Keeper of the moss beds",
+	"home": "hesper_door",
+	"sprite": "hesper",
+	"portrait": "hesper",
+	"color": "glow",
+	"voice": {"timbre": "glass_bow", "pitch": 1.2, "rate": 1.05},
+	"motif": "hesper",
+	"profile": {
+		"personality": "Intense, tender with organisms, blunt with people. Talks to moss more politely than to Odile.",
+		"history": "Grew up in the beds her grandmother planted. Has catalogued every lampmoth she has ever seen.",
+		"goals": "Keep the grove 'in balance'. Get Wick to stop venting into the air.",
+		"fears": "The beds going grey. Being right too late.",
+		"contradiction": "Preaches balance; lives in chaos. Opposes all machines, even ones that would save the moss.",
+		"problem": "Rock-lice are eating everyone's moss and she won't let anyone cull them."
+	},
+	"values": {
+		"pollution": {"affection": -3, "resentment": 3},
+		"moss_damaged": {"affection": -6, "resentment": 6},
+		"ecosystem_restored": {"affection": 5, "respect": 2},
+		"clean_power": {"respect": 2},
+		"industrial_power": {"affection": -2},
+		"curious_about_life": {"respect": 4, "shared": 2},
+		"gift_liked": {"affection": 4}
+	},
+	"likes": ["moss_fiber", "bellcap", "sulfur"],
+	"loves": ["bellcap_spore"],
+	"dislikes": ["ember_resin", "sludge"],
+	"tolerance": {"sour": 0.08, "heat": 30, "noise": 4},
+	"schedule": [
+		{"from": "06:00", "to": "11:00", "at": "moss_beds", "do": "tend", "why": "Morning is when the moss drinks."},
+		{"from": "11:00", "to": "13:00", "at": "dock", "do": "observe", "why": "Counting lampmoth larvae at the waterline."},
+		{"from": "13:00", "to": "18:00", "at": "moss_beds", "do": "tend", "why": "Back to the beds."},
+		{"from": "18:00", "to": "20:30", "at": "commons", "do": "talk", "why": "Arguing with Odile, generally."},
+		{"from": "20:30", "to": "23:30", "at": "lake_view", "do": "observe", "why": "Watching for the bloom."},
+		{"from": "23:30", "to": "06:00", "at": "hesper_door", "do": "sleep", "why": "Home, among the jars."},
+		{"from": "06:00", "to": "23:59", "at": "hesper_door", "do": "ill", "why": "The air is bad. She is staying in.", "when": ["air_sour_hesper>0.12"]}
+	]
+}

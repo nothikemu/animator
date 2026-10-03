@@ -1,0 +1,98 @@
+; Engine configuration file.
+; Godot 4.7.2
+
+config_version=5
+
+[application]
+
+config/name="Bellows"
+config/description="Build a life inside a living underground machine."
+config/version="0.1.0"
+run/main_scene="res://scenes/boot.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://assets/icon.svg"
+run/max_fps=0
+boot_splash/bg_color=Color(0.0705882, 0.0666667, 0.0862745, 1)
+boot_splash/show_image=false
+
+[autoload]
+
+Log="*res://src/autoload/log.gd"
+Events="*res://src/autoload/events.gd"
+Content="*res://src/autoload/content.gd"
+Settings="*res://src/autoload/settings.gd"
+GameState="*res://src/autoload/game_state.gd"
+Clock="*res://src/autoload/clock.gd"
+Sim="*res://src/autoload/sim.gd"
+Society="*res://src/autoload/society.gd"
+Economy="*res://src/autoload/economy.gd"
+Threads="*res://src/autoload/threads.gd"
+Director="*res://src/autoload/director.gd"
+Dialogue="*res://src/autoload/dialogue.gd"
+Audio="*res://src/autoload/audio.gd"
+Saves="*res://src/autoload/saves.gd"
+Dev="*res://src/autoload/dev.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/vsync/vsync_mode=1
+
+[gui]
+
+theme/default_font_antialiasing=0
+theme/default_font_hinting=0
+theme/default_font_subpixel_positioning=0
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=false
+
+[internationalization]
+
+locale/fallback="en"
+
+[physics]
+
+common/physics_ticks_per_second=60
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+renderer/rendering_method.mobile="mobile"
+textures/canvas_textures/default_texture_filter=0
+textures/default_filters/anisotropic_filtering_level=2
+lights_and_shadows/positional_shadow/atlas_size=2048
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=2
+environment/defaults/default_clear_color=Color(0.0705882, 0.0666667, 0.0862745, 1)
+anti_aliasing/quality/msaa_3d=0
+
+[shader_globals]
+
+cut_z={
+"type": "float",
+"value": 0.0
+}
+cut_amount={
+"type": "float",
+"value": 0.0
+}
+world_time={
+"type": "float",
+"value": 0.0
+}
+glow_level={
+"type": "float",
+"value": 1.0
+}
+pollution={
+"type": "float",
+"value": 0.0
+}
+wind={
+"type": "vec2",
+"value": Vector2(0.2, 0.05)
+}

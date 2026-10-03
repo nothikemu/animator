@@ -1,0 +1,1138 @@
+{
+ "id": "wick",
+ "biome": "grove",
+ "slice_z": 20,
+ "legend": {
+  ".": "moss_floor",
+  ",": "gravel",
+  ":": "cobble",
+  "f": "farm_soil",
+  "r": "rock_floor",
+  "=": "stairs",
+  "#": "plank",
+  "m": "moss_deep",
+  "~": "water"
+ },
+ "height": [
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "W33333332222222222333333332222222222WW00WWWW0W0W",
+  "W3333333222222222200W0000W2222222222W0000WW0000W",
+  "W3333333000000000000000000000000000000000000000W",
+  "W3333333000000000000000000000000000000000000000W",
+  "W3333333000000000000000000000000000000000000000W",
+  "W2222222000000000000000000000000000000000000000W",
+  "W0111110000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000000000000000W",
+  "W00000000000000000000~~~~~00~~~~~~~000000000000W",
+  "W00000000000000000~~~~~~~~00~~~~~~~~~~000000000W",
+  "W00000000000000~~~~~~~~~~~00~~~~~~~~~~~~~000000W",
+  "W0000000000000~~~~~~~~~~~~00~~~~~~~~~~~~~~02222W",
+  "W000000000000~~~~~~~~~~~~~~~~~~~~~~~~~~~~~02222W",
+  "W000000000000~~~~~~~~~~~~~~~~~~~~~~~~~~~~~02222W",
+  "W111111000000~~~~~~~~~~~~~~~~~~~~~~~~~~~~~02222W",
+  "W1111110000000~~~~~~~~~~~~~~~~~~~~~~~~~~~~02222W",
+  "W11111100000000~~~~~~~~~~~~~~~~~~~~~~~~~~002222W",
+  "W0000000000000000000000000000000000000000000000W"
+ ],
+ "mat": [
+  "................................................",
+  "................................................",
+  ".rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr............",
+  ".rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr............",
+  ".rrrrrrr........................................",
+  ".rrrrrrr........................................",
+  ".rrrrrrr........................................",
+  ".rr==rrr........................................",
+  ".rr==rrr........................................",
+  "...,,,,,,,,,,,,,,,:::::::::::::.................",
+  ".....,............:::::::::::::.................",
+  ".....,............:::::::::::::.................",
+  ".....,............::::::::::::,,,,,,,,..........",
+  ".....,............::::::::::::,,,,,,,,,,,,,,,,,.",
+  ".....,............:::::::::::::.............,,,.",
+  ".....,ffffffffff..:::::::::::::.............,,,.",
+  ".....,ffffffffff..:::::::::::::.............,,,.",
+  ".....,ffffffffff..:::::::::::::.............,,,.",
+  ".....,ffffffffff..:::::::::::::.................",
+  ".....,ffffffffff..:::::::::::::.................",
+  ".,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.",
+  "..........................##....................",
+  "..mmmmmmmmmmm........~~~~~##~~~~~~~.......rrrrr.",
+  "..mmmmmmmmmmm.....~~~~~~~~##~~~~~~~~~~....rrrrr.",
+  "..mmmmmmmmmmm..~~~~~~~~~~~##~~~~~~~~~~~~~.rrrrr.",
+  "..mmmmmmmmmmm.~~~~~~~~~~~~##~~~~~~~~~~~~~~rrrrr.",
+  "..mmmmmmmmmmm~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrrrr.",
+  "..mmmmmmmmmmm~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrrrr.",
+  "..mmmmmmmmmmm~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrrrr.",
+  "..mmmmmmmmmmm.~~~~~~~~~~~~~~~~~~~~~~~~~~~~rrrrr.",
+  "..mmmmmmmmmmm..~~~~~~~~~~~~~~~~~~~~~~~~~~.rrrrr.",
+  "................................................"
+ ],
+ "props": [
+  {
+   "type": "house",
+   "x": 3,
+   "z": 10,
+   "size": [
+    6,
+    5
+   ],
+   "variant": "lease",
+   "door": [
+    5,
+    14
+   ],
+   "interior": true,
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 19,
+   "z": 4,
+   "size": [
+    7,
+    5
+   ],
+   "variant": "lantern_house",
+   "door": [
+    22,
+    8
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 30,
+   "z": 6,
+   "size": [
+    6,
+    5
+   ],
+   "variant": "exchange",
+   "door": [
+    32,
+    10
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 31,
+   "z": 15,
+   "size": [
+    4,
+    4
+   ],
+   "variant": "odile",
+   "door": [
+    32,
+    18
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 37,
+   "z": 3,
+   "size": [
+    9,
+    8
+   ],
+   "variant": "pump_hall",
+   "door": [
+    41,
+    10
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 38,
+   "z": 14,
+   "size": [
+    5,
+    4
+   ],
+   "variant": "annex",
+   "door": [
+    39,
+    17
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 3,
+   "z": 23,
+   "size": [
+    4,
+    4
+   ],
+   "variant": "hesper",
+   "door": [
+    5,
+    26
+   ],
+   "block": true
+  },
+  {
+   "type": "bed",
+   "x": 4,
+   "z": 11,
+   "size": [
+    1,
+    2
+   ],
+   "block": true,
+   "home": true
+  },
+  {
+   "type": "bench",
+   "x": 7,
+   "z": 11,
+   "size": [
+    1,
+    1
+   ],
+   "block": true,
+   "home": true,
+   "station": "bench"
+  },
+  {
+   "type": "stove",
+   "x": 6,
+   "z": 11,
+   "block": true,
+   "home": true
+  },
+  {
+   "type": "chest",
+   "x": 4,
+   "z": 13,
+   "block": true,
+   "home": true,
+   "station": "storage"
+  },
+  {
+   "type": "shelf",
+   "x": 5,
+   "z": 11,
+   "home": true
+  },
+  {
+   "type": "glowroot",
+   "x": 12,
+   "z": 6,
+   "scale": 1.2,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 16,
+   "z": 13,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 28,
+   "z": 4,
+   "scale": 1.1,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 36,
+   "z": 16,
+   "scale": 0.9,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 2,
+   "z": 15,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 10,
+   "z": 23,
+   "scale": 1.1,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 20,
+   "z": 23,
+   "scale": 0.9,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 34,
+   "z": 22,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 44,
+   "z": 21,
+   "scale": 1.2,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 17,
+   "z": 18,
+   "scale": 0.8,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 8,
+   "z": 4,
+   "scale": 1.3,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 44,
+   "z": 9,
+   "scale": 0.9,
+   "block": true
+  },
+  {
+   "type": "glowroot",
+   "x": 24,
+   "z": 13,
+   "scale": 0.7,
+   "block": true
+  },
+  {
+   "type": "glowroot_small",
+   "x": 14,
+   "z": 8
+  },
+  {
+   "type": "glowroot_small",
+   "x": 11,
+   "z": 12
+  },
+  {
+   "type": "glowroot_small",
+   "x": 2,
+   "z": 11
+  },
+  {
+   "type": "glowroot_small",
+   "x": 26,
+   "z": 9
+  },
+  {
+   "type": "glowroot_small",
+   "x": 35,
+   "z": 11
+  },
+  {
+   "type": "glowroot_small",
+   "x": 29,
+   "z": 18
+  },
+  {
+   "type": "glowroot_small",
+   "x": 42,
+   "z": 18
+  },
+  {
+   "type": "glowroot_small",
+   "x": 9,
+   "z": 21
+  },
+  {
+   "type": "glowroot_small",
+   "x": 31,
+   "z": 21
+  },
+  {
+   "type": "glowroot_small",
+   "x": 21,
+   "z": 21
+  },
+  {
+   "type": "glowroot_small",
+   "x": 39,
+   "z": 21
+  },
+  {
+   "type": "glowroot_small",
+   "x": 15,
+   "z": 21
+  },
+  {
+   "type": "glowroot_small",
+   "x": 45,
+   "z": 19
+  },
+  {
+   "type": "glowroot_small",
+   "x": 1,
+   "z": 20
+  },
+  {
+   "type": "glowroot_small",
+   "x": 6,
+   "z": 21
+  },
+  {
+   "type": "glowroot_small",
+   "x": 23,
+   "z": 3
+  },
+  {
+   "type": "glowroot_small",
+   "x": 33,
+   "z": 3
+  },
+  {
+   "type": "glowroot_small",
+   "x": 13,
+   "z": 2
+  },
+  {
+   "type": "glowroot_small",
+   "x": 40,
+   "z": 12
+  },
+  {
+   "type": "glowroot_small",
+   "x": 46,
+   "z": 25
+  },
+  {
+   "type": "moss_tuft",
+   "x": 10,
+   "z": 10
+  },
+  {
+   "type": "moss_tuft",
+   "x": 13,
+   "z": 11
+  },
+  {
+   "type": "moss_tuft",
+   "x": 16,
+   "z": 6
+  },
+  {
+   "type": "moss_tuft",
+   "x": 27,
+   "z": 15
+  },
+  {
+   "type": "moss_tuft",
+   "x": 34,
+   "z": 19
+  },
+  {
+   "type": "moss_tuft",
+   "x": 44,
+   "z": 16
+  },
+  {
+   "type": "moss_tuft",
+   "x": 3,
+   "z": 18
+  },
+  {
+   "type": "moss_tuft",
+   "x": 16,
+   "z": 16
+  },
+  {
+   "type": "moss_tuft",
+   "x": 40,
+   "z": 20
+  },
+  {
+   "type": "moss_tuft",
+   "x": 12,
+   "z": 21
+  },
+  {
+   "type": "moss_tuft",
+   "x": 22,
+   "z": 12
+  },
+  {
+   "type": "moss_tuft",
+   "x": 29,
+   "z": 13
+  },
+  {
+   "type": "moss_tuft",
+   "x": 8,
+   "z": 25
+  },
+  {
+   "type": "moss_tuft",
+   "x": 11,
+   "z": 27
+  },
+  {
+   "type": "moss_tuft",
+   "x": 4,
+   "z": 29
+  },
+  {
+   "type": "moss_tuft",
+   "x": 7,
+   "z": 27
+  },
+  {
+   "type": "moss_tuft",
+   "x": 45,
+   "z": 23
+  },
+  {
+   "type": "moss_tuft",
+   "x": 14,
+   "z": 4
+  },
+  {
+   "type": "moss_tuft",
+   "x": 33,
+   "z": 4
+  },
+  {
+   "type": "moss_tuft",
+   "x": 24,
+   "z": 5
+  },
+  {
+   "type": "mushroom",
+   "x": 9,
+   "z": 8
+  },
+  {
+   "type": "mushroom",
+   "x": 17,
+   "z": 10
+  },
+  {
+   "type": "mushroom",
+   "x": 36,
+   "z": 18
+  },
+  {
+   "type": "mushroom",
+   "x": 43,
+   "z": 11
+  },
+  {
+   "type": "mushroom",
+   "x": 1,
+   "z": 12
+  },
+  {
+   "type": "mushroom",
+   "x": 19,
+   "z": 16
+  },
+  {
+   "type": "mushroom",
+   "x": 12,
+   "z": 24
+  },
+  {
+   "type": "mushroom",
+   "x": 5,
+   "z": 28
+  },
+  {
+   "type": "table",
+   "x": 22,
+   "z": 11,
+   "size": [
+    2,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "table",
+   "x": 22,
+   "z": 14,
+   "size": [
+    2,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "bench_seat",
+   "x": 22,
+   "z": 10,
+   "size": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "bench_seat",
+   "x": 22,
+   "z": 12,
+   "size": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "bench_seat",
+   "x": 22,
+   "z": 15,
+   "size": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "notice_board",
+   "x": 27,
+   "z": 11,
+   "block": true
+  },
+  {
+   "type": "town_lamp",
+   "x": 19,
+   "z": 10,
+   "block": true
+  },
+  {
+   "type": "town_lamp",
+   "x": 28,
+   "z": 10,
+   "block": true
+  },
+  {
+   "type": "town_lamp",
+   "x": 19,
+   "z": 18,
+   "block": true
+  },
+  {
+   "type": "town_lamp",
+   "x": 28,
+   "z": 18,
+   "block": true
+  },
+  {
+   "type": "market_stall",
+   "x": 25,
+   "z": 16,
+   "size": [
+    2,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "barrel",
+   "x": 36,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "barrel",
+   "x": 36,
+   "z": 9,
+   "block": true
+  },
+  {
+   "type": "crate",
+   "x": 29,
+   "z": 9,
+   "block": true
+  },
+  {
+   "type": "crate",
+   "x": 29,
+   "z": 10,
+   "block": true
+  },
+  {
+   "type": "crate_stack",
+   "x": 35,
+   "z": 11,
+   "block": true
+  },
+  {
+   "type": "fence",
+   "x": 6,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 7,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 8,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 9,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 10,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 11,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 12,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 13,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 14,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence",
+   "x": 15,
+   "z": 14,
+   "rot": 0
+  },
+  {
+   "type": "fence_post",
+   "x": 16,
+   "z": 14
+  },
+  {
+   "type": "barrel",
+   "x": 9,
+   "z": 13,
+   "block": true
+  },
+  {
+   "type": "signpost",
+   "x": 4,
+   "z": 9,
+   "text": "THE LEASE"
+  },
+  {
+   "type": "workbench",
+   "x": 43,
+   "z": 16,
+   "block": true,
+   "station": "bench_barnaby"
+  },
+  {
+   "type": "pipe_pile",
+   "x": 42,
+   "z": 18,
+   "block": true
+  },
+  {
+   "type": "gear_pile",
+   "x": 37,
+   "z": 18
+  },
+  {
+   "type": "chimney_pipe",
+   "x": 45,
+   "z": 6,
+   "block": true
+  },
+  {
+   "type": "dock_post",
+   "x": 25,
+   "z": 22
+  },
+  {
+   "type": "dock_post",
+   "x": 28,
+   "z": 22
+  },
+  {
+   "type": "dock_post",
+   "x": 25,
+   "z": 25
+  },
+  {
+   "type": "dock_post",
+   "x": 28,
+   "z": 25
+  },
+  {
+   "type": "boat",
+   "x": 29,
+   "z": 24
+  },
+  {
+   "type": "shore_rock",
+   "x": 13,
+   "z": 24,
+   "block": true
+  },
+  {
+   "type": "shore_rock",
+   "x": 16,
+   "z": 29,
+   "block": true
+  },
+  {
+   "type": "shore_rock",
+   "x": 38,
+   "z": 28,
+   "block": true
+  },
+  {
+   "type": "shore_rock",
+   "x": 41,
+   "z": 24,
+   "block": true
+  },
+  {
+   "type": "shore_rock",
+   "x": 19,
+   "z": 31,
+   "block": true
+  },
+  {
+   "type": "shore_rock",
+   "x": 35,
+   "z": 31,
+   "block": true
+  },
+  {
+   "type": "shore_rock",
+   "x": 30,
+   "z": 30,
+   "block": true
+  },
+  {
+   "type": "specimen_rack",
+   "x": 8,
+   "z": 23,
+   "block": true
+  },
+  {
+   "type": "moss_frame",
+   "x": 10,
+   "z": 25,
+   "size": [
+    2,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "moss_frame",
+   "x": 10,
+   "z": 27,
+   "size": [
+    2,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 4,
+   "z": 31,
+   "scale": 1.4,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 15,
+   "z": 31,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 24,
+   "z": 31,
+   "scale": 1.6,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 33,
+   "z": 31,
+   "scale": 1.1,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 44,
+   "z": 30,
+   "scale": 1.5,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 11,
+   "z": 30,
+   "scale": 0.8,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 39,
+   "z": 31,
+   "scale": 0.9,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 1,
+   "z": 26,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 46,
+   "z": 28,
+   "scale": 1.2,
+   "block": true
+  },
+  {
+   "type": "chute",
+   "x": 3,
+   "z": 3,
+   "size": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "rubble_small",
+   "x": 5,
+   "z": 4
+  },
+  {
+   "type": "salvage_harness",
+   "x": 4,
+   "z": 5
+  },
+  {
+   "type": "reach_gate",
+   "x": 46,
+   "z": 14,
+   "size": [
+    1,
+    4
+   ]
+  }
+ ],
+ "exits": [
+  {
+   "x": 46,
+   "z": 15,
+   "to": "reach",
+   "arrive": [
+    44,
+    15
+   ]
+  },
+  {
+   "x": 46,
+   "z": 16,
+   "to": "reach",
+   "arrive": [
+    44,
+    16
+   ]
+  }
+ ],
+ "points": {
+  "arrival": [
+   4,
+   5
+  ],
+  "lease_door": [
+   5,
+   15
+  ],
+  "lease_inside": [
+   6,
+   12
+  ],
+  "well": [
+   24,
+   19
+  ],
+  "commons": [
+   23,
+   13
+  ],
+  "commons_table": [
+   21,
+   13
+  ],
+  "lantern_door": [
+   22,
+   9
+  ],
+  "exchange_door": [
+   32,
+   11
+  ],
+  "exchange_counter": [
+   31,
+   12
+  ],
+  "odile_door": [
+   32,
+   19
+  ],
+  "pumphall_door": [
+   41,
+   11
+  ],
+  "annex_door": [
+   39,
+   18
+  ],
+  "annex_bench": [
+   43,
+   17
+  ],
+  "hesper_door": [
+   5,
+   27
+  ],
+  "moss_beds": [
+   9,
+   26
+  ],
+  "dock": [
+   26,
+   23
+  ],
+  "reach_gate": [
+   44,
+   15
+  ],
+  "lane_west": [
+   8,
+   20
+  ],
+  "lane_east": [
+   40,
+   20
+  ],
+  "farm": [
+   10,
+   17
+  ],
+  "pipe_heads": [
+   30,
+   19
+  ],
+  "shore_east": [
+   40,
+   23
+  ],
+  "grotto": [
+   5,
+   6
+  ],
+  "lake_view": [
+   21,
+   21
+  ],
+  "barnaby_well": [
+   23,
+   19
+  ],
+  "board": [
+   26,
+   12
+  ]
+ },
+ "lights": [
+  {
+   "x": 22.5,
+   "z": 6.5,
+   "y": 2.2,
+   "color": "amber",
+   "energy": 2.0,
+   "range": 8.0,
+   "kind": "window"
+  },
+  {
+   "x": 32.5,
+   "z": 9.0,
+   "y": 2.0,
+   "color": "amber",
+   "energy": 1.4,
+   "range": 6.0,
+   "kind": "window"
+  },
+  {
+   "x": 41.0,
+   "z": 15.5,
+   "y": 2.0,
+   "color": "amber",
+   "energy": 1.2,
+   "range": 6.0,
+   "kind": "window"
+  },
+  {
+   "x": 4.0,
+   "z": 3.5,
+   "y": 6.0,
+   "color": "cream",
+   "energy": 1.8,
+   "range": 9.0,
+   "kind": "shaft"
+  }
+ ],
+ "meta": {
+  "name": "Wick",
+  "ceiling": 12.0,
+  "ambient": "grove"
+ }
+}

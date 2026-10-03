@@ -1,0 +1,29 @@
+{
+	"_comment": "Per-biome presentation and ambience. Generation rules live in src/world/reach_gen.gd; these drive look, sound and hazards.",
+
+	"grove": {
+		"name": "Glowroot Grove", "ambient_light": "#3a4a66", "ambient_energy": 0.42,
+		"fog_color": "#16222a", "fog_density": 0.016, "grade": "warm",
+		"ambience": "grove", "music": "wick", "temp": 20, "hazard": ""
+	},
+	"fringe": {
+		"name": "Glowroot Fringe", "ambient_light": "#2c3d58", "ambient_energy": 0.32,
+		"fog_color": "#12202a", "fog_density": 0.024, "grade": "cool",
+		"ambience": "grove", "music": "reach", "temp": 17, "hazard": ""
+	},
+	"blackstone": {
+		"name": "Blackstone Cuts", "ambient_light": "#3a3540", "ambient_energy": 0.28,
+		"fog_color": "#1a1716", "fog_density": 0.022, "grade": "rust",
+		"ambience": "blackstone", "music": "reach", "temp": 15, "hazard": "dark"
+	},
+	"ember": {
+		"name": "Ember Vents", "ambient_light": "#4a2a24", "ambient_energy": 0.3,
+		"fog_color": "#2a1410", "fog_density": 0.03, "grade": "ember",
+		"ambience": "ember", "music": "reach", "temp": 38, "hazard": "heat"
+	},
+	"sump": {
+		"name": "The Sump", "ambient_light": "#2a2546", "ambient_energy": 0.26,
+		"fog_color": "#120f22", "fog_density": 0.034, "grade": "violet",
+		"ambience": "sump", "music": "reach", "temp": 9, "hazard": "sour"
+	}
+}
