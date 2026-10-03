@@ -7,7 +7,11 @@
 	"sprite": "mags",
 	"portrait": "mags",
 	"color": "amber_light",
-	"voice": {"timbre": "reed_warm", "pitch": 0.95, "rate": 1.1},
+	"voice": {
+		"timbre": "reed_warm",
+		"pitch": 0.95,
+		"rate": 1.1
+	},
 	"motif": "mags",
 	"profile": {
 		"personality": "Loud, warm, practical. Remembers everyone's order and everyone's business.",
@@ -18,23 +22,81 @@
 		"problem": "Glowbeet prices. The cistern. The cistern again."
 	},
 	"values": {
-		"community_help": {"affection": 4, "trust": 2},
-		"sold_food": {"affection": 1},
-		"hoarding": {"resentment": 3},
-		"water_restored": {"affection": 4, "trust": 3},
-		"town_dry": {"trust": -2},
-		"gift_liked": {"affection": 3}
+		"community_help": {
+			"affection": 4,
+			"trust": 2
+		},
+		"sold_food": {
+			"affection": 1
+		},
+		"hoarding": {
+			"resentment": 3
+		},
+		"water_restored": {
+			"affection": 4,
+			"trust": 3
+		},
+		"town_dry": {
+			"trust": -2
+		},
+		"gift_liked": {
+			"affection": 3
+		}
 	},
-	"likes": ["glowbeet", "bellcap", "moss_tea"],
-	"loves": ["glowbeet_stew"],
-	"dislikes": ["sludge", "thermal_ore"],
-	"tolerance": {"sour": 0.3, "heat": 40, "noise": 8},
+	"likes": [
+		"glowbeet",
+		"bellcap",
+		"moss_tea"
+	],
+	"loves": [
+		"glowbeet_stew"
+	],
+	"dislikes": [
+		"sludge",
+		"thermal_ore"
+	],
+	"tolerance": {
+		"sour": 0.3,
+		"heat": 40,
+		"noise": 8
+	},
 	"gossip_hub": true,
 	"schedule": [
-		{"from": "05:30", "to": "11:00", "at": "lantern_door", "do": "cook", "why": "The ovens."},
-		{"from": "11:00", "to": "14:00", "at": "commons_table", "do": "serve", "why": "Midday meal at the long table."},
-		{"from": "14:00", "to": "17:30", "at": "lantern_door", "do": "cook", "why": "Evening pots."},
-		{"from": "17:30", "to": "22:30", "at": "commons", "do": "serve", "why": "The Lantern House at Dimming: everyone comes, everyone talks."},
-		{"from": "22:30", "to": "05:30", "at": "lantern_door", "do": "sleep", "why": "Counting the stores. Then sleep."}
-	]
+		{
+			"from": "05:30",
+			"to": "11:00",
+			"at": "lantern_door",
+			"do": "cook",
+			"why": "The ovens."
+		},
+		{
+			"from": "11:00",
+			"to": "14:00",
+			"at": "commons_table",
+			"do": "serve",
+			"why": "Midday meal at the long table."
+		},
+		{
+			"from": "14:00",
+			"to": "17:30",
+			"at": "lantern_door",
+			"do": "cook",
+			"why": "Evening pots."
+		},
+		{
+			"from": "17:30",
+			"to": "22:30",
+			"at": "commons",
+			"do": "serve",
+			"why": "The Lantern House at Dimming: everyone comes, everyone talks."
+		},
+		{
+			"from": "22:30",
+			"to": "05:30",
+			"at": "lantern_door",
+			"do": "sleep",
+			"why": "Counting the stores. Then sleep."
+		}
+	],
+	"unknown": "The cook"
 }

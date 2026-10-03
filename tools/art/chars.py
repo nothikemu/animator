@@ -482,8 +482,333 @@ def draw_barnaby(c, g, p):
 
 
 # ---------------------------------------------------------------------------------------------
+# Generic humanoid used for the other residents: proportions + costume functions.
+# ---------------------------------------------------------------------------------------------
+def humanoid(c, g, p, spec):
+    """spec keys: cx, feet, leg_len, torso_h, torso_w, head_w, head_h, skin, hair, eye,
+    trouser, boot, cloth, sleeve, hand, costume(c,g,p,ctx), hair_front(c,p,ctx), hair_back(c,p,ctx),
+    hair_side(c,p,ctx), skirt (bool), barefoot (bool)."""
+    cx = spec["cx"]
+    by = spec["feet"] + p.bob
+    leg_top = by - spec["leg_len"]
+    tool_up = p.anim == "work" and p.tool in (0, 1)
+    if spec.get("skirt"):
+        # legs hidden by skirt; only feet show, stepping
+        for sgn in (-1, 1):
+            lift = 1 if p.stride == sgn and p.view != "side" else 0
+            fx = cx + (1 if sgn > 0 else -3)
+            if p.view == "side":
+                fx = cx - 1 + p.stride * sgn * 2
+            col = spec["boot"] if not spec.get("barefoot") else shade(spec["skin"], -0.2)
+            c.rect(fx, by - 1 - lift, 3, 2, col)
+    else:
+        legs(c, p, cx, leg_top, by, spec["trouser"], spec["boot"], gap=1, width=3, boot_h=2 if spec.get("barefoot") else 3)
+    torso_top = leg_top - spec["torso_h"] + p.breath
+    ctx = {"cx": cx, "torso_top": torso_top, "leg_top": leg_top, "by": by, "tool_up": tool_up}
+    cloth = ramp(spec["cloth"], 4, 0.35)
+    w = spec["torso_w"]
+    if p.view in ("down", "up"):
+        for y in range(torso_top, leg_top + (spec.get("skirt_len", 0) if spec.get("skirt") else 1)):
+            k = (y - torso_top) / max(1, leg_top - torso_top)
+            ww = int(w / 2 + (spec.get("flare", 0) * k))
+            for x in range(cx - ww, cx + ww):
+                col = cloth[1]
+                if x == cx - ww:
+                    col = cloth[2]
+                elif x >= cx + ww - 1:
+                    col = cloth[0]
+                c.set(x, y, col)
+        sleeve = spec.get("sleeve", spec["cloth"])
+        arm_len = spec.get("arm_len", 7)
+        if tool_up:
+            arm(c, cx - w // 2 - 2, torso_top + 1 - p.tool, arm_len - 2, sleeve, spec["hand"])
+            arm(c, cx + w // 2, torso_top + 1 - p.tool, arm_len - 2, sleeve, spec["hand"])
+        else:
+            arm(c, cx - w // 2 - 2, torso_top + 1, arm_len + (1 if p.arm > 0 else 0), sleeve, spec["hand"])
+            arm(c, cx + w // 2, torso_top + 1, arm_len + (1 if p.arm < 0 else 0), sleeve, spec["hand"])
+    else:
+        for y in range(torso_top, leg_top + (spec.get("skirt_len", 0) if spec.get("skirt") else 1)):
+            k = (y - torso_top) / max(1, leg_top - torso_top)
+            back = int(w / 2 - 1 + spec.get("flare", 0) * k * 0.6)
+            for x in range(cx - back, cx + int(w / 2) - 1):
+                col = cloth[1] if x < cx + w // 2 - 2 else cloth[0]
+                if x == cx - back:
+                    col = cloth[2]
+                c.set(x, y, col)
+        if tool_up:
+            a = [(-2, -5), (1, -6), (4, -1), (3, 2)][p.tool]
+            c.line(cx, torso_top + 2, cx + a[0], torso_top + 2 + a[1], spec.get("sleeve", spec["cloth"]))
+            c.rect(cx + a[0], torso_top + 2 + a[1], 2, 2, spec["hand"])
+        else:
+            arm(c, cx, torso_top + 1, spec.get("arm_len", 7), spec.get("sleeve", spec["cloth"]), spec["hand"], swing=p.arm * 2, side_view=True)
+    spec["costume"](c, g, p, ctx)
+    # head
+    hy = torso_top - spec["head_h"] - 1 + (1 if p.anim == "idle" and p.f == 3 else 0)
+    ctx["hy"] = hy
+    if p.view == "up":
+        spec["hair_back"](c, p, ctx)
+    elif p.view == "down":
+        head_shape(c, cx, hy + 1, spec["head_w"], spec["head_h"], spec["skin"])
+        face_front(c, cx, hy + spec.get("eye_row", 4), spec["skin"], spec["eye"], p, eye_gap=spec.get("eye_gap", 3), mouth_y=spec.get("mouth_y", 3))
+        spec["hair_front"](c, p, ctx)
+    else:
+        head_shape(c, cx + 1, hy + 1, spec["head_w"] - 1, spec["head_h"], spec["skin"])
+        ey = hy + spec.get("eye_row", 4)
+        c.rect(cx + 3, ey, 1, 1 if p.emote == "happy" else 2, spec["eye"])
+        c.set(cx + 4 + (spec["head_w"] - 9) // 2, ey + 1, shade(spec["skin"], -0.25))
+        spec["hair_side"](c, p, ctx)
+
+
+# --- Odile ------------------------------------------------------------------------------------------
+ODILE = {"skin": C("#7a4a32"), "hair": C("#b9b2aa"), "eye": pal("charcoal"), "cloth": C("#8a5a2a"),
+         "dress": C("#2c3a4a"), "boot": C("#2a1f1a"), "hand": C("#7a4a32"), "ledger": C("#5a3a2a")}
+
+
+def draw_odile(c, g, p):
+    O = ODILE
+
+    def costume(c, g, p, ctx):
+        cx, tt, lt = ctx["cx"], ctx["torso_top"], ctx["leg_top"]
+        if p.view == "down":
+            c.rect(cx - 1, tt + 1, 2, lt - tt + 3, O["dress"])           # dress showing at the front
+            for y in range(tt + 2, lt, 2):
+                c.set(cx - 2, y, pal("brass_light"))                     # brass buttons
+            c.hline(cx - 4, cx + 3, tt, shade(O["cloth"], 0.2))
+            # ledger under the left arm
+            c.rect(cx + 3, tt + 3, 3, 5, O["ledger"])
+            c.vline(cx + 5, tt + 3, tt + 7, pal("cream"))
+        elif p.view == "up":
+            c.rect(cx - 3, lt - 1, 6, 3, O["dress"])
+        else:
+            c.rect(cx - 1, tt + 3, 3, 5, O["ledger"])
+            c.vline(cx + 1, tt + 3, tt + 7, pal("cream"))
+
+    def hair_front(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(O["hair"], 3, 0.3)
+        c.hline(cx - 4, cx + 3, hy, hair[1])
+        c.hline(cx - 3, cx + 2, hy - 1, hair[2])
+        c.rect(cx - 5, hy + 1, 1, 3, hair[0])
+        c.rect(cx + 4, hy + 1, 1, 3, hair[0])
+        c.disc(cx - 0.5, hy - 2.5, 2.2, hair[1])                       # braided bun on top
+        c.hline(cx - 2, cx + 1, hy - 3, hair[2])
+        # spectacles pushed up into the hair
+        c.set(cx - 2, hy, pal("brass_light")); c.set(cx + 1, hy, pal("brass_light"))
+        c.hline(cx - 1, cx, hy, pal("brass"))
+
+    def hair_back(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx, hy + 1, 9, 7, O["hair"])
+        c.disc(cx - 0.5, hy - 2.5, 2.2, shade(O["hair"], -0.1))
+        c.line(cx - 2, hy + 2, cx - 3, hy + 6, shade(O["hair"], -0.3))   # braids
+        c.line(cx + 1, hy + 2, cx + 2, hy + 6, shade(O["hair"], -0.3))
+
+    def hair_side(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(O["hair"], 3, 0.3)
+        c.rect(cx - 3, hy, 5, 3, hair[1])
+        c.disc(cx - 2.5, hy - 2.0, 2.2, hair[1])
+        c.set(cx + 2, hy, pal("brass_light"))
+
+    humanoid(c, g, p, {"cx": 12, "feet": 31, "leg_len": 6, "torso_h": 11, "torso_w": 10, "flare": 2,
+                       "head_w": 9, "head_h": 7, "skin": O["skin"], "eye": O["eye"], "cloth": O["cloth"],
+                       "sleeve": shade(O["dress"], 0.1), "hand": O["hand"], "trouser": O["dress"], "boot": O["boot"],
+                       "skirt": True, "skirt_len": 4, "arm_len": 7, "costume": costume, "hair_front": hair_front,
+                       "hair_back": hair_back, "hair_side": hair_side, "eye_row": 4, "mouth_y": 3})
+
+
+# --- Hesper ------------------------------------------------------------------------------------------
+HESPER = {"skin": C("#d1b48c"), "hair": C("#6a3428"), "eye": pal("charcoal"), "shawl": C("#4f6a3a"),
+          "patch": C("#5a3f8f"), "linen": C("#b8a888"), "hand": C("#7f9a5a")}
+
+
+def draw_hesper(c, g, p):
+    H = HESPER
+
+    def costume(c, g, p, ctx):
+        cx, tt, lt = ctx["cx"], ctx["torso_top"], ctx["leg_top"]
+        shawl = ramp(H["shawl"], 3, 0.35)
+        if p.view in ("down", "up"):
+            for y in range(tt, tt + 7):
+                w = 6 + (y - tt) // 2
+                c.hline(cx - w, cx + w - 1, y, shawl[1] if (y + (0 if p.view == "down" else 1)) % 3 else shawl[0])
+            for (dx, dy) in [(-4, 2), (3, 4), (-2, 5)]:
+                c.rect(cx + dx, tt + dy, 2, 2, H["patch"])
+            if p.view == "down":
+                # pinned specimen jars that glow faintly
+                for (dx, dy, col) in [(-5, 4, pal("glow")), (4, 2, pal("moss_light")), (2, 5, pal("amber_light"))]:
+                    c.rect(cx + dx, tt + dy, 1, 2, col)
+                    g.rect(cx + dx, tt + dy, 1, 2, shade(col, -0.35))
+        else:
+            for y in range(tt, tt + 7):
+                c.hline(cx - 4 - (y - tt) // 3, cx + 2, y, shawl[1])
+            c.rect(cx - 3, tt + 3, 2, 2, H["patch"])
+            c.rect(cx + 1, tt + 4, 1, 2, pal("glow")); g.rect(cx + 1, tt + 4, 1, 2, shade(pal("glow"), -0.35))
+
+    def hair_front(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(H["hair"], 3, 0.32)
+        for y in range(hy - 2, hy + 3):
+            w = 5 + (1 if y > hy else 0)
+            c.hline(cx - w, cx + w - 1, y, hair[1] if (y % 2) else hair[2])
+        for (x, y) in [(cx - 6, hy + 3), (cx + 5, hy + 4), (cx - 6, hy + 5), (cx + 5, hy + 1), (cx - 7, hy + 1)]:
+            c.set(x, y, hair[0])
+        c.set(cx - 3, hy - 2, pal("moss_light")); c.set(cx + 3, hy - 1, pal("moss_light"))
+        c.set(cx + 1, hy - 2, pal("glow"))
+
+    def hair_back(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(H["hair"], 3, 0.32)
+        for y in range(hy - 2, hy + 8):
+            w = 5 + (1 if hy < y < hy + 6 else 0)
+            c.hline(cx - w, cx + w - 1, y, hair[1] if (y % 2) else hair[0])
+        c.set(cx - 2, hy, pal("moss_light"))
+
+    def hair_side(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(H["hair"], 3, 0.32)
+        for y in range(hy - 2, hy + 6):
+            c.hline(cx - 4, cx + (2 if y < hy + 1 else -1), y, hair[1] if y % 2 else hair[2])
+        c.set(cx - 5, hy + 4, hair[0])
+
+    humanoid(c, g, p, {"cx": 12, "feet": 33, "leg_len": 9, "torso_h": 11, "torso_w": 8, "flare": 3,
+                       "head_w": 8, "head_h": 7, "skin": H["skin"], "eye": H["eye"], "cloth": H["linen"],
+                       "sleeve": shade(H["linen"], -0.1), "hand": H["hand"], "trouser": H["linen"], "boot": H["skin"],
+                       "skirt": True, "skirt_len": 6, "barefoot": True, "arm_len": 9, "costume": costume,
+                       "hair_front": hair_front, "hair_back": hair_back, "hair_side": hair_side, "eye_row": 4, "mouth_y": 3})
+
+
+# --- Mags -----------------------------------------------------------------------------------------------
+MAGS = {"skin": C("#e0ae8a"), "hair": C("#b4562e"), "eye": pal("charcoal"), "dress": C("#7a3a2e"),
+        "apron": C("#e6dcc0"), "boot": C("#3a2a22")}
+
+
+def draw_mags(c, g, p):
+    M = MAGS
+
+    def costume(c, g, p, ctx):
+        cx, tt, lt = ctx["cx"], ctx["torso_top"], ctx["leg_top"]
+        apron = ramp(M["apron"], 3, 0.25)
+        if p.view == "down":
+            for y in range(tt + 2, lt + 3):
+                w = 4 + (1 if y > tt + 5 else 0)
+                c.hline(cx - w, cx + w - 1, y, apron[1] if y % 4 else apron[0])
+            c.hline(cx - 6, cx + 5, tt + 6, shade(M["dress"], -0.2))    # apron tie
+            c.rect(cx - 1, tt + 8, 3, 2, shade(pal("danger"), -0.3))     # a stain
+            # the ladle, held at the side
+            if p.anim != "work":
+                c.vline(cx + 8, tt + 1, tt + 10, pal("ash"))
+                c.rect(cx + 7, tt + 10, 3, 2, shade(pal("ash"), -0.1))
+        elif p.view == "up":
+            c.hline(cx - 6, cx + 5, tt + 6, shade(M["apron"], -0.15))
+            c.vline(cx, tt + 6, tt + 8, shade(M["apron"], -0.15))
+        else:
+            for y in range(tt + 2, lt + 3):
+                c.hline(cx + 1, cx + 4, y, apron[1])
+            c.vline(cx + 5, tt + 2, tt + 9, pal("ash"))
+        # steam wisp from the apron pocket (warmth)
+        if p.anim == "idle" and p.view == "down":
+            c.set(cx - 3 + (p.f % 2), tt - 2 - p.f // 2, (230, 230, 235, 120))
+
+    def hair_front(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(M["hair"], 3, 0.3)
+        c.hline(cx - 5, cx + 4, hy, hair[1])
+        c.hline(cx - 4, cx + 3, hy - 1, hair[2])
+        c.rect(cx - 6, hy + 1, 1, 2, hair[0]); c.rect(cx + 5, hy + 1, 1, 2, hair[0])
+        c.disc(cx - 0.5, hy - 2.8, 2.4, hair[1])                       # bun
+        c.set(cx + 1, hy - 4, pal("cream"))                            # a pencil in the bun
+
+    def hair_back(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx, hy + 1, 10, 7, M["hair"])
+        c.disc(cx - 0.5, hy - 2.8, 2.4, shade(M["hair"], 0.05))
+
+    def hair_side(c, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        hair = ramp(M["hair"], 3, 0.3)
+        c.rect(cx - 4, hy, 6, 3, hair[1])
+        c.disc(cx - 3.5, hy - 1.5, 2.4, hair[1])
+
+    humanoid(c, g, p, {"cx": 13, "feet": 31, "leg_len": 6, "torso_h": 12, "torso_w": 14, "flare": 2,
+                       "head_w": 10, "head_h": 7, "skin": M["skin"], "eye": M["eye"], "cloth": M["dress"],
+                       "sleeve": M["skin"], "hand": M["skin"], "trouser": M["dress"], "boot": M["boot"],
+                       "skirt": True, "skirt_len": 4, "arm_len": 7, "costume": costume, "hair_front": hair_front,
+                       "hair_back": hair_back, "hair_side": hair_side, "eye_row": 4, "mouth_y": 3})
+
+
+# --- Grist (a Knapper) ----------------------------------------------------------------------------------
+GRIST = {"stone": C("#6c6a74"), "dark": C("#3e3c46"), "crystal": pal("amber"), "eye": pal("amber_light"), "strap": C("#5a3f2e")}
+
+
+def draw_grist(c, g, p):
+    G = GRIST
+    st = ramp(G["stone"], 5, 0.4)
+    cx = 22
+    base = 44 + p.bob
+    # hunched body: a big rounded mass
+    lean = 1 if p.view == "side" else 0
+    for y in range(14, base - 5):
+        k = (y - 14) / (base - 19)
+        w = int(9 + 6 * math.sin(min(1.0, k * 1.6) * math.pi * 0.5))
+        for x in range(cx - w + lean * 2, cx + w + lean * 2):
+            t = (x - (cx - w)) / (2 * w)
+            col = st[3] if t < 0.25 else (st[2] if t < 0.6 else st[1])
+            if y > base - 10:
+                col = st[1] if t < 0.7 else st[0]
+            c.set(x, y, col)
+    # crystalline ridge along the back
+    for k in range(5):
+        x = cx - 6 + k * 3 + lean * 2
+        top = 9 + (k % 2) * 2 - (1 if p.anim == "idle" and p.f in (2, 3) else 0)
+        for y in range(top, 16):
+            c.set(x, y, G["crystal"] if y < top + 2 else shade(G["crystal"], -0.3))
+        g.set(x, top, shade(G["crystal"], -0.1))
+    # knuckle-walking arms reaching the ground
+    for sgn in (-1, 1):
+        if p.view == "side" and sgn < 0:
+            continue
+        off = 0
+        if p.anim == "walk":
+            off = p.stride * sgn * 2
+        ax = cx + sgn * 12 + lean * 4 + (off if p.view == "side" else 0)
+        lift = 1 if p.anim == "walk" and p.stride == sgn else 0
+        for y in range(22, base - lift):
+            c.rect(ax - 2, y, 4, 1, st[2] if sgn < 0 else st[1])
+        c.rect(ax - 3, base - 3 - lift, 6, 3, st[0])
+    # stubby legs
+    for sgn in (-1, 1):
+        lx = cx + sgn * 5
+        lift = 1 if p.anim == "walk" and p.stride == -sgn else 0
+        c.rect(lx - 2, base - 6, 4, 6 - lift, st[1])
+    # head: low, forward, small amber eyes
+    hx = cx + (8 if p.view == "side" else 0)
+    hy = 18 + p.bob
+    if p.view != "up":
+        c.ellipse(hx, hy, 5, 4, st[2])
+        if p.view == "down":
+            eyes = [(hx - 2, hy), (hx + 1, hy)]
+        else:
+            eyes = [(hx + 2, hy - 1)]
+        for (x, y) in eyes:
+            col = G["eye"]
+            if p.emote == "surprised":
+                c.rect(x, y - 1, 1, 2, col); g.rect(x, y - 1, 1, 2, col)
+            elif p.emote == "sad":
+                c.set(x, y + 1, shade(col, -0.3)); g.set(x, y + 1, shade(col, -0.5))
+            else:
+                c.set(x, y, col); g.set(x, y, col)
+        c.hline(hx - 2, hx + 1, hy + 2, st[0])
+    # trade strap with pouches
+    c.line(cx - 8, 16, cx + 6, 30, G["strap"])
+    c.rect(cx + 4, 28, 4, 4, shade(G["strap"], 0.15))
+
+
+# ---------------------------------------------------------------------------------------------
 def build(only=None):
-    specs = [("player", draw_player, 24, 32, True), ("barnaby", draw_barnaby, 26, 36, True)]
+    specs = [("player", draw_player, 24, 32, True), ("barnaby", draw_barnaby, 26, 36, True),
+             ("odile", draw_odile, 24, 32, False), ("hesper", draw_hesper, 24, 34, True),
+             ("mags", draw_mags, 26, 32, False), ("grist", draw_grist, 46, 46, True)]
     for cid, fn, w, h, emit in specs:
         if only and cid not in only:
             continue

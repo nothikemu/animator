@@ -1,0 +1,75 @@
+{
+ "w": 24,
+ "h": 34,
+ "cols": 4,
+ "rows": 11,
+ "emit": true,
+ "anims": {
+  "idle_down": {
+   "row": 0,
+   "frames": 4,
+   "fps": 3,
+   "loop": true
+  },
+  "idle_up": {
+   "row": 1,
+   "frames": 4,
+   "fps": 3,
+   "loop": true
+  },
+  "idle_side": {
+   "row": 2,
+   "frames": 4,
+   "fps": 3,
+   "loop": true
+  },
+  "walk_down": {
+   "row": 3,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "walk_up": {
+   "row": 4,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "walk_side": {
+   "row": 5,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "work_down": {
+   "row": 6,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "work_up": {
+   "row": 7,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "work_side": {
+   "row": 8,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "talk_down": {
+   "row": 9,
+   "frames": 4,
+   "fps": 8,
+   "loop": true
+  },
+  "emote_down": {
+   "row": 10,
+   "frames": 4,
+   "fps": 1,
+   "loop": false
+  }
+ }
+}

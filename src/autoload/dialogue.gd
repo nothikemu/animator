@@ -77,6 +77,23 @@ func start_with(npc_id: String) -> bool:
 	return true
 
 
+## One-off lines outside the rule system (player monologue, signs, notes).
+func say_lines(speaker: String, lines: Array) -> void:
+	if active:
+		return
+	npc = speaker
+	_nodes = []
+	for l in lines:
+		_nodes.append({"say": String(l), "who": speaker})
+	_labels.clear()
+	_index = 0
+	_pending_open = ""
+	active = true
+	Clock.pause("dialogue")
+	Events.dialogue_started.emit(StringName(speaker))
+	_run()
+
+
 func start_convo(npc_id: String, convo_id: String) -> bool:
 	var data: Dictionary = Content.dialogue.get(npc_id, {})
 	var nodes: Variant = data.get("convos", {}).get(convo_id)

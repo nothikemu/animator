@@ -7,7 +7,11 @@
 	"sprite": "grist",
 	"portrait": "grist",
 	"color": "stone",
-	"voice": {"timbre": "stone_marimba", "pitch": 0.6, "rate": 0.7},
+	"voice": {
+		"timbre": "stone_marimba",
+		"pitch": 0.6,
+		"rate": 0.7
+	},
 	"motif": "grist",
 	"nonhuman": true,
 	"profile": {
@@ -19,18 +23,57 @@
 		"problem": "The rock has been 'singing wrong' near the Sump for a season."
 	},
 	"values": {
-		"noise": {"fear": 3, "affection": -1},
-		"gift_liked": {"affection": 5, "trust": 2},
-		"curious_about_life": {"respect": 2},
-		"kept_word": {"trust": 4}
+		"noise": {
+			"fear": 3,
+			"affection": -1
+		},
+		"gift_liked": {
+			"affection": 5,
+			"trust": 2
+		},
+		"curious_about_life": {
+			"respect": 2
+		},
+		"kept_word": {
+			"trust": 4
+		}
 	},
-	"likes": ["glowbeet", "blackstone"],
-	"loves": ["glowbeet_stew"],
-	"dislikes": ["thermal_ore", "brass_scrap"],
-	"tolerance": {"sour": 0.6, "heat": 60, "noise": 3},
+	"likes": [
+		"glowbeet",
+		"blackstone"
+	],
+	"loves": [
+		"glowbeet_stew"
+	],
+	"dislikes": [
+		"thermal_ore",
+		"brass_scrap"
+	],
+	"tolerance": {
+		"sour": 0.6,
+		"heat": 60,
+		"noise": 3
+	},
 	"visits": "market",
 	"schedule": [
-		{"from": "00:00", "to": "23:59", "at": "away", "do": "away", "why": "In the Blackstone."},
-		{"from": "10:00", "to": "17:00", "at": "board", "do": "trade", "why": "Market day in Wick.", "when": ["market_day", "noise_lane<6"]}
-	]
+		{
+			"from": "00:00",
+			"to": "23:59",
+			"at": "away",
+			"do": "away",
+			"why": "In the Blackstone."
+		},
+		{
+			"from": "10:00",
+			"to": "17:00",
+			"at": "board",
+			"do": "trade",
+			"why": "Market day in Wick.",
+			"when": [
+				"market_day",
+				"noise_lane<6"
+			]
+		}
+	],
+	"unknown": "The stone creature"
 }
