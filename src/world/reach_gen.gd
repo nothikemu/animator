@@ -564,6 +564,10 @@ static func _place_ruin(a: AreaMap, node: Dictionary, rng: RandomNumberGenerator
 		a.blocked[(best.y + 1) * a.w + best.x + 3] = 1
 		a.resources.append({"id": "%s_coil" % a.id, "type": "story_cache", "x": best.x + 4, "z": best.y + 2,
 			"item": "governor_coil", "n": 1, "story": true})
+		# Wren's camp: a bedroll and cup by the valve, and her work lamp, still burning.
+		a.props.append({"type": "bedroll", "x": best.x + 1, "z": best.y + 3})
+		a.props.append({"type": "work_lamp", "x": best.x + 1, "z": best.y + 1, "block": true})
+		a.blocked[(best.y + 1) * a.w + best.x + 1] = 1
 	else:
 		a.props.append({"type": "broken_machine", "x": best.x + 2, "z": best.y + 1, "size": [2, 1], "block": true})
 		a.blocked[(best.y + 1) * a.w + best.x + 2] = 1

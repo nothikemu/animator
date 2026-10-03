@@ -179,6 +179,18 @@
   "frames": 1,
   "emit": true
  },
+ "story_cache": {
+  "w": 22,
+  "h": 18,
+  "frames": 1,
+  "emit": true
+ },
+ "bedroll": {
+  "w": 24,
+  "h": 10,
+  "frames": 1,
+  "emit": false
+ },
  "crate_broken": {
   "w": 18,
   "h": 16,

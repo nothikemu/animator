@@ -55,7 +55,7 @@
 	"sump": {
 		"name": "The Sump",
 		"ambient_light": "#463e6c",
-		"ambient_energy": 0.725,
+		"ambient_energy": 0.95,
 		"fog_color": "#120f22",
 		"fog_density": 0.034,
 		"grade": "violet",
@@ -63,6 +63,6 @@
 		"music": "reach",
 		"temp": 9,
 		"hazard": "sour",
-		"fill": 0.234
+		"fill": 0.3
 	}
 }

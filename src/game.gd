@@ -160,6 +160,14 @@ func _spawn_resources() -> void:
 		s.position = Vector3(float(r.x) + 0.5, area.world_y(int(r.x), int(r.z)), float(r.z) + 0.5)
 		s.name = String(r.id)
 		resources_root.add_child(s)
+		if tex_name == "story_cache":
+			# The one thing in the Reach that matters most is lit like it knows it.
+			var glint := OmniLight3D.new()
+			glint.light_color = Color("56e0d4")
+			glint.light_energy = 1.4
+			glint.omni_range = 3.5
+			glint.position = Vector3(0, 0.8, 0.6)
+			s.add_child(glint)
 
 
 func travel(to: String) -> void:
@@ -403,6 +411,8 @@ func mine_at(c: Vector2i) -> bool:
 				var take := mini(left, 2 if not r.get("story", false) else 1)
 				GameState.give(String(r.item), take)
 				Fx.item_pop(area_view, cell_pos(c), player, String(r.item), take)
+				if r.get("story", false) and String(r.item) == "governor_coil":
+					monologue("The crate's seal parts like it was waiting to. Inside, packed in wax paper and labelled in a neat hand: one governor coil. NEVER THE LAST ONE UP-LINE. Somebody already broke that rule once.")
 				left -= take
 				mined[id] = left
 				player.use_tool_anim(0.45)

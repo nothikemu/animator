@@ -127,6 +127,14 @@ static func run(game: Node, name: String) -> void:
 				Sim.plots[c].crop = "glowbeet"
 				game.actions._hands(c)
 				Engine.time_scale = 0.12)
+		"trunk":
+			# The Trunk chamber after the Tremor: Wren's camp and the spares crate.
+			GameState.set_flag("tremor_done")
+			for n: Dictionary in GameState.reach_graph.nodes:
+				if bool(n.get("trunk", false)):
+					game.load_area(String(n.id))
+					var rp: Vector2i = game.area.points.get("ruin", Vector2i(10, 10))
+					_place(game, Vector2(rp.x + 0.5, rp.y + 2.5))
 		"opening":
 			Clock.start(1, 7 * 60)
 			game.opening()

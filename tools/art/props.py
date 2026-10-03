@@ -398,6 +398,55 @@ def lore_page():
     return c, g
 
 
+def story_cache():
+    """The sealed Station 7 spares crate: brass-banded, with a lock plate that still glows."""
+    w, h = 22, 18
+    c, g = blank(w, h), blank(w, h)
+    wood = ramp(shade(pal("clay"), -0.22), 3, 0.3)
+    for y in range(3, h):
+        for x in range(1, w - 1):
+            col = wood[1] if (x + y * 3) % 11 else wood[2]
+            if y in (3, h - 1) or x in (1, w - 2):
+                col = wood[0]
+            c.set(x, y, col)
+    for x in (4, w - 5):                       # brass bands
+        c.vline(x, 3, h - 1, pal("brass"))
+        c.vline(x + 1, 3, h - 1, shade(pal("brass"), -0.35))
+    c.hline(1, w - 2, 7, shade(pal("brass_dark"), -0.1))
+    # Lock plate with a live cyan glint.
+    c.rect(9, 9, 5, 5, pal("brass_light"))
+    c.rect(10, 10, 3, 3, pal("glow"))
+    g.rect(10, 10, 3, 3, pal("glow"))
+    c.set(11, 11, pal("cream"))
+    g.set(11, 11, pal("cream"))
+    # Stencil: STN-7 (three pale ticks read as letters at this size).
+    for x in range(6, 16, 2):
+        c.set(x, 5, shade(pal("cream"), -0.35))
+    c.outline(-0.6)
+    return c, g
+
+
+def bedroll():
+    """Wren's camp: a rolled blanket, a tin cup beside it."""
+    w, h = 24, 10
+    c = blank(w, h)
+    cloth = ramp(mix(pal("violet_dark"), pal("clay"), 0.45), 3, 0.3)
+    for y in range(3, 9):
+        for x in range(2, 17):
+            c.set(x, y, cloth[1] if (x // 3 + y) % 2 else cloth[2])
+    for x in range(2, 17):
+        c.set(x, 3, cloth[0])
+    c.disc(4, 6, 2.5, cloth[0])
+    c.vline(9, 3, 8, pal("rope") if "rope" in globals() else shade(pal("sand"), -0.1))
+    c.vline(13, 3, 8, shade(pal("sand"), -0.1))
+    # tin cup
+    c.rect(19, 5, 3, 4, shade(pal("ash"), 0.1))
+    c.vline(22, 6, 7, shade(pal("ash"), -0.2))
+    c.hline(19, 21, 5, shade(pal("ash"), 0.35))
+    c.outline(-0.6)
+    return c
+
+
 def crate(seed, broken=False):
     w, h = 18, 16
     c = blank(w, h)
@@ -576,6 +625,9 @@ def build():
     save("moss_patch", big)
     c, g = lore_page()
     save("lore_page", c, g)
+    c, g = story_cache()
+    save("story_cache", c, g)
+    save("bedroll", bedroll())
     save("crate_broken", crate(740, True))
     save("crate_small", crate(741))
     for kind in ["glowbeet", "cave_moss", "sulfur_fern", "emberroot", "bellcap"]:

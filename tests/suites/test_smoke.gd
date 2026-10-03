@@ -65,6 +65,8 @@ func test_every_reach_cavern_loads() -> void:
 		eq(g.area.id, String(node.id), "loaded %s" % node.id)
 		for it in g.get_tree().get_nodes_in_group("interactable"):
 			(it as Interactable).prompt()
+		for r: Dictionary in g.area.resources:
+			check(ResourceLoader.exists("res://assets/textures/props/%s.png" % String(r.type)), "resource %s in %s has a sprite" % [r.type, node.id])
 		# Mine whatever is there (lore pages open a panel; close it).
 		GameState.add_tool("hammer")
 		for r: Dictionary in g.area.resources.duplicate():

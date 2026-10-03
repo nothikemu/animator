@@ -23,7 +23,7 @@ const BILLBOARDS := {
 	"mushroom": ["mushroom_", 2], "stalagmite": ["stalagmite_", 3], "shore_rock": ["shore_rock_", 2],
 	"rubble_small": ["rubble_small", 0], "rubble": ["rubble", 0], "salvage_harness": ["salvage_harness", 0],
 	"town_lamp": ["town_lamp", 0], "porch_lamp": ["porch_lamp", 0], "gear_pile": ["gear_pile", 0],
-	"work_lamp": ["work_lamp", 0], "ember_crystal": ["ember_crystal", 0], "pale_fungus": ["pale_fungus", 0],
+	"work_lamp": ["work_lamp", 0], "bedroll": ["bedroll", 0], "ember_crystal": ["ember_crystal", 0], "pale_fungus": ["pale_fungus", 0],
 	"pale_fungus_small": ["mushroom_", 2], "glowroot_fringe": ["glowroot_small_", 2],
 	"crate_broken": ["crate_broken", 0], "ash_pile": ["rubble_small", 0], "cinder_rock": ["shore_rock_", 2],
 	"reed": ["moss_tuft_", 3], "drip_rock": ["stalagmite_", 3], "rail": ["gear_pile", 0],
