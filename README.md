@@ -70,7 +70,7 @@ godot --headless --path . res://tests/test_runner.tscn               # everythin
 godot --headless --path . res://tests/test_runner.tscn -- --only=story
 ```
 
-The 93 tests cover:
+The 96 tests cover:
 - simulation conservation and behaviour
 - networks, machines, crops and the economy
 - saves (round trip, migration, corruption fallback)
