@@ -80,6 +80,10 @@ cut_amount={
 "type": "float",
 "value": 0.0
 }
+lamp_level={
+"type": "float",
+"value": 1.0
+}
 world_time={
 "type": "float",
 "value": 0.0

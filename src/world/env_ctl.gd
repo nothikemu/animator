@@ -103,12 +103,14 @@ func _process(delta: float) -> void:
 	var amb: Color = _current.ambient
 	var sour := Color("b5b84a")
 	# Time of day: the grove's glow lifts the ambient light a little at Bloom.
-	var energy: float = float(_current.ambient_energy) * (0.75 + 0.35 * glow)
+	var energy: float = float(_current.ambient_energy) * (0.6 + 0.65 * glow)
+	# Waking hours read clearly; the Hush is for lamps.
+	e.tonemap_exposure = lerpf(1.28, 0.98, Clock.darkness())
 	e.ambient_light_color = amb.lerp(sour.darkened(0.3), pollution * 0.6)
 	e.ambient_light_energy = energy
 	e.fog_light_color = (_current.fog as Color).lerp(sour.darkened(0.45), pollution * 0.85)
 	if fill:
-		fill.light_energy = float(_current.get("fill", 0.3)) * (0.7 + 0.4 * glow)
+		fill.light_energy = float(_current.get("fill", 0.3)) * (0.55 + 0.75 * glow)
 		fill.light_color = Color("8c9cc8").lerp(Color("c8c47a"), pollution * 0.5)
 	e.fog_density = float(_current.fog_density) * (1.0 + pollution * 2.4)
 	e.adjustment_saturation = lerpf(1.06, 0.62, pollution)

@@ -117,3 +117,41 @@ static func ambient(parent: Node3D, biome: String, w: float, d: float) -> Node3D
 	root.add_child(p)
 	parent.add_child(root)
 	return root
+
+
+## Quietlight's lampmoths: thousands of soft lights rising off the lake (or a thin few when
+## the air is poor). Named "Lampmoths" so the view can find and remove it in the morning.
+static func lampmoths(parent: Node3D, w: float, d: float, bright: bool) -> void:
+	var p := GPUParticles3D.new()
+	p.name = "Lampmoths"
+	p.amount = maxi(16, int((700 if bright else 90) * maxf(_quality(), 0.3)))
+	p.lifetime = 14.0
+	p.preprocess = 6.0
+	p.visibility_aabb = AABB(Vector3(-4, -2, -4), Vector3(w + 8, 18, d + 8))
+	var pm := ParticleProcessMaterial.new()
+	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	pm.emission_box_extents = Vector3(w * 0.42, 0.3, 5.0)   # the lake and its shore
+	pm.direction = Vector3(0, 1, 0)
+	pm.spread = 25.0
+	pm.initial_velocity_min = 0.15
+	pm.initial_velocity_max = 0.45
+	pm.gravity = Vector3(0.05, 0.08, 0)
+	pm.turbulence_enabled = true
+	pm.turbulence_noise_strength = 0.9
+	pm.turbulence_noise_scale = 3.0
+	var grad := Gradient.new()
+	grad.set_color(0, Color(0.34, 0.88, 0.83, 0.0))
+	grad.add_point(0.15, Color(0.34, 0.88, 0.83, 1.0))
+	grad.add_point(0.6, Color(0.96, 0.78, 0.46, 1.0))
+	grad.set_color(1, Color(0.96, 0.78, 0.46, 0.0))
+	var gt := GradientTexture1D.new()
+	gt.gradient = grad
+	pm.color_ramp = gt
+	p.process_material = pm
+	var q := QuadMesh.new()
+	q.size = Vector2.ONE * (0.12 if bright else 0.08)
+	p.draw_pass_1 = q
+	var m := _mat(Color.WHITE, 4.0 if bright else 1.6)
+	p.material_override = m
+	p.position = Vector3(w * 0.5, 0.2, 25.5)
+	parent.add_child(p)

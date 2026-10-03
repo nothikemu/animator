@@ -80,6 +80,32 @@ static func run(game: Node, name: String) -> void:
 			Sim.repair("pipe", Vector2i(24, 13))
 			for i in 4:
 				Threads.check()
+		"talk":
+			# talk:<npc> — opens that resident's best conversation.
+			Clock.start(1, 8 * 60)
+			GameState.set_flag("intro_done")
+			var who: String = parts[1] if parts.size() > 1 else "barnaby"
+			game.get_tree().create_timer(0.3).timeout.connect(func() -> void:
+				var n: Npc = game.npcs.get(who)
+				if n:
+					game.player.place(Vector2(n.position.x - 1.2, n.position.z + 0.6), game.area)
+					game.rig.snap()
+					game.start_dialogue(n))
+		"quietlight":
+			Clock.start(5, 22 * 60 + 20)
+			_place(game, Vector2(14.5, 21.5))
+			GameState.set_flag("intro_done")
+			GameState.set_flag("quietlight_announced")
+			Director.trigger("quietlight")
+		"tremor":
+			# The Tremor's aftermath seen through the glass: fissure open, sour gas climbing.
+			Clock.start(6, 10 * 60)
+			_place(game, Vector2(8.5, 19.5))
+			GameState.add_tool("glass")
+			Director.trigger("tremor")
+			for i in 90:
+				Sim._field_step()
+			game.toggle_cut_view.call_deferred()
 		"opening":
 			Clock.start(1, 7 * 60)
 			game.opening()

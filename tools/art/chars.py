@@ -338,7 +338,7 @@ def draw_player(c, g, p):
 # ---------------------------------------------------------------------------------------------
 BARNABY = {
     "coat": C("#2e2a3a"), "coat_light": C("#45405a"), "brass": C("#a8843f"), "verd": pal("verdigris"),
-    "glass": C("#1d2a30"), "glint": pal("glow"), "glove": C("#c9b994"), "trouser": C("#262430"),
+    "glass": C("#1d2a30"), "glint": pal("cream"), "glove": C("#c9b994"), "trouser": C("#262430"),
     "boot": C("#2b221d"), "moss": pal("glow"), "toolroll": C("#6b5040"),
 }
 

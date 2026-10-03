@@ -117,7 +117,9 @@ func _build() -> void:
 	tp.add_child(th)
 	root.add_child(tp)
 	# The hand tool means nothing in the cut view, which has its own tool strip.
-	Events.view_mode_changed.connect(func(m: StringName) -> void: tp.visible = m != &"cut")
+	Events.view_mode_changed.connect(func(m: StringName) -> void:
+		tp.visible = m != &"cut"
+		thread_label.visible = m != &"cut")
 	# Prompt (bottom-centre).
 	# A bottom-wide centring strip keeps the prompt centred whatever its width.
 	var prompt_strip := CenterContainer.new()

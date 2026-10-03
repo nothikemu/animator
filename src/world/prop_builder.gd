@@ -190,6 +190,8 @@ func _billboard(tex_name: String, pos: Vector3, scale := 1.0, sway := false, cut
 		return null
 	var tex: Texture2D = t[0]
 	var opts := {"rim_strength": 0.25}
+	if tex_name in ["town_lamp", "porch_lamp", "work_lamp"]:
+		opts["is_lamp"] = true
 	if sway:
 		opts["sway"] = 0.05
 	if not cut:

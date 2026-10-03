@@ -65,8 +65,15 @@ func update_lights(delta: float, glow: float, dark: float, lamp_quality: float) 
 	var quiet := GameState.has_flag("quietlight_active")
 	var bloom := 1.0
 	if quiet:
-		bloom = 2.6 if String(GameState.flag("ql_bloom")) == "bright" else 1.2
+		bloom = 3.2 if String(GameState.flag("ql_bloom")) == "bright" else 1.2
 	_quiet = move_toward(_quiet, 1.0 if quiet else 0.0, delta * 0.35)
+	RenderingServer.global_shader_parameter_set("lamp_level", 1.0 - 0.96 * _quiet)
+	if _quiet > 0.0:
+		RenderingServer.global_shader_parameter_set("glow_level", glow * lerpf(1.0, bloom, _quiet))
+		if _quiet > 0.4 and not has_node("Lampmoths"):
+			Fx.lampmoths(self, area.w, area.d, bloom > 2.0)
+	elif has_node("Lampmoths"):
+		get_node("Lampmoths").queue_free()
 	for l in props.lights:
 		var base := float(l.get_meta("base_energy", 1.0))
 		var kind := String(l.get_meta("kind", ""))

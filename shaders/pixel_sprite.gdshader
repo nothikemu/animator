@@ -21,6 +21,8 @@ uniform float rim_strength = 0.65;
 uniform float sway = 0.0;                  // plants: top sways in the cave draught
 instance uniform float fade = 1.0;                  // dissolve for appear/disappear
 uniform bool cuttable = true;
+uniform bool is_lamp = false;               // lamps go dark for Quietlight (global lamp_level)
+global uniform float lamp_level;
 
 global uniform float world_time;
 global uniform float glow_level;
@@ -29,6 +31,7 @@ global uniform float cut_amount;
 global uniform float cut_z;
 
 varying vec3 wpos;
+varying float sink_k;
 
 float hash2(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -56,8 +59,10 @@ void vertex() {
 		MODELVIEW_NORMAL_MATRIX = mat3(VIEW_MATRIX);
 	}
 	wpos = billboard ? VERTEX : (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	sink_k = 0.0;
 	if (cuttable && cut_amount > 0.0 && origin.z > cut_z + 0.01) {
 		float k = clamp(cut_amount * 1.8 - (origin.z - cut_z) * 0.035, 0.0, 1.0);
+		sink_k = k;
 		if (billboard) {
 			VERTEX.y -= k * k * 14.0;
 		} else {
@@ -81,13 +86,17 @@ void fragment() {
 	if (fade < 1.0 && hash2(floor(suv * vec2(textureSize(sheet, 0)))) > fade) {
 		discard;
 	}
+	// Props in front of the cut crumble away with the ground they stood on.
+	if (sink_k > 0.0 && hash2(floor(suv * vec2(textureSize(sheet, 0))) + 7.0) < sink_k * 1.15) {
+		discard;
+	}
 	vec3 albedo = c.rgb * tint.rgb;
 	albedo = mix(albedo, flash_color.rgb, flash_color.a);
 	ALBEDO = albedo;
 	if (has_emit) {
 		// Weight by alpha: the importer's "fix alpha border" fills transparent texels' RGB.
 		vec4 e = texture(emit_sheet, suv);
-		EMISSION = e.rgb * e.a * emit_strength * (0.55 + 0.45 * glow_level);
+		EMISSION = e.rgb * e.a * emit_strength * (is_lamp ? lamp_level : (0.55 + 0.45 * glow_level));
 	}
 	ROUGHNESS = 1.0;
 	BACKLIGHT = vec3(0.0);

@@ -57,8 +57,9 @@ def moss(seed, deep=False):
     base = pal("moss_dark") if not deep else mix(pal("moss_dark"), pal("verdigris"), 0.35)
     c = noise_fill(shade(base, -0.08), seed, 0.3, 4, 1.25)
     r = rng(seed)
-    light = pal("moss") if not deep else mix(pal("moss"), pal("glow_dark"), 0.25)
-    tip = pal("moss_light") if not deep else mix(pal("moss_light"), pal("glow"), 0.3)
+    # Muted greens: the grove's colour should come from glowroot light, not lime moss.
+    light = mix(pal("moss"), pal("moss_dark"), 0.3) if not deep else mix(pal("moss"), pal("glow_dark"), 0.25)
+    tip = mix(pal("moss_light"), pal("moss"), 0.55) if not deep else mix(pal("moss_light"), pal("glow"), 0.3)
     for _ in range(9 if not deep else 12):
         x, y = r.randrange(T), r.randrange(T)
         for dx, dy in [(0, 0), (1, 0), (0, 1), (-1, 0)]:
@@ -394,7 +395,7 @@ def _strata(name, seed):
                 c.set(x, y, shade(pal("moss_light"), -0.25 if band else -0.4))
         return c, None
     if name == "bedrock":
-        c = noise_fill(shade(pal("charcoal"), 0.1), seed, 0.25, 3, 1.3)
+        c, _ = rock_side(seed, shade(mix(pal("charcoal"), pal("slate"), 0.45), 0.02))
         return c, None
     if name == "ember":
         c, _ = rock_side(seed, shade(mix(pal("basalt"), pal("danger"), 0.18), 0.04))
@@ -590,7 +591,7 @@ def build():
     put("roof_slate_0", roof_slate(350))
     put("roof_moss_0", roof_moss(351))
     put("roof_metal_0", roof_metal(352))
-    put("roof_slate_dark_0", roof_slate(353, shade(pal("violet_dark"), -0.35)))
+    put("roof_slate_dark_0", roof_slate(353, shade(mix(pal("violet_dark"), pal("slate"), 0.55), -0.18)))
     t, g = window(True)
     put("window_lit_0", t, g)
     t, _ = window(False)
