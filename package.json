@@ -1,0 +1,61 @@
+{
+  "name": "git-commit-animator",
+  "version": "1.0.0",
+  "description": "Turn any git diff into a beautiful 60fps MP4 or GIF of the code typing itself out in a modern editor. Perfect for READMEs and docs.",
+  "keywords": [
+    "git",
+    "diff",
+    "commit",
+    "animation",
+    "typing",
+    "video",
+    "gif",
+    "mp4",
+    "readme",
+    "cli",
+    "puppeteer",
+    "ffmpeg"
+  ],
+  "license": "MIT",
+  "author": "Git-Commit Animator contributors",
+  "homepage": "https://github.com/nothikemu/animator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nothikemu/animator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nothikemu/animator/issues"
+  },
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "git-commit-animator": "bin/git-commit-animator.js",
+    "git-animate": "bin/git-commit-animator.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "start": "node bin/git-commit-animator.js",
+    "test": "node --test --test-reporter=spec \"test/**/*.test.js\"",
+    "test:unit": "node --test --test-reporter=spec test/highlighter.test.js test/timeline.test.js test/git.test.js test/cli.test.js test/encoder.test.js test/renderer.test.js",
+    "check": "node --check bin/git-commit-animator.js && node -e \"import('./src/index.js').then(() => console.log('ok'))\"",
+    "demo": "node bin/git-commit-animator.js --output demo.mp4",
+    "demo:gif": "node bin/git-commit-animator.js --output demo.gif --size 960x540"
+  },
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.3",
+    "puppeteer": "^25.12.0"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+
+# Generated animations (default output names)
+/animation.mp4
+/animation.gif
+/demo.mp4
+/demo.gif
