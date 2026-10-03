@@ -45,6 +45,11 @@ func _ready() -> void:
 	_build_ui()
 	Audio.music("menu", {"pad": 1.0, "melody": 0.7, "glass": 0.6, "drone": 0.8})
 	Audio.ambience("grove")
+	if Dev.has_arg("autostart"):
+		# Dev/capture path: press New game -> Begin, exactly as a player would.
+		get_tree().create_timer(0.4).timeout.connect(func() -> void:
+			_show_new_game()
+			_start_new())
 
 
 func _process(delta: float) -> void:

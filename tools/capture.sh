@@ -11,4 +11,4 @@ if [ "$SCEN" = "menu" ]; then
 else
   TARGET="--scenario=$SCEN"
 fi
-timeout 240 xvfb-run -a -s "-screen 0 1600x900x24" godot --path . --resolution 1280x720 -- "$TARGET" --capture="$OUT" "$@" 2>&1 | grep -v -E "ALSA|audio_driver|All audio drivers|at: (init_output|initialize)|^\s*$" | tail -15
+timeout 240 xvfb-run -a -s "-screen 0 1600x900x24" godot --path . --resolution 1280x720 -- "$TARGET" --capture="$OUT" "$@" 2>&1 | grep -v -E "ALSA|audio_driver|All audio drivers|at: (init_output|initialize)|status < 0|^\s*$" | tail -15
