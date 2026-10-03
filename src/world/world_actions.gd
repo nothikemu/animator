@@ -265,6 +265,7 @@ func _hands(cell: Vector2i) -> bool:
 		return true
 	for item in got:
 		GameState.give(item, int(got[item]))
+		Fx.item_pop(game.area_view, game.cell_pos(cell), game.player, String(item), int(got[item]))
 	GameState.add_deed("harvested", 1.0, {"crop": crop})
 	game.player.use_tool_anim(0.35)
 	game.fx_burst(cell, "harvest")

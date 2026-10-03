@@ -68,3 +68,11 @@ func test_every_crop_definition_is_growable_somewhere() -> void:
 			env[cond] = (float(r[0]) + float(r[1])) * 0.5
 		var f := CropLogic.factors(c, env)
 		near(CropLogic.growth_rate(c, f), 1.0, 0.0001, "%s grows at its range midpoint" % id)
+
+
+func test_every_crop_has_its_sprite_and_seed_item() -> void:
+	for id: String in Content.crops:
+		var c: Dictionary = Content.crop(id)
+		var path := "res://assets/textures/props/%s.png" % String(c.get("sprite", "crop_" + id))
+		check(ResourceLoader.exists(path), "crop %s sprite %s exists" % [id, path])
+		check(Content.items.has(String(c.get("seed", ""))), "crop %s seed item exists" % id)

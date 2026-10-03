@@ -155,3 +155,31 @@ static func lampmoths(parent: Node3D, w: float, d: float, bright: bool) -> void:
 	p.material_override = m
 	p.position = Vector3(w * 0.5, 0.2, 25.5)
 	parent.add_child(p)
+
+
+## Collected items pop out of where they were gathered, arc up and fly into the player.
+static func item_pop(parent: Node3D, from: Vector3, target: Node3D, item: String, count: int) -> void:
+	var n := clampi(count, 1, 5)
+	for i in n:
+		var s := Sprite3D.new()
+		s.texture = UiTheme.icon(item)
+		s.pixel_size = 0.035
+		s.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		s.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		s.no_depth_test = true
+		s.render_priority = 3
+		s.shaded = false
+		s.position = from + Vector3(0, 0.3, 0)
+		parent.add_child(s)
+		var side := (float(i) - float(n - 1) * 0.5) * 0.35
+		var peak := from + Vector3(side, 1.3 + randf() * 0.3, 0.1)
+		var tw := s.create_tween()
+		tw.tween_interval(i * 0.07)
+		tw.tween_property(s, "position", peak, 0.28).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tw.tween_method(func(k: float) -> void:
+			if is_instance_valid(target):
+				s.position = peak.lerp(target.global_position + Vector3(0, 1.0, 0), k)
+				s.scale = Vector3.ONE * lerpf(1.0, 0.4, k), 0.0, 1.0, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		tw.tween_callback(func() -> void:
+			Audio.ui("ui_tick", -14.0)
+			s.queue_free())

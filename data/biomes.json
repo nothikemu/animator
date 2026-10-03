@@ -16,7 +16,7 @@
 	"fringe": {
 		"name": "Glowroot Fringe",
 		"ambient_light": "#465c7c",
-		"ambient_energy": 0.7,
+		"ambient_energy": 0.875,
 		"fog_color": "#12202a",
 		"fog_density": 0.024,
 		"grade": "cool",
@@ -24,12 +24,12 @@
 		"music": "reach",
 		"temp": 17,
 		"hazard": "",
-		"fill": 0.26
+		"fill": 0.338
 	},
 	"blackstone": {
 		"name": "Blackstone Cuts",
 		"ambient_light": "#5a5260",
-		"ambient_energy": 0.62,
+		"ambient_energy": 0.775,
 		"fog_color": "#1a1716",
 		"fog_density": 0.022,
 		"grade": "rust",
@@ -37,12 +37,12 @@
 		"music": "reach",
 		"temp": 15,
 		"hazard": "dark",
-		"fill": 0.22
+		"fill": 0.286
 	},
 	"ember": {
 		"name": "Ember Vents",
 		"ambient_light": "#6a4038",
-		"ambient_energy": 0.6,
+		"ambient_energy": 0.75,
 		"fog_color": "#2a1410",
 		"fog_density": 0.03,
 		"grade": "ember",
@@ -50,12 +50,12 @@
 		"music": "reach",
 		"temp": 38,
 		"hazard": "heat",
-		"fill": 0.18
+		"fill": 0.234
 	},
 	"sump": {
 		"name": "The Sump",
 		"ambient_light": "#463e6c",
-		"ambient_energy": 0.58,
+		"ambient_energy": 0.725,
 		"fog_color": "#120f22",
 		"fog_density": 0.034,
 		"grade": "violet",
@@ -63,6 +63,6 @@
 		"music": "reach",
 		"temp": 9,
 		"hazard": "sour",
-		"fill": 0.18
+		"fill": 0.234
 	}
 }

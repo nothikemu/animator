@@ -402,6 +402,7 @@ func mine_at(c: Vector2i) -> bool:
 			elif left > 0 and String(r.item) != "":
 				var take := mini(left, 2 if not r.get("story", false) else 1)
 				GameState.give(String(r.item), take)
+				Fx.item_pop(area_view, cell_pos(c), player, String(r.item), take)
 				left -= take
 				mined[id] = left
 				player.use_tool_anim(0.45)

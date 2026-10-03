@@ -106,6 +106,27 @@ static func run(game: Node, name: String) -> void:
 			for i in 90:
 				Sim._field_step()
 			game.toggle_cut_view.call_deferred()
+		"harvest":
+			# A bed of glowbeets at every stage, then one harvested in slow motion.
+			Clock.start(2, 13 * 60)
+			_place(game, Vector2(10.5, 17.2))
+			GameState.add_tool("tiller")
+			var k := 0
+			for x in range(7, 15):
+				for z in range(15, 19):
+					var c := Vector2i(x, z)
+					if Sim.till(c) and Sim.plant(c, "glowbeet" if (x + z) % 3 else "cave_moss"):
+						Sim.plots[c].growth = clampf(0.15 + 0.12 * float(k % 9), 0.0, 1.0)
+						Sim.plots[c].water = 0.8
+						k += 1
+			if game.farm:
+				game.farm.refresh_all()
+			game.get_tree().create_timer(1.0).timeout.connect(func() -> void:
+				var c := Vector2i(10, 16)
+				Sim.plots[c].growth = 1.0
+				Sim.plots[c].crop = "glowbeet"
+				game.actions._hands(c)
+				Engine.time_scale = 0.12)
 		"opening":
 			Clock.start(1, 7 * 60)
 			game.opening()

@@ -62,6 +62,9 @@ func _refresh(cell: Vector2i) -> void:
 			if entry.has("crop"):
 				entry.crop.queue_free()
 			var t := PixelSprite3D.load_tex("res://assets/textures/props/%s.png" % tex_name)
+			if t[0] == null:
+				Log.warn("farm", "missing crop sprite %s; using glowbeet's" % tex_name)
+				t = PixelSprite3D.load_tex("res://assets/textures/props/crop_glowbeet.png")
 			var s := PixelSprite3D.new()
 			var tex: Texture2D = t[0]
 			s.setup(tex, t[1], Vector2i(tex.get_width() / 5, tex.get_height()), Vector2i(5, 1), {"rim_strength": 0.3, "sway": 0.02})

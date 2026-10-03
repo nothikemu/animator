@@ -49,10 +49,17 @@ static func build(area: AreaMap, material: Material, water_material: Material) -
 	return root
 
 
+## Cavern rock is drawn cut down to an uneven low plateau (the diorama convention: you look
+## *into* a cave from above, not at its walls). Collision still treats it as full height.
+const CAVE_WALL := 1.5
+
+
 static func top_y(area: AreaMap, x: int, z: int) -> float:
 	var h := area.h_at(x, z)
 	if h == AreaMap.WATER_LEVEL:
 		return LAKE_BED
+	if h >= AreaMap.WALL_LEVEL and area.id != "wick":
+		return CAVE_WALL + float(absi((x / 2) * 73 + (z / 2) * 151) % 5) * 0.12
 	return float(h) * AreaMap.STEP
 
 
@@ -86,8 +93,11 @@ static func _cell(st: SurfaceTool, area: AreaMap, x: int, z: int) -> void:
 	var a2 := _corner_ao(area, x, z, 1, 1, y)
 	var a3 := _corner_ao(area, x, z, -1, 1, y)
 	var tint := _tint(area, x, z)
+	var top_tint := tint
+	if wall and area.id != "wick":
+		top_tint = tint.darkened(0.78)   # the cut top of the rock mass reads as depth, not floor
 	_quad(st, [p0, p1, p2, p3], [uv.position, uv.position + Vector2(uv.size.x, 0), uv.end,
-		uv.position + Vector2(0, uv.size.y)], [tint * a0, tint * a1, tint * a2, tint * a3])
+		uv.position + Vector2(0, uv.size.y)], [top_tint * a0, top_tint * a1, top_tint * a2, top_tint * a3])
 	# Sides where the neighbour is lower.
 	var side_base: String = "side_rock" if wall else String(SIDE.get(mat_name, "side_rock"))
 	if wall and (x * 7 + z * 13) % 9 == 0:
