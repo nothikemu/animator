@@ -54,6 +54,10 @@ func resume(reason: String) -> void:
 	_pause_reasons.erase(reason)
 
 
+func clear_pauses() -> void:
+	_pause_reasons.clear()
+
+
 func is_paused() -> bool:
 	return not _pause_reasons.is_empty() or not running
 

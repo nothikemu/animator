@@ -19,6 +19,34 @@ func _ready() -> void:
 			capture_args[arg.substr(2)] = "true"
 
 
+## --capture=<png> [--frames=N] [--keep] [--ui=<panel>]: screenshot after N frames, in any scene.
+var _capture_frames := -1
+
+
+func _process(_delta: float) -> void:
+	if _capture_frames < 0:
+		if has_arg("capture") and _capture_frames == -1:
+			_capture_frames = int(arg("frames", "45"))
+			if has_arg("ui"):
+				get_tree().create_timer(0.5).timeout.connect(func() -> void:
+					var parts := arg("ui").split(":", true, 1)
+					Events.ui_open.emit(StringName(parts[0]), {"arg": parts[1] if parts.size() > 1 else ""}))
+		return
+	_capture_frames -= 1
+	if _capture_frames == 0:
+		_capture_frames = -2
+		_capture()
+
+
+func _capture() -> void:
+	await RenderingServer.frame_post_draw
+	var img := get_viewport().get_texture().get_image()
+	img.save_png(arg("capture"))
+	Log.info("capture", "saved %s (%dx%d)" % [arg("capture"), img.get_width(), img.get_height()])
+	if not has_arg("keep"):
+		get_tree().quit()
+
+
 func arg(name: String, default := "") -> String:
 	return String(capture_args.get(name, default))
 

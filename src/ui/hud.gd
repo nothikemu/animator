@@ -35,6 +35,11 @@ func _ready() -> void:
 	Events.noticed.connect(func(_npc: StringName, text: String) -> void: notice(text))
 	Events.caption.connect(caption)
 	Events.prompt_changed.connect(set_prompt)
+	# Panels cover the middle of the screen; keep the corners quiet while they're up.
+	Events.ui_open.connect(func(_p: StringName, _d: Dictionary) -> void:
+		thread_label.visible = false
+		prompt_panel.visible = false)
+	Events.ui_closed.connect(func(_p: StringName) -> void: thread_label.visible = true)
 	Events.save_started.connect(func(_s: int) -> void: _saving = true; _save_t = 0.0)
 	Events.save_finished.connect(_on_saved)
 	Events.settings_changed.connect(func(s: StringName) -> void:

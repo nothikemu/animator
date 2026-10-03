@@ -54,6 +54,32 @@ static func run(game: Node, name: String) -> void:
 				game.get_tree().create_timer(0.1).timeout.connect(func() -> void:
 					if game.engineering:
 						game.engineering.overlay = parts[1])
+		"midgame":
+			# A plausible day-3 state for UI and dialogue checks.
+			Clock.start(3, 13 * 60)
+			_place(game, Vector2(30.5, 13.5))
+			for f in ["intro_done", "lease_tools", "lease_seed_tin", "got_glass", "learned_pipes", "wick_revealed"]:
+				GameState.set_flag(f)
+			GameState.discover("places", "undercroft")
+			for t in ["tiller", "can", "glass", "hammer"]:
+				GameState.add_tool(t)
+			for id in Content.npcs:
+				Society.mark_met(id)
+			Society.change("barnaby", "trust", 12.0)
+			Society.change("barnaby", "shared", 6.0)
+			Society.change("hesper", "affection", 11.0)
+			Society.change("odile", "respect", 8.0)
+			Society.change("mags", "affection", 14.0)
+			Society.change("grist", "fear", 6.0)
+			for item in [["glowbeet", 8], ["moss_fiber", 6], ["brass_scrap", 5], ["glowglass", 2], ["pipe_section", 4], ["ember_resin", 3], ["sulfur", 2], ["bellcap", 1]]:
+				GameState.give(String(item[0]), int(item[1]), true)
+			GameState.add_money(64)
+			for l in ["moss_frames", "first_knock", "tier1", "relic_crew_locker"]:
+				GameState.discover("lore", l)
+			GameState.add_deed("harvested", 4.0)
+			Sim.repair("pipe", Vector2i(24, 13))
+			for i in 4:
+				Threads.check()
 		"opening":
 			Clock.start(1, 7 * 60)
 			game.opening()

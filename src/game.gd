@@ -18,7 +18,6 @@ var interact_root: Node3D
 var resources_root: Node3D
 var engineering: Node                    ## EngineeringView (cut mode), created on demand
 var panels: Node                         ## UI panel host (inventory, craft, journal...)
-var _capture_frames := -1
 var _target: Interactable
 var _busy := false                       ## transitions in progress
 var _talking_npc: Npc
@@ -60,21 +59,11 @@ func _ready() -> void:
 		Scenarios.run(self, Dev.arg("scenario"))
 	elif not GameState.has_flag("intro_done"):
 		opening()
-	if Dev.has_arg("capture"):
-		_capture_frames = int(Dev.arg("frames", "45"))
 	_update_music()
 
 
 func _dev_new_game() -> void:
-	var seed_v := int(Dev.arg("seed", "1234"))
-	GameState.new_game(seed_v, "Salvager")
-	Clock.start(1, 7 * 60)
-	Sim.new_world(seed_v)
-	Society.reset()
-	Economy.reset()
-	Threads.reset()
-	Director.reset(seed_v)
-	Dialogue.reset()
+	GameFlow.new_game(int(Dev.arg("seed", "1234")), "Salvager")
 
 
 # --- Areas ------------------------------------------------------------------------------------
@@ -257,10 +246,6 @@ func _process(delta: float) -> void:
 		_check_reveal()
 		for n: Npc in npcs.values():
 			n.try_bark(player.global_position)
-	if _capture_frames >= 0:
-		_capture_frames -= 1
-		if _capture_frames == 0:
-			_capture()
 
 
 func _update_target() -> void:
@@ -458,16 +443,6 @@ func _update_music() -> void:
 		stems.melody = 0.35
 		stems.counter = 0.0
 	Audio.music(cue, stems)
-
-
-func _capture() -> void:
-	var path := Dev.arg("capture")
-	await RenderingServer.frame_post_draw
-	var img := get_viewport().get_texture().get_image()
-	img.save_png(path)
-	Log.info("capture", "saved %s (%dx%d)" % [path, img.get_width(), img.get_height()])
-	if not Dev.has_arg("keep"):
-		get_tree().quit()
 
 
 # --- Story sequences --------------------------------------------------------------------------

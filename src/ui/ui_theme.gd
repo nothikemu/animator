@@ -34,16 +34,24 @@ static func invalidate() -> void:
 	_cache = null
 
 
+static var _fonts: Dictionary = {}
+
+
 static func font(bold := false) -> Font:
 	if Settings.access.get("readable_font", false):
 		return load(READABLE_BOLD if bold else READABLE_FONT)
-	var f: FontFile = load(PIXEL_FONT)
+	var key := "bold" if bold else "regular"
+	if _fonts.has(key):
+		return _fonts[key]
+	# The pixel font's "fi"/"fl" ligatures render as a single odd glyph; spell letters out.
+	var ts := TextServerManager.get_primary_interface()
+	var v := FontVariation.new()
+	v.base_font = load(PIXEL_FONT)
+	v.opentype_features = {ts.name_to_tag("liga"): 0, ts.name_to_tag("clig"): 0, ts.name_to_tag("dlig"): 0}
 	if bold:
-		var v := FontVariation.new()
-		v.base_font = f
 		v.variation_opentype = {"wght": 700}
-		return v
-	return f
+	_fonts[key] = v
+	return v
 
 
 static func size(base: int) -> int:
@@ -108,6 +116,16 @@ static func build() -> Theme:
 		t.set_color("font_pressed_color", cls, ACCENT)
 		t.set_color("font_disabled_color", cls, Color("6a6458"))
 		t.set_font_size("font_size", cls, size(20))
+	# Toggles: no box of their own; the switch/tick is the control. Focus still shows.
+	for cls in ["CheckBox", "CheckButton"]:
+		var flat := StyleBoxEmpty.new()
+		flat.content_margin_left = 6
+		flat.content_margin_right = 6
+		flat.content_margin_top = 4
+		flat.content_margin_bottom = 4
+		for st in ["normal", "pressed", "hover", "hover_pressed", "disabled"]:
+			t.set_stylebox(st, cls, flat)
+		t.set_stylebox("focus", cls, focus)
 	# Sliders
 	var track := StyleBoxFlat.new()
 	track.bg_color = Color("2c2a33")
