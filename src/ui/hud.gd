@@ -32,6 +32,10 @@ func _ready() -> void:
 	add_child(root)
 	_build()
 	Events.toast.connect(toast)
+	Events.toast.connect(func(_t: String, kind: StringName) -> void:
+		if kind in [&"thread", &"learn", &"good"]:
+			Audio.ui("chime", -10.0))
+	Events.noticed.connect(func(_n: StringName, _t: String) -> void: Audio.ui("notice", -12.0))
 	Events.noticed.connect(func(_npc: StringName, text: String) -> void: notice(text))
 	Events.caption.connect(caption)
 	Events.prompt_changed.connect(set_prompt)

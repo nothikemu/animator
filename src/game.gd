@@ -53,6 +53,9 @@ func _ready() -> void:
 	Clock.running = true
 	Clock.minute_tick.connect(_on_minute)
 	Clock.exhausted.connect(_on_exhausted)
+	Clock.phase_changed.connect(func(_p: String) -> void: _update_music())
+	Clock.hour_changed.connect(func(_h: int) -> void: _update_music())
+	Events.world_event.connect(func(_id: StringName, _d: Dictionary) -> void: _update_music())
 	Events.dialogue_ended.connect(_on_dialogue_ended)
 	Events.grid_cells_changed.connect(func(_c: Array) -> void: pass)
 	if Dev.has_arg("scenario"):
@@ -431,18 +434,30 @@ func toggle_cut_view() -> void:
 
 func _update_music() -> void:
 	var cue := "wick"
-	if GameState.view_mode == "cut":
+	var crisis_air := float(Sim.fact("pollution")) if Sim.grid != null else 0.0
+	var crisis := GameState.has_flag("tremor_done") and not bool(Sim.fact("fissure_sealed"))
+	if GameState.has_flag("finale_playing") or (GameState.has_flag("knock_heard") and GameState.view_mode == "cut"):
+		cue = "station"
+	elif GameState.view_mode == "cut":
 		cue = "cut"
 	elif area and area.id != "wick":
 		cue = "reach"
 	elif Clock.phase() in ["hush", "night"]:
 		cue = "hush"
-	var stems := {"pad": 1.0, "melody": 0.8, "counter": 0.5 if Clock.phase() == "bloom" else 0.0, "pulse": 0.0,
-		"glass": 0.6, "drone": 1.0, "bass": 1.0, "ostinato": 0.8, "perc": 0.6, "alarm": 0.0}
+	var stems := {"pad": 1.0, "melody": 0.8, "counter": 0.55 if Clock.phase() == "bloom" else 0.0,
+		"pulse": 0.6 if Clock.phase() in ["wake", "bloom"] else 0.25, "glass": 0.7, "drone": 1.0,
+		"bass": 1.0, "ostinato": 0.85, "perc": 0.7, "alarm": 0.9 if crisis or int(Sim.fact("leaks") if Sim.grid != null else 0) >= 4 else 0.0,
+		"brass": 0.9, "knock": 1.0 if GameState.has_flag("knock_heard") else 0.0}
+	if area and area.id != "wick":
+		stems.pulse = 0.7 if area.biome in ["sump", "ember"] else 0.35
 	if rig and rig.mode == "dialogue":
 		stems.melody = 0.35
 		stems.counter = 0.0
+	if GameState.has_flag("quietlight_active"):
+		stems = {"pad": 0.6, "glass": 1.0, "melody": 0.4}
 	Audio.music(cue, stems)
+	# Bad air and an open crisis close the music down, as if heard through a mask.
+	Audio.crisis(clampf(crisis_air * 2.5, 0.0, 0.7) if area and area.id == "wick" else 0.0)
 
 
 # --- Story sequences --------------------------------------------------------------------------
@@ -491,9 +506,11 @@ func _check_reveal() -> void:
 func finale(open: bool) -> void:
 	if Dialogue.active:
 		return
+	GameState.set_flag("finale_playing", true)
 	Dialogue.start_convo("barnaby", "finale_open" if open else "finale_shut")
 	_update_music()
 	await Events.dialogue_ended
+	GameState.set_flag("finale_playing", false)
 	await get_tree().create_timer(1.2).timeout
 	show_ending()
 

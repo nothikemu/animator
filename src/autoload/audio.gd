@@ -161,6 +161,8 @@ func _cue_stream(cue: String) -> AudioStreamSynchronized:
 		var path := "%s%s_%s.ogg" % [MUSIC_DIR, cue, stems[i]]
 		if ResourceLoader.exists(path):
 			var s: AudioStream = load(path)
+			if s is AudioStreamOggVorbis:
+				(s as AudioStreamOggVorbis).loop = true
 			sync.set_sync_stream(i, s)
 			sync.set_sync_stream_volume(i, -60.0)
 			loaded += 1
@@ -245,6 +247,8 @@ func ambience(name: String) -> void:
 	_amb_name = name
 	var path := "%s%s.ogg" % [AMB_DIR, name]
 	var s: AudioStream = load(path) if ResourceLoader.exists(path) else null
+	if s is AudioStreamOggVorbis:
+		(s as AudioStreamOggVorbis).loop = true
 	if s == null and not _missing.has("amb:" + name):
 		_missing["amb:" + name] = true
 		Log.warn("audio", "missing ambience '%s'" % name)
