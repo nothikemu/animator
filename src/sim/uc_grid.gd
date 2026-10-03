@@ -68,6 +68,9 @@ var vent_scale := 1.0          ## the Breath scales vents (exhale > 1, inhale < 
 var _new_water: PackedFloat32Array
 var _gas_delta: Array[PackedFloat32Array] = []
 var _temp_delta: PackedFloat32Array
+var _open: PackedByteArray             ## open & not flooded, rebuilt each gas step
+var _kc: PackedFloat32Array            ## per-cell conductivity, rebuilt each heat step
+var _cp: PackedFloat32Array            ## per-cell heat capacity
 
 
 func _init(width: int = 1, height: int = 1, ground_row: int = 0) -> void:
@@ -88,6 +91,10 @@ func _init(width: int = 1, height: int = 1, ground_row: int = 0) -> void:
 		_gas_delta.append(_zeros(n))
 	_new_water = _zeros(n)
 	_temp_delta = _zeros(n)
+	_open = PackedByteArray()
+	_open.resize(n)
+	_kc = _zeros(n)
+	_cp = _zeros(n)
 
 
 static func _zeros(n: int) -> PackedFloat32Array:
@@ -392,74 +399,119 @@ func _displace_gas_by_water() -> void:
 
 
 func _step_gas(dt: float) -> void:
-	var nk := SPECIES.size()
+	# Hot path. Species arrays are hoisted into typed locals (packed arrays are shared by
+	# reference) and the four species are unrolled: same maths, far less dispatch.
 	var n := w * h
-	for k in nk:
-		_gas_delta[k].fill(0.0)
-	var d := GAS_DIFFUSE * clampf(dt / 0.25, 0.0, 1.6)
-	d = minf(d, 0.2)
+	var g0: PackedFloat32Array = gas[FRESH]
+	var g1: PackedFloat32Array = gas[STALE]
+	var g2: PackedFloat32Array = gas[SOUR]
+	var g3: PackedFloat32Array = gas[DAMP]
+	var d0: PackedFloat32Array = _gas_delta[0]
+	var d1: PackedFloat32Array = _gas_delta[1]
+	var d2: PackedFloat32Array = _gas_delta[2]
+	var d3: PackedFloat32Array = _gas_delta[3]
+	d0.fill(0.0)
+	d1.fill(0.0)
+	d2.fill(0.0)
+	d3.fill(0.0)
+	var open := _open
+	for i in n:
+		open[i] = 1 if mat[i] == Mat.AIR and water[i] <= 0.92 else 0
+	var d := minf(GAS_DIFFUSE * clampf(dt / 0.25, 0.0, 1.6), 0.2)
+	var dv := d * VERTICAL_DIFFUSE
 	# Pairwise diffusion (right and down neighbours), double-buffered.
 	for y in h:
+		var row := y * w
 		for x in w:
-			var i := y * w + x
-			if mat[i] != Mat.AIR or water[i] > 0.92:
+			var i := row + x
+			if open[i] == 0:
 				continue
-			if x + 1 < w and mat[i + 1] == Mat.AIR and water[i + 1] <= 0.92:
-				for k in nk:
-					var t := (gas[k][i] - gas[k][i + 1]) * d
-					_gas_delta[k][i] -= t
-					_gas_delta[k][i + 1] += t
-			if y + 1 < h and mat[i + w] == Mat.AIR and water[i + w] <= 0.92:
-				for k in nk:
-					var t := (gas[k][i] - gas[k][i + w]) * d * VERTICAL_DIFFUSE
-					_gas_delta[k][i] -= t
-					_gas_delta[k][i + w] += t
-	for k in nk:
-		var g := gas[k]
-		var dl := _gas_delta[k]
-		for i in n:
-			g[i] = maxf(0.0, g[i] + dl[i])
-		gas[k] = g
+			if x + 1 < w and open[i + 1] == 1:
+				var j := i + 1
+				var t := (g0[i] - g0[j]) * d
+				d0[i] -= t
+				d0[j] += t
+				t = (g1[i] - g1[j]) * d
+				d1[i] -= t
+				d1[j] += t
+				t = (g2[i] - g2[j]) * d
+				d2[i] -= t
+				d2[j] += t
+				t = (g3[i] - g3[j]) * d
+				d3[i] -= t
+				d3[j] += t
+			if y + 1 < h and open[i + w] == 1:
+				var j := i + w
+				var t := (g0[i] - g0[j]) * dv
+				d0[i] -= t
+				d0[j] += t
+				t = (g1[i] - g1[j]) * dv
+				d1[i] -= t
+				d1[j] += t
+				t = (g2[i] - g2[j]) * dv
+				d2[i] -= t
+				d2[j] += t
+				t = (g3[i] - g3[j]) * dv
+				d3[i] -= t
+				d3[j] += t
+	for i in n:
+		g0[i] = maxf(0.0, g0[i] + d0[i])
+		g1[i] = maxf(0.0, g1[i] + d1[i])
+		g2[i] = maxf(0.0, g2[i] + d2[i])
+		g3[i] = maxf(0.0, g3[i] + d3[i])
 	# Settling: each heavy species drifts down and each light species drifts up, trading
 	# places with fresh air so pressure is kept. This is what makes gases pool and layer.
 	var sf := SETTLE * clampf(dt / 0.25, 0.0, 1.6)
+	var s_stale := sf * (WEIGHT[STALE] - 1.0) / WEIGHT[STALE]
+	var s_sour := sf * (WEIGHT[SOUR] - 1.0) / WEIGHT[SOUR]
+	var s_damp := sf * (1.0 - WEIGHT[DAMP])
 	for y in h - 1:
+		var row := y * w
 		for x in w:
-			var u := y * w + x
+			var u := row + x
 			var l := u + w
-			if mat[u] != Mat.AIR or mat[l] != Mat.AIR or water[u] > 0.92 or water[l] > 0.92:
+			if open[u] == 0 or open[l] == 0:
 				continue
 			# Convection wins over settling when the lower cell is clearly hotter.
 			var calm := clampf(1.0 - (temp[l] - temp[u]) / 12.0, 0.0, 1.0)
-			for k in [STALE, SOUR]:
-				var mv := minf(gas[k][u] * sf * calm * (WEIGHT[k] - 1.0) / WEIGHT[k], gas[FRESH][l])
-				if mv > 0.0:
-					gas[k][u] -= mv
-					gas[k][l] += mv
-					gas[FRESH][l] -= mv
-					gas[FRESH][u] += mv
-			var up := minf(gas[DAMP][l] * sf * (1.0 - WEIGHT[DAMP]), gas[FRESH][u])
+			var mv := minf(g1[u] * s_stale * calm, g0[l])
+			if mv > 0.0:
+				g1[u] -= mv
+				g1[l] += mv
+				g0[l] -= mv
+				g0[u] += mv
+			mv = minf(g2[u] * s_sour * calm, g0[l])
+			if mv > 0.0:
+				g2[u] -= mv
+				g2[l] += mv
+				g0[l] -= mv
+				g0[u] += mv
+			var up := minf(g3[l] * s_damp, g0[u])
 			if up > 0.0:
-				gas[DAMP][l] -= up
-				gas[DAMP][u] += up
-				gas[FRESH][u] -= up
-				gas[FRESH][l] += up
+				g3[l] -= up
+				g3[u] += up
+				g0[u] -= up
+				g0[l] += up
 	# Convection: a denser (colder/heavier) mixture above a lighter one swaps a share.
 	var b := BUOYANCY * clampf(dt / 0.25, 0.0, 1.6)
+	var w0: float = WEIGHT[FRESH]
+	var w1: float = WEIGHT[STALE]
+	var w2: float = WEIGHT[SOUR]
+	var w3: float = WEIGHT[DAMP]
 	for y in h - 1:
+		var row := y * w
 		for x in w:
-			var u := y * w + x
+			var u := row + x
 			var l := u + w
-			if mat[u] != Mat.AIR or mat[l] != Mat.AIR:
+			if open[u] == 0 or open[l] == 0:
 				continue
-			if water[u] > 0.92 or water[l] > 0.92:
-				continue
-			var tu := gas_total(u)
-			var tl := gas_total(l)
+			var tu := g0[u] + g1[u] + g2[u] + g3[u]
+			var tl := g0[l] + g1[l] + g2[l] + g3[l]
 			if tu < 0.001 or tl < 0.001:
 				continue
-			var rho_u := _density(u, tu)
-			var rho_l := _density(l, tl)
+			# Hot gas is lighter (ideal-gas style scaling around 18 °C).
+			var rho_u := ((g0[u] * w0 + g1[u] * w1 + g2[u] * w2 + g3[u] * w3) / tu) * (291.0 / maxf(temp[u] + 273.0, 100.0))
+			var rho_l := ((g0[l] * w0 + g1[l] * w1 + g2[l] * w2 + g3[l] * w3) / tl) * (291.0 / maxf(temp[l] + 273.0, 100.0))
 			var diff := rho_u - rho_l
 			if diff <= 0.002:
 				continue
@@ -467,22 +519,38 @@ func _step_gas(dt: float) -> void:
 			var amount := share * minf(tu, tl)
 			var fu := amount / tu
 			var fl := amount / tl
-			for k in nk:
-				var down := gas[k][u] * fu
-				var up := gas[k][l] * fl
-				gas[k][u] += up - down
-				gas[k][l] += down - up
+			var dn := g0[u] * fu
+			var upv := g0[l] * fl
+			g0[u] += upv - dn
+			g0[l] += dn - upv
+			dn = g1[u] * fu
+			upv = g1[l] * fl
+			g1[u] += upv - dn
+			g1[l] += dn - upv
+			dn = g2[u] * fu
+			upv = g2[l] * fl
+			g2[u] += upv - dn
+			g2[l] += dn - upv
+			dn = g3[u] * fu
+			upv = g3[l] * fl
+			g3[u] += upv - dn
+			g3[l] += dn - upv
 			# Heat travels with the moving air: this is what makes plumes rise.
 			var dT := (temp[l] - temp[u]) * share
 			temp[u] += dT
 			temp[l] -= dT
 	# Top row breathes with the open cavern.
+	var a0: float = ambient_gas[0]
+	var a1: float = ambient_gas[1]
+	var a2: float = ambient_gas[2]
+	var a3: float = ambient_gas[3]
 	for x in w:
-		var i := x
-		if mat[i] != Mat.AIR:
+		if mat[x] != Mat.AIR:
 			continue
-		for k in nk:
-			gas[k][i] += (ambient_gas[k] - gas[k][i]) * AMBIENT_RATE
+		g0[x] += (a0 - g0[x]) * AMBIENT_RATE
+		g1[x] += (a1 - g1[x]) * AMBIENT_RATE
+		g2[x] += (a2 - g2[x]) * AMBIENT_RATE
+		g3[x] += (a3 - g3[x]) * AMBIENT_RATE
 
 
 func _density(i: int, total: float) -> float:
@@ -496,34 +564,40 @@ func _density(i: int, total: float) -> float:
 
 func _step_heat(dt: float) -> void:
 	var n := w * h
-	_temp_delta.fill(0.0)
+	var td := _temp_delta
+	td.fill(0.0)
 	var s := clampf(dt, 0.0, 2.0)
+	# Per-cell conductivity and heat capacity, once per step.
+	var kc := _kc
+	var cp := _cp
+	for i in n:
+		var m := mat[i]
+		if m == Mat.AIR:
+			kc[i] = 0.35 if water[i] > 0.3 else CONDUCT[0]
+			cp[i] = 1.0 + water[i] * 3.0
+		else:
+			kc[i] = CONDUCT[m]
+			cp[i] = CAPACITY[m]
+	var half := 0.5 * s
 	for y in h:
+		var row := y * w
 		for x in w:
-			var i := y * w + x
-			var ka: float = CONDUCT[mat[i]]
-			if mat[i] == Mat.AIR and water[i] > 0.3:
-				ka = 0.35
+			var i := row + x
+			var ka := kc[i]
+			var ti := temp[i]
+			var ci := cp[i]
 			if x + 1 < w:
 				var j := i + 1
-				var kb: float = CONDUCT[mat[j]]
-				if mat[j] == Mat.AIR and water[j] > 0.3:
-					kb = 0.35
-				var k := minf(ka, kb) * s
-				var dT := (temp[j] - temp[i]) * k * 0.5
-				_temp_delta[i] += dT / _cap(i)
-				_temp_delta[j] -= dT / _cap(j)
+				var dT := (temp[j] - ti) * minf(ka, kc[j]) * half
+				td[i] += dT / ci
+				td[j] -= dT / cp[j]
 			if y + 1 < h:
 				var j := i + w
-				var kb: float = CONDUCT[mat[j]]
-				if mat[j] == Mat.AIR and water[j] > 0.3:
-					kb = 0.35
-				var k := minf(ka, kb) * s
-				var dT := (temp[j] - temp[i]) * k * 0.5
-				_temp_delta[i] += dT / _cap(i)
-				_temp_delta[j] -= dT / _cap(j)
+				var dT := (temp[j] - ti) * minf(ka, kc[j]) * half
+				td[i] += dT / ci
+				td[j] -= dT / cp[j]
 	for i in n:
-		temp[i] = clampf(temp[i] + _temp_delta[i], T_MIN, T_MAX)
+		temp[i] = clampf(temp[i] + td[i], T_MIN, T_MAX)
 	# Cavern air at the top stays near ambient.
 	for x in w:
 		if mat[x] == Mat.AIR:

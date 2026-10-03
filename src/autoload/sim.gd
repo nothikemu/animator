@@ -4,7 +4,7 @@ extends Node
 ## crops every ten game minutes. Everything keeps running while the player is away.
 
 const STEPS_PER_MINUTE := 3.0
-const MAX_STEPS_PER_FRAME := 6
+const MAX_STEPS_PER_FRAME := 3        ## catch-up limit; keeps a slow frame from snowballing
 const STEP_DT := 0.25
 const CROP_INTERVAL := 10
 const FARM_COLUMNS := Vector2i(6, 15)

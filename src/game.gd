@@ -46,6 +46,8 @@ func _ready() -> void:
 		panels = load("res://src/ui/panels.gd").new()
 		panels.name = "Panels"
 		add_child(panels)
+	if DevOverlay.allowed():
+		add_child(DevOverlay.new())
 	actions = WorldActions.new(self)
 	load_area(GameState.current_area, true)
 	rig.target = player
