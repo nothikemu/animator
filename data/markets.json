@@ -1,33 +1,127 @@
 {
 	"_comment": "Who buys and sells what. targets = stock level at which price equals base value.",
-
 	"exchange": {
-		"name": "The Exchange", "keeper": "odile",
-		"buys": ["glowbeet", "moss_fiber", "sulfur", "ember_resin", "bellcap", "blackstone", "brass_scrap", "glowglass", "thermal_ore", "filter_pad", "seal_gum", "fertiliser"],
-		"sells": ["glowbeet_seed", "moss_spore", "fern_spore", "brass_scrap", "blackstone", "glowglass", "pipe_section", "wire_coil"],
-		"targets": {"glowbeet": 20, "moss_fiber": 25, "sulfur": 10, "ember_resin": 8, "bellcap": 6, "blackstone": 30,
-			"brass_scrap": 14, "glowglass": 8, "thermal_ore": 8, "filter_pad": 4, "seal_gum": 4, "fertiliser": 10,
-			"glowbeet_seed": 20, "moss_spore": 20, "fern_spore": 8, "pipe_section": 12, "wire_coil": 12},
+		"name": "The Exchange",
+		"keeper": "odile",
+		"buys": [
+			"glowbeet",
+			"moss_fiber",
+			"sulfur",
+			"ember_resin",
+			"bellcap",
+			"blackstone",
+			"brass_scrap",
+			"glowglass",
+			"thermal_ore",
+			"filter_pad",
+			"seal_gum",
+			"fertiliser"
+		],
+		"sells": [
+			"glowbeet_seed",
+			"moss_spore",
+			"fern_spore",
+			"brass_scrap",
+			"blackstone",
+			"glowglass",
+			"pipe_section",
+			"wire_coil",
+			"seal_gum"
+		],
+		"targets": {
+			"glowbeet": 20,
+			"moss_fiber": 25,
+			"sulfur": 10,
+			"ember_resin": 8,
+			"bellcap": 6,
+			"blackstone": 30,
+			"brass_scrap": 14,
+			"glowglass": 8,
+			"thermal_ore": 8,
+			"filter_pad": 4,
+			"seal_gum": 4,
+			"fertiliser": 10,
+			"glowbeet_seed": 20,
+			"moss_spore": 20,
+			"fern_spore": 8,
+			"pipe_section": 12,
+			"wire_coil": 12
+		},
 		"schematics": {
-			"schematic_burner": {"name": "Burner Schematic", "price": 30, "when": ["thread:power>=1"]},
-			"schematic_lamp": {"name": "Glow Lamp Schematic", "price": 18, "when": ["day>=2"]},
-			"schematic_tank": {"name": "Water Tank Schematic", "price": 22, "when": ["flag:well_fixed"]}
+			"schematic_burner": {
+				"name": "Burner Schematic",
+				"price": 30,
+				"when": [
+					"thread:power>=1"
+				]
+			},
+			"schematic_lamp": {
+				"name": "Glow Lamp Schematic",
+				"price": 18,
+				"when": [
+					"day>=2"
+				]
+			},
+			"schematic_tank": {
+				"name": "Water Tank Schematic",
+				"price": 22,
+				"when": [
+					"flag:well_fixed"
+				]
+			}
 		}
 	},
 	"lantern": {
-		"name": "The Lantern House", "keeper": "mags",
-		"buys": ["glowbeet", "bellcap", "moss_tea", "glowbeet_stew", "moss_fiber"],
-		"sells": ["moss_tea", "glowbeet_stew"],
-		"targets": {"glowbeet": 14, "bellcap": 5, "moss_tea": 6, "glowbeet_stew": 3, "moss_fiber": 8},
+		"name": "The Lantern House",
+		"keeper": "mags",
+		"buys": [
+			"glowbeet",
+			"bellcap",
+			"moss_tea",
+			"glowbeet_stew",
+			"moss_fiber"
+		],
+		"sells": [
+			"moss_tea",
+			"glowbeet_stew"
+		],
+		"targets": {
+			"glowbeet": 14,
+			"bellcap": 5,
+			"moss_tea": 6,
+			"glowbeet_stew": 3,
+			"moss_fiber": 8
+		},
 		"food_quality": true
 	},
 	"grist": {
-		"name": "Grist's Pack", "keeper": "grist",
-		"buys": ["glowbeet", "blackstone"],
-		"sells": ["thermal_ore", "glowglass", "blackstone", "emberroot_seed"],
-		"targets": {"glowbeet": 6, "blackstone": 20, "thermal_ore": 10, "glowglass": 6, "emberroot_seed": 4},
+		"name": "Grist's Pack",
+		"keeper": "grist",
+		"buys": [
+			"glowbeet",
+			"blackstone"
+		],
+		"sells": [
+			"thermal_ore",
+			"glowglass",
+			"blackstone",
+			"emberroot_seed"
+		],
+		"targets": {
+			"glowbeet": 6,
+			"blackstone": 20,
+			"thermal_ore": 10,
+			"glowglass": 6,
+			"emberroot_seed": 4
+		},
 		"schematics": {
-			"schematic_exchanger": {"name": "Knapper Heat-Fin Trick", "price": 25, "when": ["affection:grist>=10"]}
+			"schematic_exchanger": {
+				"name": "Knapper Heat-Fin Trick",
+				"price": 25,
+				"when": [
+					"affection:grist>=10"
+				]
+			}
 		}
 	}
 }

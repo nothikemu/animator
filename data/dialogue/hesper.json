@@ -93,21 +93,24 @@
 			{"say": "Something came up out of the ground. I felt the beds flinch.", "emote": "sad", "do": ["flag:h_tremor_talk"]},
 			{"say": "Sour gas. Heavy. Sinking into everything low and green. That's my beds. That's your plots."},
 			{"say": "A scrubber would save them. A machine. With moss pads for lungs. Do you know how much it costs me to say that?", "emote": "annoyed"},
-			{"say": "Take it. My grandmother's drawing. Build it or pack that hole. Just— do something before Clara goes grey.", "do": ["learn:schematic_scrubber", "learn:learned_filters", "learn:learned_respirator", "toast:Learned: Moss Scrubber"]}
+			{"say": "Take it. My grandmother's drawing. Build it or pack that hole. Just— do something before Clara goes grey.", "do": ["learn:schematic_scrubber", "learn:learned_filters", "learn:learned_respirator", "toast:Learned: Moss Scrubber"]},
+			{"say": "And a compost vat for the sludge it makes. Everything goes back to the moss in the end. That's not poetry, it's chemistry.", "do": ["learn:schematic_compost", "toast:Learned: Compost Vat"]}
 		],
 
 		"bloom_bright": [
 			{"say": "Did you see it. Did you SEE it.", "emote": "happy"},
 			{"say": "The moths came up off the lake like the water was snowing upwards. The Old Frame lit. The OLD FRAME."},
 			{"say": "Forty-one years I've watched Quietlight. That was the brightest. That was your air. That was you.", "do": ["affection:hesper+6", "mem:hesper:bright_bloom:6:0.8:lasting"]},
-			{"say": "I'm not crying. Moss pollen. It's very— it's a lot of pollen this year."}
+			{"say": "I'm not crying. Moss pollen. It's very— it's a lot of pollen this year."},
+			{"say": "Here. Spore mash. Sulfur and bellcap, mashed together. The beds adore it. Don't tell Odile it works.", "do": ["learn:experiment_spore_mash", "toast:Learned: Spore Mash"]}
 		],
 
 		"bloom_thin": [
 			{"say": "You saw it. The bloom. What there was of it.", "emote": "sad"},
 			{"say": "Half the frames stayed dark. The moths came up and went straight back down. They could taste it."},
 			{"say": "I'm not saying whose fault. I'm saying it was somebody's. I'm saying it was the air, and the air came from somewhere.", "do": ["mem:hesper:thin_bloom:5:-0.6:lasting"]},
-			{"say": "Next turn. Next turn it can be better. That's the thing about moss. It forgives. It just takes its time about it."}
+			{"say": "Next turn. Next turn it can be better. That's the thing about moss. It forgives. It just takes its time about it."},
+			{"say": "Spore mash helps. Sulfur and bellcap, mashed. Feed the beds and the beds feed the moths. Here.", "do": ["learn:experiment_spore_mash", "toast:Learned: Spore Mash"]}
 		],
 
 		"knock": [

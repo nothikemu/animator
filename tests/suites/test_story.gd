@@ -234,3 +234,58 @@ func test_tremor_opens_fissure_and_thread() -> void:
 	check(bool(Sim.fact("fissure_sealed")), "fissure sealed")
 	Threads.check()
 	check(Threads.is_done("tremor"), "thread completes")
+
+
+func test_critical_items_have_a_source() -> void:
+	# Everything the Station needs can be found, bought or made without luck or a lost line.
+	eq(Economy.buy_price("exchange", "seal_gum") > 0, true, "seal gum is sold at the Exchange")
+	var resin := false
+	for n: Dictionary in GameState.reach_graph.nodes:
+		if String(n.get("biome", "")) == "ember":
+			var a := ReachGen.generate_cavern(GameState.seed_value, GameState.reach_graph, String(n.id))
+			for r: Dictionary in a.resources:
+				if String(r.get("item", "")) == "ember_resin":
+					resin = true
+	check(resin, "ember resin can be mined in an Ember cavern")
+	check(Content.recipes.has("seal_gum"), "seal gum has a recipe")
+	var teaches := 0
+	for line in FileAccess.get_file_as_string("res://data/dialogue/barnaby.json").split("learn:learned_seal"):
+		teaches += 1
+	check(teaches - 1 >= 2, "Barnaby teaches seal gum in more than one conversation")
+
+
+func test_every_unlock_can_be_learned() -> void:
+	# Collect every flag that any effect or shop can set.
+	var taught := {"start": true}
+	var scan := func(effects: Variant) -> void:
+		if effects == null:
+			return
+		for e in (effects if effects is Array else [effects]):
+			var s := String(e)
+			for prefix in ["learn:", "unlock:", "flag:"]:
+				if s.begins_with(prefix):
+					taught[s.substr(prefix.length()).split("=")[0]] = true
+	for npc in Content.dialogue:
+		for line: Dictionary in Content.dialogue[npc].get("lines", []):
+			scan.call(line.get("do"))
+		for cid in Content.dialogue[npc].get("convos", {}):
+			for n: Dictionary in Content.dialogue[npc].convos[cid]:
+				scan.call(n.get("do"))
+				for c: Dictionary in n.get("choice", []):
+					scan.call(c.get("do"))
+	for id in Content.threads:
+		for st: Dictionary in Content.threads[id].get("stages", []):
+			scan.call(st.get("on_enter"))
+	for id in Content.events:
+		scan.call(Content.events[id].get("effects"))
+	for m in Content.markets:
+		for sid in Content.markets[m].get("schematics", {}):
+			taught[sid] = true
+	for id: String in Content.machines:
+		var u := String(Content.machine(id).get("unlock", ""))
+		if u != "":
+			check(taught.has(u), "machine %s unlock '%s' is taught somewhere" % [id, u])
+	for id: String in Content.recipes:
+		var u := String(Content.recipes[id].get("unlock", ""))
+		if u != "":
+			check(taught.has(u), "recipe %s unlock '%s' is taught somewhere" % [id, u])

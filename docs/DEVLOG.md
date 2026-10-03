@@ -94,6 +94,12 @@ Concise record of decisions, problems, solutions and discoveries.
 * **The Reach** hid the player behind 8 m walls. Cavern rock is now drawn as a low dark
   plateau: you look into the cave, diorama style.
 * **Critters**: lampmoths and rock-lice, so the ecology the dialogue talks about is visible.
+* **Progression holes.** A new test asks, for every machine and recipe unlock, "who teaches
+  this?" Six had no answer (sprinkler, fan, compost vat, heat cell, lamp lens, spore mash). Each
+  now has a teacher in a conversation where the topic fits. Another asks "where does it come
+  from?" for the Station's parts: seal gum was only teachable in a conversation that could
+  expire before the Tremor, and ember resin only grew on a crop that needs a burner's heat.
+  Seal gum is now stocked at the Exchange and re-taught with the coil; Ember caverns hold resin.
 
 ## Critique of the vertical slice
 What works:

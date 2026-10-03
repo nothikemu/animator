@@ -24,7 +24,7 @@
 		{"id": "o_amb_price", "tier": "ambient", "text": "Everything has a price. Most things have two: the one I say and the one I mean.", "open": "shop:exchange"},
 		{"id": "o_amb_damp", "tier": "ambient", "when": ["met:odile", "day>=2"], "text": "Children cough in the damp season. Medicine comes from down-river. Down-river wants something we haven't got. You see my problem.", "open": "shop:exchange"},
 		{"id": "o_amb_hesper", "tier": "ambient", "when": ["met:hesper"], "text": "Hesper came in to tell me moss has feelings. I sold her a jar. Everyone wins.", "open": "shop:exchange"},
-		{"id": "o_amb_schem", "tier": "ambient", "when": ["thread:power>=1"], "text": "Schematics on the back wall. Knowledge is the only stock that doesn't spoil.", "open": "shop:exchange"},
+		{"id": "o_amb_schem", "tier": "ambient", "when": ["thread:power>=1"], "text": "Schematics on the back wall. And a free one: grind glowglass into a lens and a lamp throws twice as far. Call it marketing.", "do": ["learn:learned_lens"], "open": "shop:exchange"},
 
 		{"id": "o_bark1", "tier": "bark", "text": "The ledger doesn't lie."},
 		{"id": "o_bark2", "tier": "bark", "text": "Mind the stall."},

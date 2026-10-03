@@ -41,6 +41,7 @@
 		],
 
 		"song": [
+			{"say": "...Hot-ore. ...Keeps warmth. Keeps... spark, too. Wrap it in brass. ...Knappers know.", "do": ["learn:schematic_heat_cell", "toast:Learned: Heat Cell"]},
 			{"say": "...The rock. ...Near the deep water.", "do": ["flag:g_song_talk"]},
 			{"say": "...It sings. ...Wrong. Low. ...Like a held breath."},
 			{"say": "...Held breath lets go. ...Always. ...Soon."},

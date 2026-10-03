@@ -90,6 +90,7 @@
 			{"say": "That line's older than me, which says something about the line."},
 			{"say": "Here's the thing. The cistern feeds everyone, and nothing feeds the cistern. The Station pump used to.", "emote": "sad"},
 			{"say": "Give it a week and it's mud. We'll want a pump of our own down in the Sink. And a pump wants power.", "do": ["flag:b_thanked_well", "respect:barnaby+4"]},
+			{"say": "Here. Sprinkler drawing. Pipe it off a line and your plots water themselves. Don't overdo it; drowned beets are still dead beets.", "do": ["learn:schematic_sprinkler", "toast:Learned: Sprinkler"]},
 			{"say": "You did good work. I'm only going to say that the once, so I'd write it down."}
 		],
 
@@ -158,6 +159,7 @@
 			{"say": "Lines are cracked all down the lane. And the sour pocket under the Lease has found a way up."},
 			{"say": "Sour gas is heavy. It pools in the low places. Cellars. Plots. Hesper's beds."},
 			{"say": "Pack the fissure with blackstone, or scrub the air, or move your crops. Pick one. Today."},
+			{"say": "And take a fan drawing. Push the gas somewhere it does less harm, if you can find such a place.", "do": ["learn:schematic_fan", "toast:Learned: Vent Fan"]},
 			{"say": "...And the Sump flooded. Which means the old Trunk passage is open again. Which means the coil is in reach.", "emote": "sad"},
 			{"say": "Funny. I spent eleven years hoping that wouldn't happen."}
 		],
@@ -194,7 +196,7 @@
 
 		"coil": [
 			{"say": "Is that— that's a governor coil. A real one. Not a rumour.", "emote": "surprised"},
-			{"say": "Fit it. Four seal gum on the housing. Feed the pump fifty-five power, and the Station will run.", "do": ["flag:b_coil_talk"]},
+			{"say": "Fit it. Four seal gum on the housing. Feed the pump fifty-five power, and the Station will run.", "do": ["flag:b_coil_talk", "learn:learned_seal"]},
 			{"say": "...And then the hall will have pressure, and the gauge will want to read, and somebody will have to look at that valve.", "emote": "sad"},
 			{"say": "One thing at a time. The pump first. The valve can wait. It's very good at it."}
 		],

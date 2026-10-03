@@ -338,7 +338,7 @@ static func generate_cavern(seed_value: int, graph: Dictionary, node_id: String)
 	var table: Array = {
 		"fringe": [["glowglass_node", "glowglass", 2], ["moss_patch", "moss_fiber", 4], ["moss_patch", "moss_fiber", 4], ["blackstone_node", "blackstone", 4]],
 		"blackstone": [["blackstone_node", "blackstone", 6], ["blackstone_node", "blackstone", 6], ["scrap_pile", "brass_scrap", 4], ["glowglass_node", "glowglass", 3]],
-		"ember": [["thermal_node", "thermal_ore", 6], ["thermal_node", "thermal_ore", 6], ["emberroot_wild", "emberroot_seed", 2], ["blackstone_node", "blackstone", 4]],
+		"ember": [["thermal_node", "thermal_ore", 6], ["ember_crystal", "ember_resin", 3], ["emberroot_wild", "emberroot_seed", 2], ["thermal_node", "thermal_ore", 5], ["blackstone_node", "blackstone", 4]],
 		"sump": [["bellcap_wild", "bellcap_spore", 2], ["scrap_pile", "brass_scrap", 6], ["glowglass_node", "glowglass", 4], ["moss_patch", "moss_fiber", 3]],
 	}[a.biome]
 	var count := 8 + rng.randi_range(0, 4)
