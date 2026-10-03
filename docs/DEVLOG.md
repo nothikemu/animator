@@ -57,8 +57,9 @@ Concise record of decisions, problems, solutions and discoveries.
 * Wrote the chapter: five voices, nine threads, eleven director cards, a dozen lore fragments,
   and the valve finale with two endings that both end at the knock.
 * **Content linter as a test.** Every condition kind, effect kind, item, machine, thread,
-  event, label and speaker in the data is checked. It caught nothing on the first run, which
-  was suspicious, so a deliberately broken line was added and removed to prove it bites.
+  event, label and speaker in the data is checked. It passed first time, so to prove it bites, a
+  line with a misspelled effect (`trsut:`) and condition (`runing.`) was planted: the suite failed
+  naming both, and the line was removed.
 * **Full-arc test.** Playing the chapter through real systems found a progression hole: Station 7
   needs seal gum and nothing taught it. Barnaby now teaches it. It also showed a crank placed
   in the Sink floods — correct, and now part of the test.
