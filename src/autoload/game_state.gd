@@ -303,6 +303,7 @@ func value(key: String) -> Variant:
 			var p := arg.split(":", true, 1)
 			return discovered.get(p[0], {}).has(p[1]) if p.size() == 2 else false
 		"market_day": return Clock.is_market_day()
+		"seen_places": return discovered.get("places", {}).size()
 		"talked": return Society.talked_today(arg)
 		"gifted": return Society.gifted_today(arg)
 	return Sim.fact(key)

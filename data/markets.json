@@ -9,7 +9,7 @@
 			"brass_scrap": 14, "glowglass": 8, "thermal_ore": 8, "filter_pad": 4, "seal_gum": 4, "fertiliser": 10,
 			"glowbeet_seed": 20, "moss_spore": 20, "fern_spore": 8, "pipe_section": 12, "wire_coil": 12},
 		"schematics": {
-			"schematic_burner": {"name": "Burner Schematic", "price": 30, "when": ["thread:power_choice>=1"]},
+			"schematic_burner": {"name": "Burner Schematic", "price": 30, "when": ["thread:power>=1"]},
 			"schematic_lamp": {"name": "Glow Lamp Schematic", "price": 18, "when": ["day>=2"]},
 			"schematic_tank": {"name": "Water Tank Schematic", "price": 22, "when": ["flag:well_fixed"]}
 		}

@@ -1,3 +1,89 @@
 {
-	"_comment": "Event Director cards. Filled in during the narrative pass."
+	"_comment": "Event Director cards. Considered hourly; conditions are world state, never pure chance. intensity >= 2 respects the calm window after a crisis. 'manual' cards only fire from effects or code.",
+
+	"first_knock": {
+		"when": ["flag:well_fixed", "phase:hush|night", "!flag:station_running"],
+		"once": true, "chance": 1.0, "intensity": 0,
+		"caption": "[the pipes knock — three, two, three — then nothing]",
+		"effects": ["flag:heard_first_knock", "discover:lore:first_knock"]
+	},
+
+	"exhale_surge": {
+		"when": ["breath:exhale", "phase:wake|bloom", "day>=2"],
+		"cooldown": 3, "chance": 0.8, "intensity": 1,
+		"hook": "exhale_surge",
+		"toast": "The Deep exhales. Warm, sour air rises from the vents below the Sink.",
+		"caption": "[a long, low breath moves through the rock]"
+	},
+
+	"inhale_damp": {
+		"when": ["breath:inhale", "phase:hush"],
+		"cooldown": 3, "chance": 0.5, "intensity": 0,
+		"toast": "The cavern draws breath. Damp air settles over the lake."
+	},
+
+	"moth_swarm": {
+		"when": ["phase:dimming", "planted>=3", "pollution<0.2"],
+		"cooldown": 2, "chance": 0.5, "intensity": 0,
+		"hook": "moth_swarm",
+		"toast": "Lampmoths drift in from the grove and settle on the glowbeets.",
+		"effects": ["notice:hesper:Hesper counted the lampmoths over your plots. Twice."]
+	},
+
+	"cistern_low": {
+		"when": ["cistern<0.35", "!flag:cistern_fed", "flag:well_fixed"],
+		"cooldown": 2, "chance": 0.6, "intensity": 1,
+		"toast": "The cistern is getting low. Mags is boiling the same water twice.",
+		"effects": ["mem:mags:cistern_low:1.5:-0.2"]
+	},
+
+	"grist_hum": {
+		"when": ["market_day", "met:grist", "!flag:tremor_done", "day>=3"],
+		"once": true, "chance": 1.0, "intensity": 0,
+		"caption": "[deep in the rock, something hums a single held note]",
+		"effects": ["flag:heard_rock_song"]
+	},
+
+	"tremor": {
+		"when": ["thread:station7>=2", "day>=4", "phase:wake|bloom", "!flag:tremor_done"],
+		"once": true, "chance": 1.0, "intensity": 3, "shake": 1.0,
+		"hook": "tremor",
+		"toast": "Tremor! Pipes are cracking under the lane.",
+		"caption": "[the ground lurches; brick gives way somewhere below]",
+		"effects": ["mem:barnaby:tremor:3:-0.2", "mem:hesper:tremor:3:-0.4", "mem:mags:tremor:3:-0.3"]
+	},
+
+	"tremor_late": {
+		"when": ["day>=7", "phase:wake|bloom", "!flag:tremor_done"],
+		"once": true, "chance": 1.0, "intensity": 3, "shake": 1.0,
+		"hook": "tremor",
+		"toast": "Tremor! Pipes are cracking under the lane.",
+		"caption": "[the ground lurches; brick gives way somewhere below]",
+		"effects": ["mem:barnaby:tremor:3:-0.2", "mem:hesper:tremor:3:-0.4", "mem:mags:tremor:3:-0.3"]
+	},
+
+	"quietlight": {
+		"when": ["flag:quietlight_announced", "day>=5", "phase:hush", "!flag:quietlight_done"],
+		"once": true, "chance": 1.0, "intensity": 0,
+		"hook": "quietlight",
+		"caption": "[one by one, every lamp in Wick goes out]"
+	},
+
+	"quietlight_end": {
+		"manual": true,
+		"effects": ["flag:quietlight_done"]
+	},
+
+	"valve_turn": {
+		"manual": true, "intensity": 0, "shake": 0.35,
+		"hook": "valve_turn",
+		"caption": "[iron grinds on iron; far below, a long sigh of air]"
+	},
+
+	"knock": {
+		"manual": true, "intensity": 0, "shake": 0.15,
+		"hook": "knock",
+		"caption": "[knock knock knock — knock knock — knock knock knock]",
+		"effects": ["flag:knock_heard", "discover:lore:the_knock"]
+	}
 }

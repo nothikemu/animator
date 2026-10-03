@@ -58,6 +58,8 @@ func _ready() -> void:
 	Events.grid_cells_changed.connect(func(_c: Array) -> void: pass)
 	if Dev.has_arg("scenario"):
 		Scenarios.run(self, Dev.arg("scenario"))
+	elif not GameState.has_flag("intro_done"):
+		opening()
 	if Dev.has_arg("capture"):
 		_capture_frames = int(Dev.arg("frames", "45"))
 	_update_music()
@@ -252,6 +254,7 @@ func _process(delta: float) -> void:
 		else:
 			env.pollution = 0.0
 		_update_target()
+		_check_reveal()
 		for n: Npc in npcs.values():
 			n.try_bark(player.global_position)
 	if _capture_frames >= 0:
@@ -402,7 +405,9 @@ func mine_at(c: Vector2i) -> bool:
 			GameState.areas[area.id]["mined"] = mined
 			var left := int(mined.get(id, int(r.n)))
 			if r.has("lore"):
+				GameState.discover("lore", String(r.lore))
 				Events.ui_open.emit(&"lore", {"id": String(r.lore)})
+				Audio.play("pickup", -6.0)
 				mined[id] = 0
 			elif left > 0 and String(r.item) != "":
 				var take := mini(left, 2 if not r.get("story", false) else 1)
@@ -463,3 +468,83 @@ func _capture() -> void:
 	Log.info("capture", "saved %s (%dx%d)" % [path, img.get_width(), img.get_height()])
 	if not Dev.has_arg("keep"):
 		get_tree().quit()
+
+
+# --- Story sequences --------------------------------------------------------------------------
+
+## Beat 1–2: black, a winch, a snapped cable, a long fall; then the grove's edge and one
+## direction with any light in it.
+func opening() -> void:
+	_busy = true
+	player.frozen = true
+	fade.black()
+	Clock.pause("opening")
+	await get_tree().create_timer(0.8).timeout
+	Audio.play("winch", -6.0)
+	Events.caption.emit("[a winch creaks, very far above]", 2.4)
+	await get_tree().create_timer(2.4).timeout
+	Audio.play("cable_snap", -2.0)
+	Events.caption.emit("[a cable snaps]", 1.6)
+	Events.camera_impulse.emit(0.4)
+	await get_tree().create_timer(1.6).timeout
+	Audio.play("fall", -4.0)
+	Events.caption.emit("[a long fall — then moss, softer than it has any right to be]", 3.0)
+	await get_tree().create_timer(3.2).timeout
+	Clock.resume("opening")
+	await fade.fade_in(2.2)
+	GameState.set_flag("intro_done")
+	player.frozen = false
+	_busy = false
+	monologue("Your headlamp flickers. Only one direction has any light in it.")
+
+
+## Beat 3: the first time the player steps out of the grotto, the camera eases back to show Wick.
+func _check_reveal() -> void:
+	if area.id != "wick" or GameState.has_flag("wick_revealed") or not GameState.has_flag("intro_done"):
+		return
+	if player.position.z < 9.5 or player.position.x > 14.0:
+		return
+	GameState.set_flag("wick_revealed")
+	GameState.discover("places", "wick")
+	rig._zoom_target = CameraRig.ZOOM_MAX
+	Events.caption.emit("Wick", 3.0)
+	Audio.play("reveal", -6.0)
+	get_tree().create_timer(5.0).timeout.connect(func() -> void: rig._zoom_target = 24.0)
+
+
+## The Trunk valve, with Barnaby, from the cut view. open = turn it; otherwise listen.
+func finale(open: bool) -> void:
+	if Dialogue.active:
+		return
+	Dialogue.start_convo("barnaby", "finale_open" if open else "finale_shut")
+	_update_music()
+	await Events.dialogue_ended
+	await get_tree().create_timer(1.2).timeout
+	show_ending()
+
+
+## The end of the vertical slice. The game continues afterwards.
+func show_ending() -> void:
+	if _busy:
+		return
+	_busy = true
+	await fade.fade_out(2.4)
+	var lines: Array = []
+	lines.append("Wick has water. Station 7 is breathing again.")
+	if GameState.deed("industrial_power") > GameState.deed("clean_power") + 1.0:
+		lines.append("Its pumps run on fire, and the lake remembers the smoke.")
+	elif GameState.deed("clean_power") > 0.5:
+		lines.append("Its pumps run on falling water, and the lake hardly noticed.")
+	if String(GameState.flag("ql_bloom") if GameState.flag("ql_bloom") else "") == "bright":
+		lines.append("Hesper's moss bloomed brighter than it had in forty years.")
+	if GameState.has_flag("read_wren_note"):
+		lines.append("Somewhere below, Wren Askew went looking for whoever keeps the deep pumps running.")
+	lines.append("And under the Lower Stations, someone is still running the machine.")
+	await fade.card(lines, 2.8)
+	await fade.card(["I want to see what is deeper down."], 3.6, UiTheme.LIVING)
+	GameState.set_flag("ending_seen")
+	GameState.discover("lore", "the_knock")
+	Saves.save(0)
+	await fade.card(["Thank you for playing the first chapter.", "Wick carries on. So can you."], 2.6, UiTheme.DIM)
+	await fade.fade_in(1.6)
+	_busy = false

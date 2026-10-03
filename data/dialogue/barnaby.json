@@ -1,4 +1,255 @@
 {
-	"lines": [],
-	"convos": {}
+	"_comment": "Barnaby Coil. Dry, precise, short sentences; states an opinion once. Calls the player 'topper'. Never says Wren's name until he has to.",
+
+	"lines": [
+		{"id": "b_intro", "tier": "story", "once": true, "when": ["!met:barnaby"], "convo": "intro"},
+		{"id": "b_glass", "tier": "story", "once": true, "when": ["met:barnaby", "flag:lease_tools", "!flag:got_glass"], "convo": "glass"},
+		{"id": "b_glass_hint", "tier": "story", "when": ["met:barnaby", "!flag:lease_tools"], "text": "The Lease is west, past the farm plots. Bed, bench, a tin of seeds. Go on. I'll be here, losing to a pump."},
+		{"id": "b_find_break", "tier": "story", "when": ["flag:got_glass", "!flag:well_fixed"], "text": "Glass up at the well, topper. [{key:cut_view}] The break's under the lane somewhere. Seal gum for a crack, pipe for a hole."},
+		{"id": "b_well_fixed", "tier": "story", "once": true, "when": ["flag:well_fixed"], "convo": "well_fixed"},
+		{"id": "b_power", "tier": "story", "once": true, "when": ["thread:power>=1", "!flag:b_power_talk"], "convo": "power"},
+		{"id": "b_reach", "tier": "story", "once": true, "when": ["flag:well_fixed", "day>=2", "!flag:reach_open"], "convo": "reach"},
+		{"id": "b_station", "tier": "story", "once": true, "when": ["flag:reach_open", "day>=3", "!flag:b_station_asked"], "convo": "station_look"},
+		{"id": "b_station_seen", "tier": "story", "once": true, "when": ["flag:seen_station_pump", "!flag:tremor_done"], "convo": "station_seen"},
+		{"id": "b_rounds", "tier": "story", "once": true, "when": ["phase:hush|night", "trust:barnaby>=6", "!flag:b_rounds_seen"], "convo": "rounds"},
+		{"id": "b_tremor", "tier": "story", "once": true, "when": ["flag:tremor_done"], "convo": "tremor"},
+		{"id": "b_wren", "tier": "story", "once": true, "when": ["flag:took_crew_tag"], "convo": "wren", "priority": 20},
+		{"id": "b_wren_note", "tier": "story", "once": true, "when": ["flag:read_wren_note", "flag:b_wren_talk"], "convo": "wren_note", "priority": 25},
+		{"id": "b_coil", "tier": "story", "once": true, "when": ["item:governor_coil>=1"], "convo": "coil"},
+		{"id": "b_valve", "tier": "story", "once": true, "when": ["running.station_pump"], "convo": "valve", "priority": 30},
+		{"id": "b_valve_wait", "tier": "story", "when": ["flag:b_valve_talk", "!flag:knock_heard"], "text": "The valve's in the Sink, under the hall. Through the glass, topper. I'll be there before you are. I've been there for eleven years."},
+		{"id": "b_after", "tier": "story", "once": true, "when": ["flag:knock_heard"], "convo": "after"},
+
+		{"id": "b_carried", "tier": "reactive", "once": true, "when": ["mem:barnaby:carried_home"], "text": "You fell asleep on the moss again. Next time I'm leaving you for the lice.", "emote": "annoyed"},
+		{"id": "b_leaks", "tier": "reactive", "when": ["leaks>=3", "flag:well_fixed"], "text": "There's water going where water shouldn't. I can hear it. So can the rock, and the rock remembers."},
+		{"id": "b_sour", "tier": "reactive", "when": ["pollution>0.15"], "text": "You can taste it in the lane. Somebody's breathing out of turn, and it isn't the Deep."},
+		{"id": "b_exhale", "tier": "reactive", "when": ["breath:exhale"], "text": "Exhale day. Keep your vents high and your expectations low."},
+		{"id": "b_burner", "tier": "reactive", "once": true, "when": ["running.burner"], "text": "Burner's warm. You'll have friends at the Exchange and fewer at the lake. That's not a criticism. It's a weather report."},
+		{"id": "b_turbine", "tier": "reactive", "once": true, "when": ["running.turbine"], "text": "That turbine. Quiet as a held breath. I approve, and I'd like that written down somewhere."},
+		{"id": "b_crank", "tier": "reactive", "once": true, "when": ["machine.crank>=1"], "text": "A crank. Good. Nothing teaches you what a watt is like turning one by hand."},
+		{"id": "b_overload", "tier": "reactive", "once": true, "when": ["deed:overloaded>=1"], "text": "Smelled hot copper last night. Wire's like a mule. Ask it to carry too much and it sits down. Then it catches fire."},
+		{"id": "b_fissure", "tier": "reactive", "when": ["flag:tremor_done", "!fissure_sealed"], "text": "The fissure's still open. Gas doesn't get bored and go home, topper. Pack it."},
+		{"id": "b_kept", "tier": "reactive", "once": true, "when": ["flag:kept_barnaby_secret", "trust:barnaby>=15"], "text": "Mags asked me who's been fixing her line at night. Said I had no idea. Said it very well, I thought."},
+
+		{"id": "b_amb_wake", "tier": "ambient", "when": ["phase:wake"], "text": "Tea first. Then problems. Then more tea, as a treat."},
+		{"id": "b_amb_wake2", "tier": "ambient", "when": ["phase:wake", "flag:well_fixed"], "text": "Well's holding. I went and looked at it twice this morning. Don't make it a thing."},
+		{"id": "b_amb_bloom", "tier": "ambient", "when": ["phase:bloom"], "text": "Glowroots peak at Bloom. Best light there is to read a gauge by. Worst light to read a person."},
+		{"id": "b_amb_dim", "tier": "ambient", "when": ["phase:dimming"], "text": "Lantern House is loud tonight. I'll be the quiet table. There's always one."},
+		{"id": "b_amb_hush", "tier": "ambient", "when": ["phase:hush|night"], "text": "I'm walking. It's a thing people do. At night. With wrenches."},
+		{"id": "b_amb_easy", "tier": "ambient", "text": "You've got a face like you're about to say 'should be easy'. Don't."},
+		{"id": "b_amb_helmet", "tier": "ambient", "when": ["shared:barnaby>=6"], "text": "The moss in the crack? Grew there on its own. I'd scrape it off but it's the only thing that's ever chosen me."},
+		{"id": "b_amb_odile", "tier": "ambient", "when": ["met:odile"], "text": "Odile thinks in numbers. It's not a flaw. It's just loud."},
+		{"id": "b_amb_hesper", "tier": "ambient", "when": ["met:hesper"], "text": "Hesper would rather the town choked than a lichen sneezed. She's wrong. She's also not entirely wrong."},
+
+		{"id": "b_bark1", "tier": "bark", "text": "Topper."},
+		{"id": "b_bark2", "tier": "bark", "text": "Mind the pipe-heads."},
+		{"id": "b_bark3", "tier": "bark", "text": "Hm."},
+		{"id": "b_bark4", "tier": "bark", "when": ["phase:wake"], "text": "Cold morning. Hands don't like it."},
+		{"id": "b_bark5", "tier": "bark", "text": "Gauges don't lie. People do. Gauges learn it from people."},
+		{"id": "b_bark6", "tier": "bark", "when": ["!flag:well_fixed"], "text": "Come on, you wretched— no. Nothing."},
+		{"id": "b_bark7", "tier": "bark", "when": ["pollution>0.15"], "text": "Smell that? No? Lucky."},
+		{"id": "b_bark8", "tier": "bark", "when": ["flag:knock_heard"], "text": "Three. Two. Three."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "—come on, you wretched, ungrateful— oh. Hello.", "emote": "surprised"},
+			{"say": "You came down the shaft. Hard way. Cable's been fraying for a year, and nobody up top reads letters."},
+			{"say": "Barnaby. I keep the water running, when it runs. Today it doesn't.", "do": ["met:barnaby"]},
+			{"choice": [
+				{"text": "What's wrong with the well?", "goto": "well"},
+				{"text": "I need somewhere to sleep.", "goto": "lease"},
+				{"text": "Is there a way back up?", "goto": "up"}
+			]},
+			{"label": "well"},
+			{"say": "Somewhere between here and the cistern the line's drinking itself. Find where, mend it. Easy to say. I've been saying it all morning."},
+			{"goto": "lease"},
+			{"label": "up"},
+			{"say": "There's a way up the way there's a way to the moon. Not this week.", "emote": "annoyed"},
+			{"label": "lease"},
+			{"say": "The Lease. West end, past the farm plots. Tolley went down-line. Doesn't need it."},
+			{"say": "Bed, bench, and a tin of seeds he wouldn't shut up about. Go on, topper.", "do": ["trust:barnaby+2", "flag:barnaby_named_you"]}
+		],
+
+		"glass": [
+			{"say": "Settled in? Good. Bad news: the beets will want water, and the well wants a priest."},
+			{"say": "I've traced it this far. Dry from here to the cistern. Something below's drinking it."},
+			{"say": "Here. Plumb-glass. Old Trunk crew kit. Surveyors used them before there was nothing left to survey.", "do": ["tool:glass", "flag:got_glass", "give:seal_gum*2", "give:pipe_section*2", "learn:learned_pipes"]},
+			{"say": "Hold it up at the well [{key:cut_view}] and look at the ground the way the pipe sees it."},
+			{"say": "Seal gum for a crack. Pipe for a hole. If it's both, come and tell me, and I'll pretend to be surprised."},
+			{"choice": [
+				{"text": "Why don't you use it?", "goto": "why"},
+				{"text": "Thanks, Barnaby.", "goto": "end"}
+			]},
+			{"label": "why"},
+			{"say": "I know what's down there. That's the trouble with looking. You keep seeing it after.", "emote": "sad", "do": ["shared:barnaby+2"]}
+		],
+
+		"well_fixed": [
+			{"say": "Water in the basin. Real water. I put my hand in it to check. Don't tell anyone.", "emote": "happy"},
+			{"say": "That line's older than me, which says something about the line."},
+			{"say": "Here's the thing. The cistern feeds everyone, and nothing feeds the cistern. The Station pump used to.", "emote": "sad"},
+			{"say": "Give it a week and it's mud. We'll want a pump of our own down in the Sink. And a pump wants power.", "do": ["flag:b_thanked_well", "respect:barnaby+4"]},
+			{"say": "You did good work. I'm only going to say that the once, so I'd write it down."}
+		],
+
+		"power": [
+			{"say": "Power. Three ways to get it. Every one costs something.", "do": ["flag:b_power_talk"]},
+			{"say": "Odile will sell you a burner. Burns beets or resin. Strong and steady, and it breathes out sour air. The lake won't thank you."},
+			{"say": "Hesper will tell you the spring at the east wall falls far enough to turn a turbine. Clean. Quiet. Weak, unless you're clever about where you put it."},
+			{"say": "Or a crank. Builds character. Mine's mostly built.", "emote": "happy", "do": ["give:wire_coil*3"]},
+			{"choice": [
+				{"text": "What would you do?", "goto": "him"},
+				{"text": "I'll work it out.", "goto": "out"}
+			]},
+			{"label": "him"},
+			{"say": "I'd pick the one I could fix at three in the morning with cold hands. But I'm not you, and you'll be up at three in the morning either way."},
+			{"label": "out"},
+			{"say": "Whatever you pick: pump low in the Sink, pipe up to the cistern outlet. Water's lazy. It wants help going up."}
+		],
+
+		"reach": [
+			{"say": "You've been looking at the Reach gate like it owes you money."},
+			{"say": "Down there's where the parts are. Brass, glowglass, the odd thing nobody should've left behind."},
+			{"say": "Take this. Hammer's for rock, not for Knappers.", "do": ["tool:hammer", "flag:reach_open", "trust:barnaby+2"]},
+			{"say": "If you meet a Knapper, be slow and be kind. They've got better hearing than manners, and better manners than us."},
+			{"say": "Be home before Hush. If you're not, I'll come looking, and I'll be insufferable about it."}
+		],
+
+		"station_look": [
+			{"say": "I need you to do something. Not a favour. A look."},
+			{"say": "The Station pump. In the hall. Bring the glass. Just look at it."},
+			{"say": "Eleven years it's been dead. I know what it needs. I'd like somebody else to tell me I'm wrong.", "emote": "sad"},
+			{"choice": [
+				{"text": "I'll look.", "do": ["flag:b_station_asked", "trust:barnaby+3"], "goto": "end"},
+				{"text": "Why don't you look yourself?", "goto": "why"}
+			]},
+			{"label": "why"},
+			{"say": "Because if I go in there with the glass, I'll see the valve. Go on. Please.", "do": ["flag:b_station_asked", "shared:barnaby+3"]}
+		],
+
+		"station_seen": [
+			{"say": "Well? Don't soften it."},
+			{"say": "Governor coil's gone. Seals are dust. The rest is just old, and old isn't broken. I knew that. I wanted to hear it in someone else's voice.", "emote": "sad"},
+			{"say": "There was a spare coil. In the Trunk chamber, down past the Sump. The passage collapsed in the flood. Or I collapsed it. The days run together."},
+			{"say": "So that's that. Unless the rock changes its mind.", "do": ["flag:b_station_seen", "respect:barnaby+2"]}
+		],
+
+		"rounds": [
+			{"say": "Ah. You've caught me walking.", "emote": "surprised"},
+			{"say": "...With a wrench. And seal gum. Next to Mags' line. Which has a crack in it. Coincidentally."},
+			{"say": "Don't make a face. If I fix it in daylight, it becomes my job. At night it's a hobby."},
+			{"choice": [
+				{"text": "Want a hand?", "do": ["shared:barnaby+6", "affection:barnaby+4", "deed:helped_barnaby+1"], "goto": "help"},
+				{"text": "Your secret's safe.", "do": ["trust:barnaby+5", "flag:kept_barnaby_secret"], "goto": "safe"}
+			]},
+			{"label": "help"},
+			{"say": "...Hold the lamp, then. Lower. There.", "emote": "happy"},
+			{"say": "Wren used to hold the lamp. Talked the whole time. Couldn't hear the pipe for her.", "do": ["flag:b_rounds_seen", "flag:heard_of_wren"]},
+			{"say": "...Goodnight, topper."},
+			{"goto": "end"},
+			{"label": "safe"},
+			{"say": "It's not a secret. It's a hobby. Goodnight, topper.", "do": ["flag:b_rounds_seen"]}
+		],
+
+		"tremor": [
+			{"say": "You felt it. Everyone felt it. Grist's been saying the rock was singing wrong for a season.", "emote": "annoyed", "do": ["flag:b_tremor_talk"]},
+			{"say": "Lines are cracked all down the lane. And the sour pocket under the Lease has found a way up."},
+			{"say": "Sour gas is heavy. It pools in the low places. Cellars. Plots. Hesper's beds."},
+			{"say": "Pack the fissure with blackstone, or scrub the air, or move your crops. Pick one. Today."},
+			{"say": "...And the Sump flooded. Which means the old Trunk passage is open again. Which means the coil is in reach.", "emote": "sad"},
+			{"say": "Funny. I spent eleven years hoping that wouldn't happen."}
+		],
+
+		"wren": [
+			{"say": "Where did you get that.", "emote": "surprised"},
+			{"say": "...The locker. Of course. I never opened it. Couldn't."},
+			{"say": "Wren Askew. Trunk crew. My partner. She was down-line when the Sump flood came up the Trunk."},
+			{"say": "The valve had to close or Wick drowned. It only closes from this side. I closed it."},
+			{"say": "She knocked for an hour. Three, two, three. Crew code for 'still here'.", "emote": "sad"},
+			{"choice": [
+				{"text": "You saved Wick.", "do": ["trust:barnaby+4"], "goto": "saved"},
+				{"text": "Could she have lived?", "do": ["shared:barnaby+5"], "goto": "lived"},
+				{"text": "(Say nothing.)", "do": ["shared:barnaby+3", "affection:barnaby+3"], "goto": "silent"}
+			]},
+			{"label": "saved"},
+			{"say": "That's what they tell me. It's a fine sentence. I've worn it smooth.", "goto": "after"},
+			{"label": "lived"},
+			{"say": "Down there? Eleven years? No. ...The tag's warm, though. Isn't it.", "goto": "after"},
+			{"label": "silent"},
+			{"say": "...Thank you. People always want to say something.", "goto": "after"},
+			{"label": "after"},
+			{"say": "Keep it. I'd only put it in a drawer and look at the drawer.", "do": ["flag:b_wren_talk", "mem:barnaby:showed_tag:6:0.4:lasting"]}
+		],
+
+		"wren_note": [
+			{"say": "You've got a look. Like you've read something you'd rather I read first."},
+			{"say": "...", "emote": "surprised"},
+			{"say": "'Stop that face.' She'd say that. She'd say it every time.", "emote": "sad"},
+			{"say": "A dry stair. Pumps running below. And she went to see. Of course she went to see."},
+			{"say": "Eleven years I've been sitting at the quiet table with the wrong grief. Not the dead kind. The left-behind kind.", "do": ["shared:barnaby+8", "mem:barnaby:read_note:8:0.6:lasting"]},
+			{"say": "Thank you, topper. I mean it. I'm going to go and be somewhere else for a bit."}
+		],
+
+		"coil": [
+			{"say": "Is that— that's a governor coil. A real one. Not a rumour.", "emote": "surprised"},
+			{"say": "Fit it. Four seal gum on the housing. Feed the pump fifty-five power, and the Station will run.", "do": ["flag:b_coil_talk"]},
+			{"say": "...And then the hall will have pressure, and the gauge will want to read, and somebody will have to look at that valve.", "emote": "sad"},
+			{"say": "One thing at a time. The pump first. The valve can wait. It's very good at it."}
+		],
+
+		"valve": [
+			{"say": "Listen to it. Eleven years of nothing, and it purrs like it was waiting for us.", "emote": "happy"},
+			{"say": "Cistern'll be full by morning. Wick won't be thirsty again in my lifetime. Which is a smaller promise than it sounds."},
+			{"say": "And the gauge by the valve moved. LOWER STATIONS. There's pressure on the far side.", "emote": "surprised"},
+			{"say": "There shouldn't be. Not after eleven years. Not unless something down there is running."},
+			{"choice": [
+				{"text": "We should open it.", "do": ["flag:valve_choice=open", "shared:barnaby+4"], "goto": "open"},
+				{"text": "Leave it shut. Wick comes first.", "do": ["flag:valve_choice=shut", "trust:barnaby+3"], "goto": "shut"},
+				{"text": "It's your valve. Your call.", "do": ["flag:valve_choice=his", "respect:barnaby+4"], "goto": "his"}
+			]},
+			{"label": "open"},
+			{"say": "...Yes. I suppose we should. If it floods, I'll close it again. I've had practice.", "goto": "go"},
+			{"label": "shut"},
+			{"say": "That's what I said, eleven years ago. Sensible. I've hated it every day since. ...We'll listen, then. Listening's allowed.", "goto": "go"},
+			{"label": "his"},
+			{"say": "It was always mine. That was the trouble. ...Come with me. I'll do it, but not alone.", "goto": "go"},
+			{"label": "go"},
+			{"say": "The valve's in the Sink, under the hall. Meet me there. Through the glass.", "do": ["flag:b_valve_talk"]}
+		],
+
+		"finale_open": [
+			{"say": "Together, then. On three.", "who": "barnaby"},
+			{"say": "...I always hated 'on three'. Is it on three, or after three? Wren and I argued about it for a year.", "who": "barnaby", "emote": "happy"},
+			{"say": "On three.", "who": "barnaby"},
+			{"do": ["event:valve_turn"]},
+			{"say": "The wheel gives. Copper wire parts with a sound like a held breath let go. Far below, the dark sighs.", "who": "narrator"},
+			{"say": "Nothing. Of course. Eleven years. What did I think—", "who": "barnaby", "emote": "sad"},
+			{"do": ["event:knock"]},
+			{"say": "Up the pipe, faint and perfectly clear: three knocks. Two. Three.", "who": "narrator"},
+			{"say": "...", "who": "barnaby", "emote": "surprised"},
+			{"say": "That's crew code. That's 'still here'.", "who": "barnaby", "emote": "surprised"},
+			{"say": "Topper. There is someone down there.", "who": "barnaby"},
+			{"do": ["flag:valve_open", "mem:barnaby:opened_valve:10:0.8:lasting", "shared:barnaby+10"]}
+		],
+
+		"finale_shut": [
+			{"say": "We'll just listen. Listening's allowed.", "who": "barnaby"},
+			{"say": "You press your ear to the cold iron. Barnaby does the same, on the other side of the wheel, not looking at you.", "who": "narrator"},
+			{"say": "Nothing. Of course. What did I think I'd—", "who": "barnaby", "emote": "sad"},
+			{"do": ["event:knock"]},
+			{"say": "Through the iron, against your cheek: three knocks. Two. Three.", "who": "narrator"},
+			{"say": "...You heard that.", "who": "barnaby", "emote": "surprised"},
+			{"say": "Crew code. 'Still here.' Knocked on the far side of a valve I sealed, by someone who knows the code.", "who": "barnaby"},
+			{"say": "Well. I suppose we're going to need a bigger plan than 'leave it shut'.", "who": "barnaby"},
+			{"do": ["mem:barnaby:heard_knock:10:0.6:lasting", "shared:barnaby+8"]}
+		],
+
+		"after": [
+			{"say": "I keep listening for it. The knock. Every pipe in Wick sounds like a question now.", "emote": "happy"},
+			{"say": "The Trunk goes down a long way. Further than the maps. Further than the Lower Stations, if Wren's right, and she was always right about the inconvenient things."},
+			{"say": "We'd need light. Air. A way back up. Sleep on it, topper.", "do": ["flag:b_after_talk"]},
+			{"say": "...I'm going to sleep in the pump hall tonight. Somebody should be near the gauge."}
+		]
+	}
 }

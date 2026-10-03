@@ -14,7 +14,7 @@
 		"sprite": "mains", "sound": ""
 	},
 	"station_pump": {
-		"name": "Station 7 Pump", "desc": "The great pump. Built to lift a river. Dead for as long as anyone remembers.",
+		"name": "Station 7 Pump", "desc": "The great pump. Built to lift a river. Dead since the Sump flood, eleven years ago.",
 		"size": [4, 4], "cost": {}, "fixed": true, "placement": "floor", "waterproof": true,
 		"power": {"consume": 55}, "pump": {"rate": 2.5},
 		"requires": {"governor_coil": 1, "seal_gum": 4},

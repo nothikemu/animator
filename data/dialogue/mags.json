@@ -1,4 +1,82 @@
 {
-	"lines": [],
-	"convos": {}
+	"_comment": "Mags Pellow. Loud, warm, practical; tells your deeds back to you slightly wrong. Counts the stores alone at night. The Lantern House is where the town's memory lives.",
+
+	"lines": [
+		{"id": "m_intro", "tier": "story", "once": true, "when": ["!met:mags"], "convo": "intro"},
+		{"id": "m_stores", "tier": "story", "once": true, "when": ["phase:hush|night", "affection:mags>=8"], "convo": "stores"},
+		{"id": "m_stew", "tier": "story", "once": true, "when": ["met:mags", "deed:harvested>=1"], "convo": "stew"},
+		{"id": "m_knock", "tier": "story", "once": true, "when": ["flag:knock_heard"], "convo": "knock"},
+
+		{"id": "m_g_well", "tier": "reactive", "once": true, "when": ["flag:well_fixed"], "text": "Heard you fixed the well with your bare hands and a hairpin! ...Seal gum? Well. I'm telling it with the hairpin.", "emote": "happy", "open": "shop:lantern"},
+		{"id": "m_g_burner", "tier": "reactive", "once": true, "when": ["deed:built_dirty>=1"], "text": "Odile says you built a burner. Hesper says you built a monster. I say: does it cook?", "open": "shop:lantern"},
+		{"id": "m_g_turbine", "tier": "reactive", "once": true, "when": ["deed:built_clean>=1"], "text": "A turbine! On the spring! Hesper's been humming all day. It's unsettling. Have some tea.", "emote": "happy", "open": "shop:lantern"},
+		{"id": "m_g_carried", "tier": "reactive", "once": true, "when": ["mem:barnaby:carried_home"], "text": "Barnaby carried you home, I hear. Over his shoulder like a sack of beets. He denies it. That's how you know.", "emote": "happy", "open": "shop:lantern"},
+		{"id": "m_g_rounds", "tier": "reactive", "once": true, "when": ["flag:b_rounds_seen"], "text": "Somebody fixed my line in the night. Again. I left a pie on the step. The pie went. Ghosts don't eat pie.", "open": "shop:lantern"},
+		{"id": "m_g_sour", "tier": "reactive", "when": ["pollution>0.15"], "text": "My stew tastes of pennies today. Somebody's air is wrong, and I'd like a word with it.", "emote": "annoyed", "open": "shop:lantern"},
+		{"id": "m_g_dry", "tier": "reactive", "when": ["cistern<0.35", "!flag:cistern_fed"], "text": "Cistern's low. I'm boiling the same water twice. Don't tell anyone. I'm saying it loudly so I'll remember not to.", "open": "shop:lantern"},
+		{"id": "m_g_tremor", "tier": "reactive", "once": true, "when": ["flag:tremor_done"], "text": "Shook every jar off my shelves! Lost three good pickles. Pickles don't grow on trees. They grow on— well. Moss. Mostly.", "open": "shop:lantern"},
+		{"id": "m_g_sealed", "tier": "reactive", "once": true, "when": ["mem:hesper:sealed_fissure"], "text": "Hesper says you packed the fissure with your own two hands and sang to it. I added the singing. Did you sing? You should've sung.", "open": "shop:lantern"},
+		{"id": "m_g_pump", "tier": "reactive", "once": true, "when": ["running.station_pump"], "text": "The Station pump! My whole kitchen's humming in tune with it. Barnaby came in and sat at a DIFFERENT TABLE. I nearly fainted.", "emote": "surprised", "open": "shop:lantern"},
+		{"id": "m_g_quiet_bright", "tier": "reactive", "once": true, "when": ["flag:ql_bloom=bright"], "text": "Best Quietlight since my mother's time. People are still talking. I'm making sure of it.", "emote": "happy", "open": "shop:lantern"},
+		{"id": "m_g_quiet_thin", "tier": "reactive", "once": true, "when": ["flag:quietlight_done", "!flag:ql_bloom=bright"], "text": "Thin bloom this year. Folk are saying it's the air. Folk are saying it at my tables, so I hear it every time.", "emote": "sad", "open": "shop:lantern"},
+		{"id": "m_g_paid", "tier": "reactive", "once": true, "when": ["flag:burner_paid"], "text": "You paid Odile back! On time! She told me. She told everyone. She's been almost smiling.", "open": "shop:lantern"},
+
+		{"id": "m_amb_wake", "tier": "ambient", "when": ["phase:wake"], "text": "Breakfast's porridge and gossip. Gossip's free. Porridge isn't.", "open": "shop:lantern"},
+		{"id": "m_amb_bloom", "tier": "ambient", "when": ["phase:bloom"], "text": "Stew's on. Stew's always on. Stew was on before I was born and it'll be on after.", "open": "shop:lantern"},
+		{"id": "m_amb_dim", "tier": "ambient", "when": ["phase:dimming"], "text": "Busiest hour! Sit anywhere. Not Barnaby's table. He won't say anything, but he'll THINK it.", "open": "shop:lantern"},
+		{"id": "m_amb_hush", "tier": "ambient", "when": ["phase:hush|night"], "text": "Kitchen's closing, love. There's tea if you're quick and quiet.", "open": "shop:lantern"},
+		{"id": "m_amb_odile", "tier": "ambient", "when": ["met:odile"], "text": "Odile runs a tab for half the town and pretends she doesn't. I pretend I don't know. It's a very friendly pretending.", "open": "shop:lantern"},
+		{"id": "m_amb_food", "tier": "ambient", "text": "Bring me beets and bellcaps and I'll make you something that'll put the colour back in you.", "open": "shop:lantern"},
+
+		{"id": "m_bark1", "tier": "bark", "text": "Stew's on!"},
+		{"id": "m_bark2", "tier": "bark", "text": "There you are! Eat something."},
+		{"id": "m_bark3", "tier": "bark", "text": "Ooh, did you hear about—? Later. Later!"},
+		{"id": "m_bark4", "tier": "bark", "when": ["phase:dimming"], "text": "Tables are filling up!"},
+		{"id": "m_bark5", "tier": "bark", "when": ["pollution>0.15"], "text": "Pennies. Everything tastes of pennies."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "Well, LOOK at you. Down the shaft! All the way down! Did it hurt? It looks like it hurt.", "emote": "surprised", "do": ["met:mags"]},
+			{"say": "Mags. Lantern House. If you're hungry, I feed you. If you're not hungry, I feed you anyway and you find out you were."},
+			{"say": "Everyone in Wick comes through that door sooner or later. So everything in Wick does too. You'll want to keep that in mind.", "emote": "happy"},
+			{"choice": [
+				{"text": "What's good?", "goto": "food"},
+				{"text": "What's the news?", "goto": "news"}
+			]},
+			{"label": "food"},
+			{"say": "Moss tea for the morning, glowbeet stew for the evening, and nothing in between because I'm one woman.", "goto": "shop"},
+			{"label": "news"},
+			{"say": "The well's dry, Barnaby's swearing at it, Odile's counting, Hesper's counting moths, and you fell out of the sky. Big week.", "emote": "happy"},
+			{"label": "shop"},
+			{"open": "shop:lantern"}
+		],
+
+		"stew": [
+			{"say": "Is that glowbeet on your hands? You've been growing! Proper growing!", "emote": "happy"},
+			{"say": "Here's my mother's trick. Two beets, one bellcap, low heat, and you don't stir it when it's thinking.", "do": ["learn:learned_stew", "toast:Learned: Glowbeet Stew", "affection:mags+3"]},
+			{"say": "Barnaby loves it. He'll never say so. Watch his helmet when you give him some. It fogs."}
+		],
+
+		"stores": [
+			{"say": "Oh! You gave me a start. I'm— I'm just counting.", "emote": "surprised"},
+			{"say": "Jars. Sacks. Every night. Forty-two jars of preserves, nineteen of tea, eleven sacks of meal."},
+			{"say": "Wick eats about four sacks a turn. You do the sums. I do them every night. They don't change, love. I keep hoping they'll change.", "emote": "sad"},
+			{"choice": [
+				{"text": "I'll grow more.", "do": ["affection:mags+5", "flag:promised_mags", "trust:mags+3"], "goto": "grow"},
+				{"text": "Does anyone else know?", "do": ["shared:mags+5"], "goto": "know"}
+			]},
+			{"label": "grow"},
+			{"say": "...Would you? Not for selling. For the shelves. I'd pay what Odile pays. Near enough. Don't tell Odile.", "emote": "happy", "goto": "end"},
+			{"label": "know"},
+			{"say": "Odile, maybe. She knows everything with a number in it. Nobody else. They come in, they eat, they laugh. That's the job. Laughing's the job.", "do": ["mem:mags:shared_stores:5:0.5:lasting"]}
+		],
+
+		"knock": [
+			{"say": "A knock! Under the Station! From the LOWER STATIONS!", "emote": "surprised"},
+			{"say": "Half my tables say it's a ghost. The other half say it's Wren Askew, and those are the tables that knew her."},
+			{"say": "Barnaby slept in the pump hall last night. Took a blanket and a teapot. I sent pie.", "do": ["shared:mags+3"]},
+			{"say": "Whatever's down there, love, it'll be hungry. Everyone is. I'm going to start packing a basket. Just in case."}
+		]
+	}
 }

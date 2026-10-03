@@ -81,13 +81,21 @@ func _on_line(speaker: StringName, line: String, emote: StringName) -> void:
 	_clear_choices()
 	_speaker = String(speaker)
 	var who := _speaker
-	if who == "player":
+	portrait.visible = who != "narrator"
+	if who == "narrator":
+		# Stage directions and sounds: no name, no face, dimmer text.
+		name_label.text = ""
+		text.add_theme_color_override("default_color", UiTheme.DIM)
+	elif who == "player":
+		text.remove_theme_color_override("default_color")
 		name_label.text = String(GameState.player.get("name", "You"))
 		name_label.add_theme_color_override("font_color", UiTheme.TEXT)
 	else:
+		text.remove_theme_color_override("default_color")
 		name_label.text = Society.display_name(who) if Society.is_met(who) else String(Content.npc(who).get("unknown", who))
 		name_label.add_theme_color_override("font_color", Content.color(String(Content.npc(who).get("color", "amber")), UiTheme.ACCENT))
-	portrait.texture = portrait_for(who if who != "player" else "player", String(emote))
+	if who != "narrator":
+		portrait.texture = portrait_for(who if who != "player" else "player", String(emote))
 	text.text = line
 	text.visible_characters = 0
 	_visible_chars = 0.0
@@ -138,7 +146,7 @@ func _process(delta: float) -> void:
 		var plain := text.get_parsed_text()
 		if n > 0 and n <= plain.length() and plain[n - 1] != " ":
 			_blip_acc += 1.0
-			if _blip_acc >= 2.0:
+			if _blip_acc >= 2.0 and _speaker != "narrator":
 				_blip_acc = 0.0
 				var voice: Dictionary = Content.npc(_speaker).get("voice", {}) if _speaker != "player" else {"timbre": "player", "pitch": 1.0}
 				Audio.voice_blip(String(voice.get("timbre", "")), float(voice.get("pitch", 1.0)), plain.unicode_at(n - 1))

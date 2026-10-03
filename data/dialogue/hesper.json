@@ -1,4 +1,120 @@
 {
-	"lines": [],
-	"convos": {}
+	"_comment": "Hesper Mott. Intense, tender with organisms, blunt with people. Counts lampmoths. Talks to moss more politely than to Odile. Wrong about machines; right about the air.",
+
+	"lines": [
+		{"id": "h_intro", "tier": "story", "once": true, "when": ["!met:hesper"], "convo": "intro"},
+		{"id": "h_turbine", "tier": "story", "once": true, "when": ["thread:power>=1", "!flag:h_power_talk"], "convo": "turbine"},
+		{"id": "h_quietlight", "tier": "story", "once": true, "when": ["met:hesper", "day>=3", "!flag:quietlight_announced"], "convo": "quietlight"},
+		{"id": "h_lice", "tier": "story", "once": true, "when": ["met:hesper", "day>=2"], "convo": "lice"},
+		{"id": "h_tremor", "tier": "story", "once": true, "when": ["flag:tremor_done"], "convo": "tremor"},
+		{"id": "h_bloom_bright", "tier": "story", "once": true, "when": ["flag:quietlight_done", "flag:ql_bloom=bright"], "convo": "bloom_bright"},
+		{"id": "h_bloom_thin", "tier": "story", "once": true, "when": ["flag:quietlight_done", "!flag:ql_bloom=bright"], "convo": "bloom_thin"},
+		{"id": "h_knock", "tier": "story", "once": true, "when": ["flag:knock_heard"], "convo": "knock"},
+		{"id": "h_ill", "tier": "story", "when": ["air_sour_hesper>0.12"], "text": "I can't— the beds are— please. Whatever is in the air. Please.", "emote": "sad"},
+
+		{"id": "h_sour", "tier": "reactive", "when": ["pollution>0.12"], "text": "Can you smell that? No. You can't. The moss can. It's dying very politely.", "emote": "annoyed"},
+		{"id": "h_burner", "tier": "reactive", "when": ["running.burner"], "text": "Someone is burning beets. Beets! We EAT those. Lampmoths eat those.", "emote": "annoyed"},
+		{"id": "h_turbine_on", "tier": "reactive", "once": true, "when": ["running.turbine"], "text": "The spring sings differently with your turbine in it. I've decided I like it. Don't tell anyone I decided.", "emote": "happy"},
+		{"id": "h_studied", "tier": "reactive", "once": true, "when": ["deed:studied_life>=1"], "text": "You looked at the frames. Properly looked. Most people walk on them. Some people walk on them on purpose.", "emote": "happy"},
+		{"id": "h_scrubber", "tier": "reactive", "once": true, "when": ["running.scrubber"], "text": "A moss scrubber. Machinery with moss in its lungs. I hate that it works. I love that it works. I need to sit down."},
+		{"id": "h_sealed", "tier": "reactive", "once": true, "when": ["mem:hesper:sealed_fissure"], "text": "You packed the fissure. The beds took a breath this morning. I watched them do it.", "emote": "happy"},
+		{"id": "h_side_odile", "tier": "reactive", "once": true, "when": ["flag:ql_side=odile"], "text": "Odile's lamps. For purses. On Quietlight. I'm not angry. I'm cataloguing it.", "emote": "annoyed"},
+
+		{"id": "h_amb_wake", "tier": "ambient", "when": ["phase:wake"], "text": "Shh. The frames are waking. They're slow in the mornings. So am I. We have that in common."},
+		{"id": "h_amb_bloom", "tier": "ambient", "when": ["phase:bloom"], "text": "Bloom. Everything is photosynthesising at once. Can you hear it? No. Nobody can. It's still happening."},
+		{"id": "h_amb_dim", "tier": "ambient", "when": ["phase:dimming"], "text": "Seventeen lampmoths so far tonight. Eighteen. No. Seventeen; that one was ash."},
+		{"id": "h_amb_hush", "tier": "ambient", "when": ["phase:hush|night"], "text": "The moss breathes out at night. If you lie on it you can feel it. Please don't lie on it."},
+		{"id": "h_amb_machines", "tier": "ambient", "text": "Every machine is a promise that someone else will deal with the smoke."},
+		{"id": "h_amb_grandmother", "tier": "ambient", "when": ["affection:hesper>=8"], "text": "My grandmother planted the first frames. She said the moss was here before Wick. I think it was here before the rock."},
+		{"id": "h_amb_odile", "tier": "ambient", "when": ["met:odile"], "text": "Odile asked me what moss is FOR. As if it needs to be for anything. As if SHE'S for anything."},
+
+		{"id": "h_bark1", "tier": "bark", "text": "Shh. They're breathing."},
+		{"id": "h_bark2", "tier": "bark", "text": "Mind the frames!"},
+		{"id": "h_bark3", "tier": "bark", "text": "Seventeen. Eighteen. No. Seventeen."},
+		{"id": "h_bark4", "tier": "bark", "when": ["pollution>0.12"], "text": "Ugh. Can't you smell it?"},
+		{"id": "h_bark5", "tier": "bark", "text": "Hello, you. Not you. The moss."},
+		{"id": "h_bark6", "tier": "bark", "when": ["phase:dimming"], "text": "Lampmoths soon. Soon!"}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "Don't step there. Or there. Or— fine. Stand on the path. The path is for feet.", "emote": "annoyed", "do": ["met:hesper"]},
+			{"say": "Hesper. These are the moss beds. That's Clara, that's the Old Frame, that's the one I haven't named because it's sulking."},
+			{"say": "They clean the air. They make the damp bearable. Everybody in Wick breathes them and nobody thanks them."},
+			{"choice": [
+				{"text": "Thank you, moss.", "do": ["affection:hesper+4", "deed:studied_life+1"], "goto": "thanks"},
+				{"text": "What's wrong with the grey patch?", "do": ["respect:hesper+3"], "goto": "grey"},
+				{"text": "It's just moss.", "do": ["affection:hesper-3"], "goto": "just"}
+			]},
+			{"label": "thanks"},
+			{"say": "...Oh. Oh, that's— they heard that. I'm almost sure they heard that.", "emote": "happy", "goto": "end"},
+			{"label": "grey"},
+			{"say": "Rock-lice. And bad air from somewhere. You noticed. Nobody notices. Come back. Come back and notice things.", "emote": "surprised", "goto": "end"},
+			{"label": "just"},
+			{"say": "And you're just a topper. Off you go, then. Mind Clara.", "emote": "annoyed"}
+		],
+
+		"turbine": [
+			{"say": "Barnaby says you're building power. Everyone always says it like it's weather.", "do": ["flag:h_power_talk"]},
+			{"say": "Listen. The spring at the east wall falls a long way down. A long, clean fall. You could put a turbine in it."},
+			{"say": "Glowglass vanes. No smoke. No sour. The water doesn't even notice it's been useful."},
+			{"say": "My grandmother drew one, once. Here. Don't get beet on it.", "do": ["learn:schematic_turbine", "toast:Learned: Drip Turbine", "affection:hesper+2"]},
+			{"say": "It won't be as strong as Odile's fire. It'll be honest about it, though. Honest is a kind of strong."}
+		],
+
+		"quietlight": [
+			{"say": "You don't know about Quietlight. Of course you don't. Sit. No, not there. There.", "do": ["flag:quietlight_announced"]},
+			{"say": "On the fifth night of the turn, Wick puts out every lamp. Every one. And the grove blooms."},
+			{"say": "The glowroots open, the lampmoths come up off the lake in thousands, and for an hour everything that's alive down here is lit by everything else that's alive down here."},
+			{"say": "How bright it gets depends on the air. And the moths. And whether Odile Brask can survive one hour without selling something.", "emote": "annoyed"},
+			{"say": "Keep the air clean. Plant things moths like. That's all. That's everything."}
+		],
+
+		"lice": [
+			{"say": "Rock-lice. In the Old Frame. Eating it from the roots up.", "emote": "sad", "do": ["flag:h_lice_talk"]},
+			{"say": "Everybody wants me to cull them. Odile says crush them. Mags says boil them. Barnaby says nothing, which is worse."},
+			{"say": "They were here before the frames. They're part of it. You can't just— take a piece out of a thing and call it fixed."},
+			{"choice": [
+				{"text": "Sulfur ferns might drive them off.", "do": ["respect:hesper+4", "learn:learned_filters", "flag:lice_ferns"], "goto": "ferns"},
+				{"text": "Maybe they do need culling.", "do": ["affection:hesper-2", "respect:hesper+1"], "goto": "cull"},
+				{"text": "Then leave them be.", "do": ["affection:hesper+2"], "goto": "leave"}
+			]},
+			{"label": "ferns"},
+			{"say": "...Ferns. They hate the smell of sulfur ferns. That isn't killing. That's— persuasion.", "emote": "surprised"},
+			{"say": "Fine. Here. Filter pads: moss fibre and sulfur, pressed. The ferns and the pads like the same things. I'll teach you both."},
+			{"goto": "end"},
+			{"label": "cull"},
+			{"say": "You sound like Odile. Odile sounds like a hammer.", "emote": "annoyed", "goto": "end"},
+			{"label": "leave"},
+			{"say": "...And watch the Old Frame go grey. Yes. That's what I've been doing. It's very restful.", "emote": "sad"}
+		],
+
+		"tremor": [
+			{"say": "Something came up out of the ground. I felt the beds flinch.", "emote": "sad", "do": ["flag:h_tremor_talk"]},
+			{"say": "Sour gas. Heavy. Sinking into everything low and green. That's my beds. That's your plots."},
+			{"say": "A scrubber would save them. A machine. With moss pads for lungs. Do you know how much it costs me to say that?", "emote": "annoyed"},
+			{"say": "Take it. My grandmother's drawing. Build it or pack that hole. Just— do something before Clara goes grey.", "do": ["learn:schematic_scrubber", "learn:learned_filters", "learn:learned_respirator", "toast:Learned: Moss Scrubber"]}
+		],
+
+		"bloom_bright": [
+			{"say": "Did you see it. Did you SEE it.", "emote": "happy"},
+			{"say": "The moths came up off the lake like the water was snowing upwards. The Old Frame lit. The OLD FRAME."},
+			{"say": "Forty-one years I've watched Quietlight. That was the brightest. That was your air. That was you.", "do": ["affection:hesper+6", "mem:hesper:bright_bloom:6:0.8:lasting"]},
+			{"say": "I'm not crying. Moss pollen. It's very— it's a lot of pollen this year."}
+		],
+
+		"bloom_thin": [
+			{"say": "You saw it. The bloom. What there was of it.", "emote": "sad"},
+			{"say": "Half the frames stayed dark. The moths came up and went straight back down. They could taste it."},
+			{"say": "I'm not saying whose fault. I'm saying it was somebody's. I'm saying it was the air, and the air came from somewhere.", "do": ["mem:hesper:thin_bloom:5:-0.6:lasting"]},
+			{"say": "Next turn. Next turn it can be better. That's the thing about moss. It forgives. It just takes its time about it."}
+		],
+
+		"knock": [
+			{"say": "Mags says there's someone knocking under the Station. Everybody's whispering about the Lower Stations."},
+			{"say": "Do you know what I think? I think the moss knew. The frames breathe on a rhythm I've never been able to match to anything."},
+			{"say": "Three. Two. Three. I've had it written in my notebook for nine years and called it 'irregular'.", "emote": "surprised"},
+			{"say": "Whoever's down there, they're breathing the same air we are. Tell them to be careful with it.", "do": ["shared:hesper+5"]}
+		]
+	}
 }

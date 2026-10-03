@@ -73,6 +73,8 @@ func start_with(npc_id: String) -> bool:
 	_nodes = [{"say": String(line.get("text", "...")), "emote": String(line.get("emote", ""))}]
 	if line.has("do"):
 		_nodes.append({"do": line.do})
+	if line.has("open"):
+		_nodes.append({"open": String(line.open)})
 	_begin()
 	return true
 
@@ -267,6 +269,7 @@ func _token(t: String) -> String:
 		"time": return Clock.time_string()
 		"day": return str(Clock.day)
 		"item": return Content.item_name(parts[1]) if parts.size() > 1 else ""
+		"key": return Settings.binding_label(parts[1]) if parts.size() > 1 else ""
 	return "{%s}" % t
 
 

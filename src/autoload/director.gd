@@ -16,7 +16,9 @@ var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
 	Clock.hour_changed.connect(_on_hour)
-	Clock.day_started.connect(func(_d: int) -> void: tension = maxf(0.0, tension - 1.5))
+	Clock.day_started.connect(func(_d: int) -> void:
+		tension = maxf(0.0, tension - 1.5)
+		end_quietlight())
 
 
 func reset(seed_value: int) -> void:
@@ -139,6 +141,37 @@ func _hook_moth_swarm(_c: Dictionary) -> void:
 		var p: Dictionary = Sim.plots[cell]
 		if p.crop == "glowbeet":
 			p.pollinated = true
+
+
+## Quietlight: every lamp in Wick goes out for the Hush and the grove blooms. How bright it
+## blooms is decided by the air the player has left the town with, and by whether the
+## market lamps stayed lit (Odile's side of the argument).
+func _hook_quietlight(_c: Dictionary) -> void:
+	var air := Sim.village_pollution()
+	var bright := air < 0.06 and String(GameState.flag("ql_side") if GameState.flag("ql_side") else "") != "odile"
+	GameState.set_flag("ql_bloom", "bright" if bright else "thin")
+	GameState.set_flag("quietlight_active", true)
+	GameState.discover("lore", "quietlight")
+
+
+## The morning after Quietlight.
+func end_quietlight() -> void:
+	if GameState.has_flag("quietlight_active"):
+		GameState.set_flag("quietlight_active", false)
+		trigger("quietlight_end")
+
+
+## The Trunk valve turns: pressure equalises, the gauge needle drops off its pin.
+func _hook_valve_turn(_c: Dictionary) -> void:
+	GameState.set_flag("valve_turned", true)
+	Audio.play("valve_turn", -2.0)
+	Events.flash.emit(Color(0.85, 0.95, 1.0), 0.15)
+
+
+## Three, two, three, from below the Lower Stations.
+func _hook_knock(_c: Dictionary) -> void:
+	Audio.play("knock_323", 0.0)
+	GameState.discover("lore", "the_knock")
 
 
 func to_dict() -> Dictionary:

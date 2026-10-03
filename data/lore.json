@@ -1,3 +1,68 @@
 {
-	"_comment": "Lore fragments found in the world. Filled in during the narrative pass."
+	"_comment": "Lore fragments, shown in the Journal once discovered. Short. Every one raises a question.",
+	"moss_frames": {
+		"title": "The Moss Frames",
+		"where": "Hesper's beds, Wick",
+		"text": "Tidy frames of cave moss, each tagged with a date. The oldest tag is forty years old and in a different hand. The moss breathes: on quiet nights you can watch the frames rise and fall, very slightly, in time with nothing you can hear."
+	},
+	"first_knock": {
+		"title": "The Pipes, at Night",
+		"where": "The Lease, Wick",
+		"text": "Three knocks, a pause, two, a pause, three. Then nothing. Old pipes tick as they cool. These didn't tick. They knocked."
+	},
+	"tier1": {
+		"title": "Crew Log, Page Torn",
+		"where": "A ruin in the Reach",
+		"text": "STN-7 inspection, day 4. Lower Stations line holding at 3.1. Askew insists she hears tapping on the second trunk. Coil told her it's thermal. It's thermal. Askew has started tapping back. Coil has told her to stop. — the rest is water-stained"
+	},
+	"tier2": {
+		"title": "Stores Manifest",
+		"where": "A ruin in the Reach",
+		"text": "GOVERNOR COILS: two (2). One fitted, Station 7 primary. One spare, Trunk chamber, sealed crate. NEVER take the last coil up-line. If the pump dies and the spare is gone, nothing lifts the river. Initialled: W.A."
+	},
+	"tier3": {
+		"title": "Station Council Notice",
+		"where": "A ruin deep in the Reach",
+		"text": "By order of the Station Council: the Trunk Lines are closed to all traffic until the Quiet is understood. Stations will not attempt contact with Lower Stations. Stations will not answer. The brass plate is two hundred years old. Someone has scratched beneath it, much more recently: WE ANSWERED."
+	},
+	"trunk": {
+		"title": "A Note in Wren's Hand",
+		"where": "The Trunk chamber",
+		"text": "B — If you're reading this, you closed it. Good. That's the job, and you did it, so stop that face. The water's going down here. There's air in the lower gallery and a dry stair going further than any map. I can hear pumps below. Running. Somebody is keeping them going. I'm going to find out who. Don't wait up. — W.  3·2·3"
+	},
+	"relic_crew_locker": {
+		"title": "Crew Locker",
+		"where": "Under the lane",
+		"text": "A crew locker, door rusted half open. A tin cup, a respirator strap gone stiff, and a brass tag on a nail. The name stencilled on the door has been scrubbed off by somebody who meant it."
+	},
+	"relic_gauge": {
+		"title": "The Lower Stations Gauge",
+		"where": "Station 7 pump hall",
+		"text": "A pressure gauge with a starred face, plate reading LOWER STATIONS. The needle is pinned past the red. A gauge with nothing behind it reads zero. This one doesn't."
+	},
+	"relic_trunk_valve": {
+		"title": "The Trunk Valve",
+		"where": "The Sink, beneath the pump hall",
+		"text": "A wheel valve the size of a cart wheel, stamped TRUNK — LOWER STATIONS. It's been wired shut with very careful, very even wraps of copper. Someone took their time. Someone didn't want to be quick about it."
+	},
+	"relic_stencil": {
+		"title": "Primary Lift",
+		"where": "Station 7 pump hall",
+		"text": "Stencilled on the brick, nearly gone: STN-7 PRIMARY LIFT. There was a lift here once, and it went down. Nobody in Wick remembers it going anywhere."
+	},
+	"relic_old_pipes": {
+		"title": "The Old Risers",
+		"where": "Station 7 pump hall",
+		"text": "Risers far older than Wick's mains, cast in one piece with no seams. They go down further than the brickwork does, further than the plumb-glass can show."
+	},
+	"the_knock": {
+		"title": "Three, Two, Three",
+		"where": "The Trunk valve",
+		"text": "Crew code, Barnaby says. It means: still here. It came back up the Trunk line from somewhere under the Lower Stations, eleven years after anyone should have been there to send it."
+	},
+	"quietlight": {
+		"title": "Quietlight",
+		"where": "Wick, the fifth night",
+		"text": "Every lamp in Wick goes out for one Hush. The glowroots open, the lampmoths rise off the lake, and for an hour everything alive down here is lit by everything else alive down here. How bright depends on the air. Everyone knows that. Everyone acts surprised anyway."
+	}
 }

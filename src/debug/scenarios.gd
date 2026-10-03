@@ -54,6 +54,9 @@ static func run(game: Node, name: String) -> void:
 				game.get_tree().create_timer(0.1).timeout.connect(func() -> void:
 					if game.engineering:
 						game.engineering.overlay = parts[1])
+		"opening":
+			Clock.start(1, 7 * 60)
+			game.opening()
 		"cut_exit":
 			# Enters the cut, then leaves it again: checks the return transition restores the town.
 			Clock.start(1, 11 * 60)

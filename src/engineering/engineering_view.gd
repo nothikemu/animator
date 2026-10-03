@@ -815,6 +815,9 @@ func _refresh_panel() -> void:
 
 func _show_machine(m: MachineState) -> void:
 	var d: Dictionary = Content.machine(m.def_id)
+	if m.def_id == "station_pump" and Threads.stage("station7") >= 1 and not GameState.has_flag("seen_station_pump"):
+		GameState.set_flag("seen_station_pump")
+		game.monologue("No governor coil in the housing — just a clean, empty cradle where one should be. The seals have gone to powder. Everything else is only old.")
 	ui.show_machine(m, d, Inspect.machine_lines(m, d), _machine_actions(m, d))
 
 
@@ -858,9 +861,21 @@ func _show_cell(c: Vector2i) -> void:
 	if not r.is_empty():
 		var t := String(r.type)
 		var acts: Array = []
+		var body := String(RELIC_TEXT.get(t, ""))
 		if t == "crew_locker" and not GameState.has_flag("took_crew_tag"):
 			acts.append(["relic_take", t, "Take the brass tag", true, "crew_tag"])
-		ui.show_info(_relic_name(t), String(RELIC_TEXT.get(t, "")), PackedStringArray(), acts)
+		if t == "gauge" and Sim.fact("running.station_pump"):
+			body = "The needle has come off its pin. It's reading. Something below the Lower Stations is holding pressure against the valve."
+		if t == "trunk_valve":
+			if GameState.has_flag("knock_heard"):
+				body = "The valve, " + ("open a hand's width. Cold air breathes up out of it, smelling of iron and somewhere else." if GameState.has_flag("valve_open") else "still shut. You both know what's on the other side now. Someone who knows the code.")
+			elif GameState.has_flag("b_valve_talk"):
+				body = "Barnaby is already here, one glove on the wheel, not looking at it."
+				if String(GameState.flag("valve_choice")) == "shut":
+					acts.append(["finale", "listen", "Listen at the valve with Barnaby", true, "st_water"])
+				else:
+					acts.append(["finale", "open", "Turn the valve with Barnaby", true, "gear"])
+		ui.show_info(_relic_name(t), body, PackedStringArray(), acts)
 		if not GameState.has_flag("seen_relic_" + t):
 			GameState.set_flag("seen_relic_" + t)
 			GameState.discover("lore", "relic_" + t)
@@ -929,6 +944,10 @@ func _on_action(act: String, arg: String) -> void:
 			if m:
 				_remove_at(m.cell)
 				return
+		"finale":
+			ui.close_panel()
+			game.finale(arg == "open")
+			return
 		"relic_take":
 			GameState.set_flag("took_crew_tag")
 			GameState.give("wren_token", 1)

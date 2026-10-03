@@ -538,6 +538,33 @@ func fact(key: String) -> Variant:
 		"town_water": return town_water
 		"noise_lane": return machines.last.get("noise", 0.0)
 		"exhale": return Clock.breath() == "exhale"
+		"planted":
+			var n := 0
+			for c: Vector2i in plots:
+				if String(plots[c].get("crop", "")) != "":
+					n += 1
+			return n
+		"well_flowing":
+			var w := well()
+			return w != null and (w.basin > 0.15 or (w.water_moved > 0.01 and w.on_water_net and machines.water_net_of(w).get("leak", 1.0) < 0.05))
+		"fissure_sealed":
+			for cell in Content.undercroft.get("fissure", []):
+				var c := Vector2i(int(cell[0]), int(cell[1]))
+				# Sealed when no open fissure cell reaches the surface: packing any one row closes it.
+				if not grid.is_open(c.x, c.y):
+					return true
+			return false
+		"power":
+			var total := 0.0
+			for net: Dictionary in machines.power_nets:
+				total += float(net.get("supply", 0.0))
+			return total
+		"leaks":
+			var n := 0
+			for c: Vector2i in machines.pipes:
+				if float(machines.pipes[c]) < 1.0:
+					n += 1
+			return n
 	if key.begins_with("air_sour_"):
 		var npc := key.substr(9)
 		var home := String(Content.npc(npc).get("home", ""))

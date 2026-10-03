@@ -1,4 +1,72 @@
 {
-	"lines": [],
-	"convos": {}
+	"_comment": "Grist, a Knapper. Slow, careful, timid. Hears through its hands. Speaks in short, considered pieces separated by pauses. Finds glowbeets delicious and slightly intoxicating.",
+
+	"lines": [
+		{"id": "g_intro", "tier": "story", "once": true, "when": ["!met:grist"], "convo": "intro"},
+		{"id": "g_song", "tier": "story", "once": true, "when": ["met:grist", "!flag:tremor_done"], "convo": "song"},
+		{"id": "g_after_tremor", "tier": "story", "once": true, "when": ["flag:tremor_done"], "convo": "listening"},
+		{"id": "g_knock", "tier": "story", "once": true, "when": ["flag:knock_heard"], "convo": "knock"},
+
+		{"id": "g_loud", "tier": "reactive", "when": ["noise_lane>6"], "text": "...Loud. Above. Hurts the hands. ...Trade quick?", "emote": "sad", "open": "shop:grist"},
+		{"id": "g_burner", "tier": "reactive", "once": true, "when": ["running.burner"], "text": "...Fire-box. Under the town. It... coughs. In the rock. We feel it cough.", "open": "shop:grist"},
+		{"id": "g_turbine", "tier": "reactive", "once": true, "when": ["running.turbine"], "text": "...Water-wheel. Soft. Like rain on the far side of stone. ...Nice.", "emote": "happy", "open": "shop:grist"},
+		{"id": "g_beets", "tier": "reactive", "when": ["item:glowbeet>=3"], "text": "...You smell of beets. ...Very... of beets. ...Trade?", "emote": "happy", "open": "shop:grist"},
+
+		{"id": "g_amb1", "tier": "ambient", "text": "...Ore. For beets. ...Fair?", "open": "shop:grist"},
+		{"id": "g_amb2", "tier": "ambient", "text": "...Slow. Slow is good. Rock is slow. Rock is... honest.", "open": "shop:grist"},
+		{"id": "g_amb3", "tier": "ambient", "when": ["affection:grist>=6"], "text": "...Friend. You walk soft now. ...We notice.", "emote": "happy", "open": "shop:grist"},
+		{"id": "g_amb4", "tier": "ambient", "when": ["affection:grist>=10"], "text": "...A trick. For heat. Fins of hot-ore. ...Knapper trick. ...For you.", "open": "shop:grist"},
+
+		{"id": "g_bark1", "tier": "bark", "text": "...beets?"},
+		{"id": "g_bark2", "tier": "bark", "text": "...slow."},
+		{"id": "g_bark3", "tier": "bark", "text": "...hands hear."},
+		{"id": "g_bark4", "tier": "bark", "when": ["noise_lane>6"], "text": "...too loud..."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "...", "emote": "surprised", "do": ["met:grist"]},
+			{"say": "...New. Walker. ...From up?"},
+			{"say": "...Grist. Knapper. ...We eat stone. We make the ways. ...You walk them."},
+			{"choice": [
+				{"text": "(Speak slowly.) Hello, Grist.", "do": ["affection:grist+4", "trust:grist+2"], "goto": "slow"},
+				{"text": "What are you selling?", "goto": "trade"}
+			]},
+			{"label": "slow"},
+			{"say": "...Oh. ...Slow voice. ...Good voice.", "emote": "happy"},
+			{"label": "trade"},
+			{"say": "...Hot-ore. Glow-glass. Black-stone. ...For beets. Beets are..."},
+			{"say": "...very good.", "emote": "happy"},
+			{"open": "shop:grist"}
+		],
+
+		"song": [
+			{"say": "...The rock. ...Near the deep water.", "do": ["flag:g_song_talk"]},
+			{"say": "...It sings. ...Wrong. Low. ...Like a held breath."},
+			{"say": "...Held breath lets go. ...Always. ...Soon."},
+			{"choice": [
+				{"text": "What happens when it lets go?", "goto": "what"},
+				{"text": "Thank you for telling me.", "do": ["trust:grist+3"], "goto": "thanks"}
+			]},
+			{"label": "what"},
+			{"say": "...Things move. ...Closed ways open. ...Open ways close. ...Pipes... crack.", "emote": "sad", "goto": "end"},
+			{"label": "thanks"},
+			{"say": "...Walkers don't listen. ...You listen. ...Strange walker.", "emote": "happy"}
+		],
+
+		"listening": [
+			{"say": "...The rock stopped singing.", "do": ["flag:g_listening_talk"]},
+			{"say": "...Now it... listens."},
+			{"say": "...The old way. Past the deep water. ...Open now. We felt it open. ...Like a mouth."},
+			{"say": "...Careful. ...Something is at the bottom of the mouth. ...Something with... rhythm."}
+		],
+
+		"knock": [
+			{"say": "...You heard. ...Three. Two. Three."},
+			{"say": "...We always hear. ...Since before Grist. Since before Grist's grand-stone."},
+			{"say": "...We thought... walkers knew. ...Walkers below. ...Talking to walkers above.", "emote": "surprised"},
+			{"say": "...Nobody answered. ...For long. ...Long. ...Now somebody answers.", "do": ["shared:grist+6", "trust:grist+4"]},
+			{"say": "...Good. ...Lonely, otherwise."}
+		]
+	}
 }

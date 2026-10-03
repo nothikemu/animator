@@ -13,6 +13,7 @@ var area: AreaMap
 var props: PropBuilder
 var fade_targets: Dictionary = {}        ## group name -> target fade
 var _flicker_t := 0.0
+var _quiet := 0.0                        ## 0..1 Quietlight blend (lamps fade out slowly)
 
 
 static func terrain_material() -> ShaderMaterial:
@@ -60,16 +61,22 @@ func update_fades(pos: Vector3, delta: float) -> void:
 ## Light life: glowroots breathe with the grove, lamps flicker a little.
 func update_lights(delta: float, glow: float, dark: float, lamp_quality: float) -> void:
 	_flicker_t += delta
+	# Quietlight: every lamp out; the grove blooms as bright as the air allows.
+	var quiet := GameState.has_flag("quietlight_active")
+	var bloom := 1.0
+	if quiet:
+		bloom = 2.6 if String(GameState.flag("ql_bloom")) == "bright" else 1.2
+	_quiet = move_toward(_quiet, 1.0 if quiet else 0.0, delta * 0.35)
 	for l in props.lights:
 		var base := float(l.get_meta("base_energy", 1.0))
 		var kind := String(l.get_meta("kind", ""))
 		var phase := l.position.x * 0.37 + l.position.z * 0.21
 		match kind:
 			"glow":
-				l.light_energy = base * (0.55 + 0.45 * glow) * (1.0 + 0.06 * sin(_flicker_t * 0.9 + phase))
+				l.light_energy = base * (0.55 + 0.45 * glow) * (1.0 + 0.06 * sin(_flicker_t * 0.9 + phase)) * lerpf(1.0, bloom, _quiet)
 			"amber":
 				var f := 1.0 + 0.05 * sin(_flicker_t * 7.3 + phase) + 0.03 * sin(_flicker_t * 13.1 + phase * 2.0)
-				l.light_energy = base * (0.75 + 0.35 * dark) * f
+				l.light_energy = base * (0.75 + 0.35 * dark) * f * (1.0 - _quiet)
 			"ember":
 				l.light_energy = base * (1.0 + 0.15 * sin(_flicker_t * 3.1 + phase))
 			_:

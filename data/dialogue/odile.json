@@ -1,4 +1,131 @@
 {
-	"lines": [],
-	"convos": {}
+	"_comment": "Odile Brask. Brisk, exact, thinks in ledgers, impatient with sentiment, generous in ways she hides. Most conversations end at the counter.",
+
+	"lines": [
+		{"id": "o_intro", "tier": "story", "once": true, "when": ["!met:odile"], "convo": "intro"},
+		{"id": "o_power", "tier": "story", "once": true, "when": ["thread:power>=1", "!flag:o_power_talk"], "convo": "burner_offer"},
+		{"id": "o_debt", "tier": "story", "when": ["flag:burner_credit", "!flag:burner_paid", "day>=4"], "convo": "debt"},
+		{"id": "o_quietlight", "tier": "story", "once": true, "when": ["flag:quietlight_announced", "!flag:quietlight_done"], "convo": "quietlight"},
+		{"id": "o_tremor", "tier": "story", "once": true, "when": ["flag:tremor_done"], "convo": "tremor"},
+		{"id": "o_trade", "tier": "story", "once": true, "when": ["running.station_pump"], "convo": "trade"},
+		{"id": "o_credit_secret", "tier": "story", "once": true, "when": ["trust:odile>=15", "phase:dimming|hush"], "convo": "ledger"},
+
+		{"id": "o_burner", "tier": "reactive", "once": true, "when": ["running.burner"], "text": "Your burner's doing honest work. The Exchange has noticed. So has the lake, I'm told, at length.", "open": "shop:exchange"},
+		{"id": "o_turbine", "tier": "reactive", "once": true, "when": ["running.turbine"], "text": "Clean power. Admirable. Small. Admirable things often are.", "open": "shop:exchange"},
+		{"id": "o_market", "tier": "reactive", "when": ["market_day", "met:grist"], "text": "Market day. Grist's in from the Blackstone. Prices move when Knappers smile. Watch the glowglass.", "open": "shop:exchange"},
+		{"id": "o_dry", "tier": "reactive", "when": ["cistern<0.35", "!flag:cistern_fed"], "text": "The ledger has a new column. 'Water, lack of.' It's growing faster than the others.", "open": "shop:exchange"},
+		{"id": "o_sour", "tier": "reactive", "when": ["pollution>0.15"], "text": "Beets from sour soil sell for less. I don't make the rules. I do enforce them.", "open": "shop:exchange"},
+		{"id": "o_fed", "tier": "reactive", "once": true, "when": ["flag:cistern_fed"], "text": "Cistern's climbing. I took 'water, lack of' out of the ledger. Ceremonially. With a ruler.", "emote": "happy", "open": "shop:exchange"},
+		{"id": "o_well", "tier": "reactive", "once": true, "when": ["flag:well_fixed"], "text": "You fixed the well. Barnaby's been insufferable about it, which is how I know he's pleased.", "open": "shop:exchange"},
+
+		{"id": "o_amb_wake", "tier": "ambient", "when": ["phase:wake"], "text": "The Exchange opens when I say. I say now. Buying or selling?", "open": "shop:exchange"},
+		{"id": "o_amb_bloom", "tier": "ambient", "when": ["phase:bloom"], "text": "Afternoon trade. People buy more after lunch. Mags thinks that's her stew. It is.", "open": "shop:exchange"},
+		{"id": "o_amb_dim", "tier": "ambient", "when": ["phase:dimming"], "text": "Last trades before the books close. Make it quick, I've a column to argue with.", "open": "shop:exchange"},
+		{"id": "o_amb_price", "tier": "ambient", "text": "Everything has a price. Most things have two: the one I say and the one I mean.", "open": "shop:exchange"},
+		{"id": "o_amb_damp", "tier": "ambient", "when": ["met:odile", "day>=2"], "text": "Children cough in the damp season. Medicine comes from down-river. Down-river wants something we haven't got. You see my problem.", "open": "shop:exchange"},
+		{"id": "o_amb_hesper", "tier": "ambient", "when": ["met:hesper"], "text": "Hesper came in to tell me moss has feelings. I sold her a jar. Everyone wins.", "open": "shop:exchange"},
+		{"id": "o_amb_schem", "tier": "ambient", "when": ["thread:power>=1"], "text": "Schematics on the back wall. Knowledge is the only stock that doesn't spoil.", "open": "shop:exchange"},
+
+		{"id": "o_bark1", "tier": "bark", "text": "The ledger doesn't lie."},
+		{"id": "o_bark2", "tier": "bark", "text": "Mind the stall."},
+		{"id": "o_bark3", "tier": "bark", "text": "Buying glowglass. Always buying glowglass."},
+		{"id": "o_bark4", "tier": "bark", "text": "Hm. Prices."},
+		{"id": "o_bark5", "tier": "bark", "when": ["market_day"], "text": "Market day! Fair prices, firm hands!"},
+		{"id": "o_bark6", "tier": "bark", "when": ["pollution>0.15"], "text": "Somebody's air smells expensive."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "New face. Down the shaft, I hear. Odile Brask. I run the Exchange.", "do": ["met:odile"]},
+			{"say": "The rules are simple. You bring things, I pay. I have things, you pay more. Questions?"},
+			{"choice": [
+				{"text": "What sells?", "goto": "sells"},
+				{"text": "No questions.", "goto": "fine"}
+			]},
+			{"label": "sells"},
+			{"say": "Glowbeets, always. Glowglass, when anyone's brave enough to dig it. Food from clean soil sells better than food from sour, and don't let anyone tell you people can't taste it."},
+			{"goto": "shop"},
+			{"label": "fine"},
+			{"say": "Good. I like people who don't waste time. Mine, specifically.", "do": ["respect:odile+1"]},
+			{"label": "shop"},
+			{"open": "shop:exchange"}
+		],
+
+		"burner_offer": [
+			{"say": "Barnaby says you're putting a pump on the cistern. Sensible. Pumps want power.", "do": ["flag:o_power_talk"]},
+			{"say": "I have a burner schematic. Steady, strong, eats beets or resin. It will make Hesper cry, but Hesper cries at moss."},
+			{"choice": [
+				{"text": "I'll take it on credit.", "do": ["learn:schematic_burner", "flag:burner_credit", "trust:odile+3", "toast:Learned: Glowbeet Burner"], "goto": "credit"},
+				{"text": "What does it cost the town?", "goto": "cost"},
+				{"text": "Not yet.", "goto": "no"}
+			]},
+			{"label": "cost"},
+			{"say": "Sour air, mostly. Some heat. Noise the Knappers complain about. In exchange: the cistern stays full and nobody boils their water twice."},
+			{"say": "I've buried people over less water than this, so forgive me if I'm not sentimental about a smell."},
+			{"choice": [
+				{"text": "Credit, then.", "do": ["learn:schematic_burner", "flag:burner_credit", "trust:odile+3", "toast:Learned: Glowbeet Burner"], "goto": "credit"},
+				{"text": "I'll think about it.", "goto": "no"}
+			]},
+			{"label": "credit"},
+			{"say": "On credit. Thirty glim when the cistern's full. I'll know when it is. I always know.", "goto": "end"},
+			{"label": "no"},
+			{"say": "Suit yourself. It's on the back wall when you change your mind. Minds are cheaper than pumps."}
+		],
+
+		"debt": [
+			{"say": "The burner. Thirty glim. You'll notice I waited."},
+			{"choice": [
+				{"text": "Here. Paid in full.", "when": ["money>=30"], "do": ["money-30", "flag:burner_paid", "deed:kept_word+1", "trust:odile+4"], "goto": "paid"},
+				{"text": "Not yet. Soon.", "goto": "later"}
+			]},
+			{"label": "paid"},
+			{"say": "Paid. You'd be amazed how rare that is down here. I'm going to underline you.", "emote": "happy", "goto": "end"},
+			{"label": "later"},
+			{"say": "'Soon' is a word I've written in this ledger four hundred times. Fine. Soon.", "emote": "annoyed"}
+		],
+
+		"quietlight": [
+			{"say": "Quietlight. Hesper's told you. Every lamp out so the grove can show off.", "do": ["flag:o_ql_talk"]},
+			{"say": "Half the market comes down from the far caverns for it. In the dark. With purses. And I'm to sell them nothing?"},
+			{"say": "I want the market lamps lit. Six of them, low, for an hour. Hesper wants me drawn and quartered for suggesting it."},
+			{"choice": [
+				{"text": "Keep the lamps on. Trade matters.", "do": ["flag:ql_side=odile", "trust:odile+5", "resentment:hesper+4", "notice:hesper:Hesper heard you sided with Odile about the lamps."], "goto": "on"},
+				{"text": "Put them out. It's one night.", "do": ["flag:ql_side=hesper", "respect:odile+2", "affection:hesper+3", "notice:odile:Odile wrote something in the ledger about you. Small letters."], "goto": "off"},
+				{"text": "I'm staying out of this.", "do": ["flag:ql_side=none"], "goto": "none"}
+			]},
+			{"label": "on"},
+			{"say": "Thank you. Somebody in this town has to think about February.", "goto": "end"},
+			{"label": "off"},
+			{"say": "Hm. One night. I'll hold you to the 'one'.", "emote": "annoyed", "goto": "end"},
+			{"label": "none"},
+			{"say": "Wise. Cowardly, but wise. Those often travel together."}
+		],
+
+		"tremor": [
+			{"say": "Three cracked lines, a gas leak and a collapsed passage. I'm entering it in the ledger as 'Tuesday'.", "do": ["flag:o_tremor_talk"]},
+			{"say": "Prices on seal gum and blackstone go up today. Not because I'm cruel. Because everybody needs them at once and I have eleven."},
+			{"say": "You'll want to pack that fissure before Hesper's beds go grey. And then we'll never hear the end of it."}
+		],
+
+		"trade": [
+			{"say": "The Station pump. You actually did it. I heard it from the counter. The jars rattled.", "emote": "surprised", "do": ["flag:o_trade_talk"]},
+			{"say": "Do you know what this means? Surplus water. Surplus beets. Something down-river wants."},
+			{"say": "Twenty glowbeets in the Exchange stock, and I can send the first crate. Medicine comes back before the damp. Children stop coughing."},
+			{"say": "Don't look at me like that. I'm being practical. ...I'm being practical very hard.", "emote": "sad"}
+		],
+
+		"ledger": [
+			{"say": "You're looking at the ledger. Everyone looks at the ledger. Nobody reads it."},
+			{"say": "Fine. Page forty. Every name on it owes me. Mags owes me a season. Hesper owes me a year. Barnaby owes me a winter, and doesn't know."},
+			{"say": "I'll never call it in. If I call it in, Wick stops. And if anyone finds out I'll never call it in, they'll stop paying the ones I need them to.", "do": ["shared:odile+6", "flag:knows_ledger", "mem:odile:showed_ledger:6:0.5:lasting"]},
+			{"choice": [
+				{"text": "That's generous.", "goto": "gen"},
+				{"text": "Your secret's safe.", "do": ["trust:odile+5"], "goto": "safe"}
+			]},
+			{"label": "gen"},
+			{"say": "It's arithmetic. Generous is when you don't write it down.", "goto": "end"},
+			{"label": "safe"},
+			{"say": "It's not a secret. It's a ledger. ...Thank you."}
+		]
+	}
 }
