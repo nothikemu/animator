@@ -132,6 +132,7 @@
 			{"say": "Well? Don't soften it."},
 			{"say": "Governor coil's gone. Seals are dust. The rest is just old, and old isn't broken. I knew that. I wanted to hear it in someone else's voice.", "emote": "sad"},
 			{"say": "There was a spare coil. In the Trunk chamber, down past the Sump. The passage collapsed in the flood. Or I collapsed it. The days run together."},
+			{"say": "Seals I can teach you. Ember resin, two to a pot, boiled till it stops arguing. Here.", "do": ["learn:learned_seal", "toast:Learned: Seal Gum"]},
 			{"say": "So that's that. Unless the rock changes its mind.", "do": ["flag:b_station_seen", "respect:barnaby+2"]}
 		],
 

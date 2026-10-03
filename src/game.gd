@@ -471,21 +471,31 @@ func opening() -> void:
 	Clock.pause("opening")
 	await get_tree().create_timer(0.8).timeout
 	Audio.play("winch", -6.0)
-	Events.caption.emit("[a winch creaks, very far above]", 2.4)
-	await get_tree().create_timer(2.4).timeout
+	await _black_caption("[a winch creaks, very far above]", 2.4)
 	Audio.play("cable_snap", -2.0)
-	Events.caption.emit("[a cable snaps]", 1.6)
 	Events.camera_impulse.emit(0.4)
-	await get_tree().create_timer(1.6).timeout
+	await _black_caption("[a cable snaps]", 1.6)
 	Audio.play("fall", -4.0)
-	Events.caption.emit("[a long fall — then moss, softer than it has any right to be]", 3.0)
-	await get_tree().create_timer(3.2).timeout
+	await _black_caption("[a long fall — then moss, softer than it has any right to be]", 3.0)
 	Clock.resume("opening")
 	await fade.fade_in(2.2)
 	GameState.set_flag("intro_done")
 	player.frozen = false
 	_busy = false
 	monologue("Your headlamp flickers. Only one direction has any light in it.")
+
+
+## A sound caption on the black opening card (the HUD caption line sits under the fade).
+func _black_caption(text: String, seconds: float) -> void:
+	fade.title.add_theme_color_override("font_color", UiTheme.DIM)
+	fade.title.text = text   # story text, shown whether or not sound captions are on
+	var tw := create_tween()
+	tw.tween_property(fade.title, "modulate:a", 1.0, 0.3)
+	await get_tree().create_timer(seconds).timeout
+	var tw2 := create_tween()
+	tw2.tween_property(fade.title, "modulate:a", 0.0, 0.3)
+	await tw2.finished
+	fade.title.remove_theme_color_override("font_color")
 
 
 ## Beat 3: the first time the player steps out of the grotto, the camera eases back to show Wick.
