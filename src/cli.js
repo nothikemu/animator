@@ -416,7 +416,12 @@ export async function generateAnimation(rawOptions, { reporter, signal = shutdow
     });
     ui.debug(`timeline: ${timeline.stats.keystrokes} keystrokes, ${timeline.stats.hunks} hunks, ${(timeline.durationMs / 1000).toFixed(2)}s, seed ${seed}`);
     if (timeline.stats.typingScale < 0.67) {
-      ui.warn(`Typing sped up ${(1 / timeline.stats.typingScale).toFixed(1)}× to fit --max-duration ${options.maxDuration}s (raise it for a slower take).`);
+      const factor = 1 / timeline.stats.typingScale;
+      ui.warn(`Typing sped up ${factor.toFixed(1)}× to fit --max-duration ${options.maxDuration}s (raise it for a slower take).`);
+      if (factor > 8) {
+        const biggest = [...models].sort((a, b) => b.additions - a.additions)[0];
+        ui.info(s.dim(`Tip: this diff is very large for one video. Focus on one file, e.g. \`-- ${biggest.path}\`, or a smaller range.`));
+      }
     } else if (timeline.stats.compressed) {
       ui.debug(`timeline compressed to fit --max-duration (typing scale ${timeline.stats.typingScale.toFixed(2)})`);
     }
