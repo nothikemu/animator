@@ -1,0 +1,326 @@
+<title>Bellows</title>
+<meta name="description" content="Bellows, chapter one: a cozy engineering-life game that plays in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+/* One deliberate look: Wick at night. Basalt, brass, lamp amber, living cyan. */
+:root {
+	--basalt: #121116;
+	--basalt-2: #1a1820;
+	--rule: #2f2b35;
+	--brass: #9c7a3c;
+	--amber: #e8a33d;
+	--amber-hi: #f3bd63;
+	--cream: #efe3c2;
+	--muted: #a99f8a;
+	--cyan: #56e0d4;
+	--ember: #e2795a;
+	--display: "Pixelify Sans", "Courier New", ui-monospace, monospace;
+	--text: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+	color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+	background: var(--basalt);
+	color: var(--cream);
+	font: 16px/1.55 var(--text);
+	-webkit-font-smoothing: antialiased;
+}
+body.playing { overflow: hidden; touch-action: none; }
+
+#canvas { position: fixed; inset: 0; display: block; outline: none; background: #000; }
+#canvas:focus { outline: none; }
+
+/* ---- Launcher ---------------------------------------------------------- */
+.launch {
+	position: fixed; inset: 0; z-index: 2;
+	display: grid; grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+	background: var(--basalt);
+	overflow-y: auto;
+}
+.launch__art {
+	grid-column: 2; grid-row: 1; margin: 0;
+	background: #0c0b10 url("wick.jpg") center / cover no-repeat;
+	image-rendering: pixelated;
+	position: relative;
+}
+.launch__art::before {
+	content: ""; position: absolute; inset: 0;
+	background: linear-gradient(90deg, var(--basalt) 0%, rgba(18, 17, 22, 0.55) 22%, rgba(18, 17, 22, 0) 55%);
+}
+.launch__art figcaption {
+	position: absolute; right: 16px; bottom: 14px;
+	font: 13px/1.3 var(--text); color: var(--muted);
+	background: rgba(18, 17, 22, 0.72); padding: 4px 8px; border-radius: 3px;
+}
+.launch__panel {
+	grid-column: 1; grid-row: 1;
+	display: flex; flex-direction: column; justify-content: center; gap: 1.6rem;
+	padding-block: 3rem; padding-inline: clamp(16px, 5vw, 3.5rem);
+	min-width: 0;
+}
+.eyebrow {
+	margin: 0; font: 700 0.78rem/1 var(--text); letter-spacing: 0.14em; text-transform: uppercase;
+	color: var(--cyan);
+}
+h1 {
+	margin: 0; font: 700 clamp(3.2rem, 9vw, 5.25rem)/0.9 var(--display); letter-spacing: 0.01em;
+	color: var(--amber); text-shadow: 0 0 28px rgba(232, 163, 61, 0.28);
+	text-wrap: balance;
+}
+.lede { margin: 0; max-width: 62ch; color: var(--cream); font-size: 1.06rem; text-wrap: pretty; }
+.lede em { font-style: normal; color: var(--amber-hi); }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
+.btn {
+	appearance: none; border: 0; cursor: pointer;
+	font: 700 1.15rem/1 var(--display); letter-spacing: 0.04em;
+	padding: 0.95rem 2.1rem; border-radius: 3px;
+	color: #1b1307; background: var(--amber);
+	box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.22), 0 0 0 1px #6d4f1c;
+	transition: background-color 120ms ease, transform 120ms ease;
+}
+.btn:hover { background: var(--amber-hi); }
+.btn:active { transform: translateY(1px); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.22), 0 0 0 1px #6d4f1c; }
+.btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.btn--quiet {
+	font: 700 0.95rem/1 var(--text); letter-spacing: 0; padding: 0.8rem 1.1rem;
+	color: var(--cream); background: transparent; box-shadow: inset 0 0 0 1px var(--brass);
+}
+.btn--quiet:hover { background: rgba(156, 122, 60, 0.18); }
+
+.note { margin: 0; color: var(--muted); font-size: 0.92rem; max-width: 60ch; }
+.note strong { color: var(--cream); font-weight: 700; }
+
+/* Controls, set as a surveyor's legend. */
+.legend { border-top: 1px solid var(--rule); padding-top: 1.1rem; }
+.legend h2 {
+	margin: 0 0 0.7rem; font: 700 0.78rem/1 var(--text); letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass);
+}
+.legend dl {
+	margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.45rem 1rem; align-items: baseline;
+}
+.legend dt { margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.legend dd { margin: 0; color: var(--muted); font-size: 0.95rem; min-width: 0; }
+kbd {
+	display: inline-block; min-width: 1.6em; text-align: center;
+	font: 700 0.8rem/1 var(--text); color: var(--cream);
+	padding: 0.32em 0.45em 0.28em; border-radius: 3px;
+	background: var(--basalt-2); box-shadow: inset 0 0 0 1px var(--rule), inset 0 -2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Loading state */
+.load { display: grid; gap: 0.6rem; max-width: 30rem; }
+.load__label { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.95rem; color: var(--muted); }
+.load__label span:last-child { font-variant-numeric: tabular-nums; color: var(--cream); }
+.gauge {
+	height: 10px; border-radius: 2px; background: var(--basalt-2);
+	box-shadow: inset 0 0 0 1px var(--rule); overflow: hidden;
+}
+.gauge__fill {
+	height: 100%; width: 0%; background: linear-gradient(90deg, var(--brass), var(--amber));
+	transition: width 160ms linear;
+}
+.gauge--busy .gauge__fill { width: 35% !important; animation: sweep 1.2s ease-in-out infinite alternate; }
+@keyframes sweep { from { transform: translateX(-10%); } to { transform: translateX(200%); } }
+
+.error {
+	margin: 0; padding: 0.9rem 1rem; border-radius: 3px; max-width: 62ch;
+	background: rgba(226, 121, 90, 0.1); box-shadow: inset 3px 0 0 var(--ember);
+	color: var(--cream); font-size: 0.95rem;
+}
+.error code { font-size: 0.85rem; color: var(--ember); word-break: break-word; }
+
+@media (max-width: 760px) {
+	.launch { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; align-content: start; }
+	.launch__art { grid-column: 1; grid-row: 1; aspect-ratio: 16 / 10; max-width: 100%; }
+	.launch__art::before { background: linear-gradient(0deg, var(--basalt) 0%, rgba(18, 17, 22, 0) 45%); }
+	.launch__panel { grid-column: 1; grid-row: 2; padding-block: 0.5rem 2.5rem; justify-content: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.gauge__fill, .btn { transition: none; }
+	.gauge--busy .gauge__fill { animation: none; }
+}
+</style>
+
+<canvas id="canvas" tabindex="0">Your browser can't draw the game (no canvas support).</canvas>
+
+<main class="launch" id="launch">
+	<figure class="launch__art" role="img" aria-label="Wick at night: lamp-lit houses, cobbles and glowing moss trees above a dark lake.">
+		<figcaption>Wick, the market lane at dimming</figcaption>
+	</figure>
+
+	<section class="launch__panel">
+		<p class="eyebrow">Chapter one &middot; plays in your browser</p>
+		<h1>Bellows</h1>
+		<p class="lede">
+			Your line snaps at the bottom of a shaft and you land in <em>Wick</em>, a lamp-lit town built
+			on a dead pumping station. Grow crops in the dark, look under the streets through the
+			surveyor's <em>plumb-glass</em> at the pipes, wires, water and air that keep it breathing,
+			and get to know five people who remember what you do.
+		</p>
+
+		<div id="start">
+			<div class="actions">
+				<button class="btn" id="play" type="button">Play</button>
+				<button class="btn btn--quiet" id="play-full" type="button">Play full screen</button>
+			</div>
+		</div>
+
+		<div class="load" id="load" hidden>
+			<div class="load__label"><span id="load-what">Lowering the line&hellip;</span><span id="load-pct">0%</span></div>
+			<div class="gauge" id="gauge"><div class="gauge__fill" id="gauge-fill"></div></div>
+		</div>
+
+		<p class="error" id="error" hidden></p>
+
+		<p class="note" id="note">
+			About <strong>25&nbsp;MB</strong> loads the first time. Best in Chrome, Edge or Firefox on a
+			computer, with a <strong>keyboard</strong> or a <strong>gamepad</strong>. Sound starts when you press Play.
+		</p>
+
+		<div class="legend">
+			<h2>Controls</h2>
+			<dl>
+				<dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Walk (arrows work too)</dd>
+				<dt><kbd>E</kbd></dt><dd>Talk, open, pick up</dd>
+				<dt><kbd>F</kbd><kbd>Click</kbd></dt><dd>Use the tool in hand &middot; <kbd>Q</kbd> swaps tools</dd>
+				<dt><kbd>C</kbd></dt><dd>Plumb-glass: see the machinery under the town</dd>
+				<dt><kbd>Tab</kbd><kbd>J</kbd><kbd>M</kbd></dt><dd>Pack &middot; Journal &middot; Map</dd>
+				<dt><kbd>Esc</kbd></dt><dd>Pause, settings and save (in full screen, Esc first leaves full screen)</dd>
+			</dl>
+		</div>
+	</section>
+</main>
+
+<script>
+// Hosts that cap file sizes or types (15 MB, standard web types only) can't serve the 40 MB
+// engine or the .pck as they are. The packager ships each as base64 text of its gzip
+// (index.wasm.txt, index.pck.txt). Godot still asks for "index.wasm" and "index.pck";
+// this hands back the decoded, inflated bytes and reports download progress on the way.
+(function () {
+	var PACKED = /*PACKED*/{}/*END*/;
+	var realFetch = window.fetch.bind(window);
+	var got = {};
+	function report() {
+		var have = 0, want = 0;
+		for (var k in PACKED) { want += PACKED[k].size; have += got[k] || 0; }
+		if (typeof window.onPackedProgress === "function") window.onPackedProgress(have, want);
+	}
+	function nameOf(input) {
+		var url = typeof input === "string" ? input : (input && input.url) || "";
+		return url.split("?")[0].split("#")[0].split("/").pop();
+	}
+	function decode(text) {
+		text = text.replace(/\s+/g, "");
+		if (typeof Uint8Array.fromBase64 === "function") return Uint8Array.fromBase64(text);
+		var bin = atob(text), out = new Uint8Array(bin.length);
+		for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+		return out;
+	}
+	window.fetch = async function (input, init) {
+		var name = nameOf(input);
+		var entry = Object.prototype.hasOwnProperty.call(PACKED, name) ? PACKED[name] : null;
+		if (!entry) return realFetch(input, init);
+		var res = await realFetch(entry.src, init);
+		if (!res.ok || !res.body) return res;
+		var reader = res.body.getReader(), dec = new TextDecoder(), parts = [];
+		got[name] = 0;
+		for (;;) {
+			var r = await reader.read();
+			if (r.done) break;
+			got[name] += r.value.length;
+			parts.push(dec.decode(r.value, { stream: true }));
+			report();
+		}
+		parts.push(dec.decode());
+		var bytes = decode(parts.join(""));
+		parts = null;
+		var body = new Blob([bytes]).stream();
+		if (bytes.length > 1 && bytes[0] === 0x1f && bytes[1] === 0x8b) body = body.pipeThrough(new DecompressionStream("gzip"));
+		return new Response(body, { status: 200, headers: { "Content-Type": entry.type } });
+	};
+})();
+</script>
+<script src="index.js"></script>
+<script>
+(function () {
+	var GODOT_CONFIG = /*GODOT_CONFIG*/{}/*END*/;
+	var engine = new Engine(GODOT_CONFIG);
+
+	var $ = function (id) { return document.getElementById(id); };
+	var started = false;
+
+	function fail(msg, detail) {
+		$("load").hidden = true;
+		$("start").hidden = false;
+		var el = $("error");
+		el.textContent = msg + " ";
+		if (detail) {
+			var code = document.createElement("code");
+			code.textContent = String(detail);
+			el.appendChild(code);
+		}
+		el.hidden = false;
+		started = false;
+	}
+
+	function progress(current, total) {
+		var pct = total > 0 ? Math.min(100, Math.floor((current / total) * 100)) : 0;
+		$("gauge").classList.remove("gauge--busy");
+		$("gauge-fill").style.width = pct + "%";
+		$("load-pct").textContent = pct + "%";
+		$("load-what").textContent = "Lowering the line\u2026";
+		if (pct >= 100) unpacking();
+	}
+
+	function unpacking() {
+		$("gauge").classList.add("gauge--busy");
+		$("load-pct").textContent = "";
+		$("load-what").textContent = "Lighting the lamps\u2026";
+	}
+
+	window.onPackedProgress = progress;
+
+	function begin(fullscreen) {
+		if (started) return;
+		started = true;
+		$("error").hidden = true;
+
+		var missing = Engine.getMissingFeatures({ threads: false });
+		if (missing.length) {
+			fail("This browser is missing something the game needs: " + missing.join(", ") + ". Try a recent Chrome, Edge or Firefox.");
+			return;
+		}
+		if (typeof DecompressionStream === "undefined") {
+			fail("This browser is too old to unpack the game (no DecompressionStream). Try a recent Chrome, Edge, Firefox or Safari.");
+			return;
+		}
+		if (fullscreen && document.documentElement.requestFullscreen) {
+			document.documentElement.requestFullscreen().catch(function () { /* optional */ });
+		}
+		$("start").hidden = true;
+		$("load").hidden = false;
+		progress(0, 1);
+
+		engine.startGame({ onProgress: function () { /* the download gauge covers this */ } }).then(function () {
+			$("launch").hidden = true;
+			document.body.classList.add("playing");
+			$("canvas").focus();
+		}, function (err) {
+			var text = String((err && err.message) || err);
+			if (/WebAssembly|wasm|unsafe-eval|Content Security/i.test(text)) {
+				fail("This page isn't allowed to start the game engine here.", text);
+			} else {
+				fail("The game couldn't start.", text);
+			}
+		});
+	}
+
+	$("play").addEventListener("click", function () { begin(false); });
+	$("play-full").addEventListener("click", function () { begin(true); });
+	$("canvas").addEventListener("pointerdown", function () { $("canvas").focus(); });
+})();
+</script>

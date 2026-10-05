@@ -121,3 +121,21 @@ What doesn't yet:
 
 Next, in order: a listening pass; set pieces for each Reach tier; harvest feel; a first-hour
 playtest with three people who've never seen it, watching where they stop reading.
+
+## Browser build
+The game now runs in a browser tab, so it can be played without installing anything.
+* **Renderer.** Desktop stays on Forward+; the Web uses Compatibility (WebGL 2). Audio uses the
+  Stream playback path on the Web because the default Sample path can't play the layered music.
+* **Invisible town.** The first browser run drew nothing but the sky. Unset per-instance shader
+  uniforms read as 0 under WebGL, not their declared defaults, so `fade = 0` discarded every
+  fragment and `tint = 0` would have blacked out every sprite. The terrain and sprite shaders now
+  treat an exact zero as "never set". No real value hits it: roof fades bottom out at 0.08 and
+  sprites hide below 0.01.
+* **Data.** The JSON content isn't a Godot resource, so the export preset includes `*.json`.
+* **Hosting limits.** The engine is 40 MB, and some hosts cap files at 15 MB and serve only
+  standard web types. The packager gzips the engine and the pack and ships them as base64 text;
+  a fetch shim in the launch page decodes, inflates and hands Godot its `index.wasm` and
+  `index.pck`, and drives the download gauge. Checked in Chromium (SwiftShader) from launcher to
+  the grotto's first line, including under a strict CSP that allows only `wasm-unsafe-eval`.
+* **Not checked yet:** Firefox and Safari, a real GPU, and save persistence in a sandboxed
+  frame (Godot falls back to memory-only saves when IndexedDB is unavailable).

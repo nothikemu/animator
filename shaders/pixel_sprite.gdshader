@@ -83,14 +83,15 @@ void fragment() {
 	if (c.a < 0.5) {
 		discard;
 	}
-	if (fade < 1.0 && hash2(floor(suv * vec2(textureSize(sheet, 0)))) > fade) {
+	// Exact zeros mean "never set": WebGL leaves unset instance uniforms at zero.
+	if (fade < 1.0 && fade > 0.0001 && hash2(floor(suv * vec2(textureSize(sheet, 0)))) > fade) {
 		discard;
 	}
 	// Props in front of the cut crumble away with the ground they stood on.
 	if (sink_k > 0.0 && hash2(floor(suv * vec2(textureSize(sheet, 0))) + 7.0) < sink_k * 1.15) {
 		discard;
 	}
-	vec3 albedo = c.rgb * tint.rgb;
+	vec3 albedo = c.rgb * (tint.a < 0.0001 ? vec3(1.0) : tint.rgb);
 	albedo = mix(albedo, flash_color.rgb, flash_color.a);
 	ALBEDO = albedo;
 	if (has_emit) {

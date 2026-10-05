@@ -59,10 +59,15 @@ locale/fallback="en"
 
 common/physics_ticks_per_second=60
 
+[audio]
+
+general/default_playback_type.web=0
+
 [rendering]
 
 renderer/rendering_method="forward_plus"
 renderer/rendering_method.mobile="mobile"
+renderer/rendering_method.web="gl_compatibility"
 textures/canvas_textures/default_texture_filter=0
 textures/default_filters/anisotropic_filtering_level=2
 lights_and_shadows/positional_shadow/atlas_size=2048

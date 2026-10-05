@@ -28,6 +28,21 @@ godot --path . -- --dev             # with the dev overlay (F3) and console (F1)
 The project uses Forward+ (Mobile and Compatibility fall back gracefully). It needs Godot 4.7
 or newer; the first launch imports the generated assets.
 
+### In a browser
+
+```sh
+tools/build_web.sh                                  # export + package into build/webpub/
+python3 -m http.server -d build/webpub 8000         # then open http://localhost:8000
+```
+
+The Web build uses the Compatibility renderer (WebGL 2) and is single-threaded, so any static
+host works without special headers. It needs the Godot 4.7 Web export templates. The packager
+(`tools/web/package.py`) wraps the export in a launch page (`tools/web/launcher.html`) and ships
+the 40 MB engine and the game pack as gzip-in-base64 text, so no file is over 16 MB and every
+file is a standard web type; a small fetch shim in the page turns them back into `index.wasm` and
+`index.pck`. `build/webpub/artifact.html` is the same page without the document wrapper, for
+hosts that add their own.
+
 ### Controls
 
 | Action | Keyboard / mouse | Gamepad |

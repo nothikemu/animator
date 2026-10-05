@@ -42,7 +42,8 @@ void fragment() {
 			discard;
 		}
 	}
-	if (fade < 0.999) {
+	// An exact 0 means "never set": WebGL leaves unset instance uniforms at zero.
+	if (fade < 0.999 && fade > 0.0001) {
 		// Ordered-dither dissolve (roofs and front walls of the cutaway house).
 		vec2 sp = floor(FRAGCOORD.xy / 2.0);
 		float d = fract(sin(dot(sp, vec2(12.9898, 78.233))) * 43758.5453);
