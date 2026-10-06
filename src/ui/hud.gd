@@ -17,6 +17,9 @@ var caption_label: Label
 var breath_bar: ProgressBar
 var save_icon: TextureRect
 var save_label: Label
+var minimap: Minimap
+var area_label: Label
+var _map_box: Control
 var _notice_t := 0.0
 var _caption_t := 0.0
 var _save_t := 0.0
@@ -42,14 +45,18 @@ func _ready() -> void:
 	# Panels cover the middle of the screen; keep the corners quiet while they're up.
 	Events.ui_open.connect(func(_p: StringName, _d: Dictionary) -> void:
 		thread_label.visible = false
+		_map_box.visible = false
 		prompt_panel.visible = false)
-	Events.ui_closed.connect(func(_p: StringName) -> void: thread_label.visible = true)
+	Events.ui_closed.connect(func(_p: StringName) -> void:
+		thread_label.visible = true
+		_apply_minimap_size())
 	Events.save_started.connect(func(_s: int) -> void: _saving = true; _save_t = 0.0)
 	Events.save_finished.connect(_on_saved)
 	Events.settings_changed.connect(func(s: StringName) -> void:
 		if s == &"access":
 			UiTheme.invalidate()
-			root.theme = UiTheme.get_theme())
+			root.theme = UiTheme.get_theme()
+			_apply_minimap_size())
 
 
 func _build() -> void:
@@ -93,6 +100,21 @@ func _build() -> void:
 	mh.add_child(money_label)
 	mp.add_child(mh)
 	tr.add_child(mp)
+	# Minimap (N cycles small / large / hidden).
+	var mbox := VBoxContainer.new()
+	mbox.size_flags_horizontal = Control.SIZE_SHRINK_END
+	mbox.add_theme_constant_override("separation", 2)
+	minimap = Minimap.new()
+	minimap.custom_minimum_size = Vector2(184, 150)
+	mbox.add_child(minimap)
+	area_label = Label.new()
+	area_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	area_label.add_theme_font_size_override("font_size", UiTheme.size(15))
+	area_label.add_theme_color_override("font_color", UiTheme.DIM)
+	mbox.add_child(area_label)
+	tr.add_child(mbox)
+	_map_box = mbox
+	_apply_minimap_size()
 	thread_label = Label.new()
 	thread_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	thread_label.add_theme_font_size_override("font_size", UiTheme.size(17))
@@ -119,7 +141,11 @@ func _build() -> void:
 	# The hand tool means nothing in the cut view, which has its own tool strip.
 	Events.view_mode_changed.connect(func(m: StringName) -> void:
 		tp.visible = m != &"cut"
-		thread_label.visible = m != &"cut")
+		thread_label.visible = m != &"cut"
+		if m == &"cut":
+			_map_box.visible = false
+		else:
+			_apply_minimap_size())
 	# Prompt (bottom-centre).
 	# A bottom-wide centring strip keeps the prompt centred whatever its width.
 	var prompt_strip := CenterContainer.new()
@@ -197,6 +223,9 @@ func _process(delta: float) -> void:
 		b = " · the Deep inhales"
 	phase_label.text = phase.capitalize() + b
 	money_label.text = "%d" % GameState.money()
+	if _map_box.visible:
+		var a := GameState.current_area
+		area_label.text = "Wick" if a == "wick" else String(ReachGen.node_by_id(GameState.reach_graph, a).get("name", ""))
 	var notes := Threads.active_notes()
 	thread_label.text = String(notes[0].note) if not notes.is_empty() else ""
 	var tool := GameState.current_tool()
@@ -227,6 +256,21 @@ static func _tool_icon(tool: String) -> String:
 static func _tool_name(tool: String) -> String:
 	return {"hands": "Hands", "tiller": "Tiller", "can": "Watering can", "hammer": "Knapping hammer",
 		"wrench": "Wrench", "glass": "Plumb-glass"}.get(tool, tool.capitalize())
+
+
+## Settings.access.minimap: 0 hidden, 1 small, 2 large.
+func _apply_minimap_size() -> void:
+	var m := int(Settings.access.get("minimap", 1))
+	_map_box.visible = m > 0 and GameState.view_mode != "cut"
+	minimap.custom_minimum_size = Vector2(300, 240) if m == 2 else Vector2(184, 150)
+	minimap.zoom = 1.25 if m == 2 else 1.0
+
+
+func cycle_minimap() -> void:
+	Settings.access["minimap"] = (int(Settings.access.get("minimap", 1)) + 1) % 3
+	Settings.save_settings()
+	_apply_minimap_size()
+	Audio.ui("ui_tick", -10.0)
 
 
 func set_prompt(text: String) -> void:

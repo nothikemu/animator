@@ -21,6 +21,7 @@ var panels: Node                         ## UI panel host (inventory, craft, jou
 var _target: Interactable
 var _busy := false                       ## transitions in progress
 var _talking_npc: Npc
+var marker: Node3D                      ## floating objective marker
 
 
 func _ready() -> void:
@@ -49,6 +50,8 @@ func _ready() -> void:
 	if DevOverlay.allowed():
 		add_child(DevOverlay.new())
 	actions = WorldActions.new(self)
+	marker = ObjectiveMarker.new()
+	add_child(marker)
 	load_area(GameState.current_area, true)
 	rig.target = player
 	rig.snap()
@@ -247,6 +250,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		Events.ui_open.emit(&"journal", {})
 	elif event.is_action_pressed("map"):
 		Events.ui_open.emit(&"map", {})
+	elif event.is_action_pressed("minimap"):
+		hud.cycle_minimap()
 	elif event.is_action_pressed("menu"):
 		Events.ui_open.emit(&"pause", {})
 

@@ -6,11 +6,11 @@
 		"priority": 10,
 		"start": ["flag:intro_done"],
 		"stages": [
-			{"note": "The town well gives nothing. Someone in a brass helmet is fighting it.", "advance": ["met:barnaby"]},
-			{"note": "Barnaby says the Lease at the west end is empty. Look around it.", "advance": ["flag:lease_tools", "flag:lease_seed_tin"]},
-			{"note": "Seeds, a tiller, an empty can. The well is still dry. Barnaby's been tracing the line.", "advance": ["flag:got_glass"]},
-			{"note": "Hold the plumb-glass up at the well [C]. Look at the ground the way the pipe sees it.", "advance": ["discovered:places:undercroft"]},
-			{"note": "The well line has burst under the lane. Mend it with seal gum, then crank the well.", "advance": ["well_flowing"]},
+			{"where": "npc:barnaby", "note": "The town well gives nothing. Someone in a brass helmet is fighting it.", "advance": ["met:barnaby"]},
+			{"where": "point:lease_door", "note": "Barnaby says the Lease at the west end is empty. Look around it.", "advance": ["flag:lease_tools", "flag:lease_seed_tin"]},
+			{"where": "npc:barnaby", "note": "Seeds, a tiller, an empty can. The well is still dry. Barnaby's been tracing the line.", "advance": ["flag:got_glass"]},
+			{"where": "point:well", "note": "Hold the plumb-glass up at the well [C]. Look at the ground the way the pipe sees it.", "advance": ["discovered:places:undercroft"]},
+			{"where": "point:well", "note": "The well line has burst under the lane. Mend it with seal gum, then crank the well.", "advance": ["well_flowing"]},
 			{"note": "Water in the basin. Real water.", "done": true, "on_enter": ["flag:well_fixed", "deed:water_restored+1", "deed:community_help+1", "mem:mags:fixed_well:3:0.6", "mem:barnaby:fixed_well:4:0.5:lasting"]}
 		]
 	},
@@ -20,9 +20,9 @@
 		"priority": 6,
 		"start": ["flag:lease_seed_tin"],
 		"stages": [
-			{"note": "Till the plots by the Lease and plant the glowbeet seeds. Glowbeets like it warm, wet and lit.", "advance": ["planted>=1"]},
-			{"note": "Keep them watered. Lamps and glowroots help; sour air doesn't.", "advance": ["deed:harvested>=1"]},
-			{"note": "Glowbeets! Sell a few at the Exchange, or keep them for something better.", "advance": ["deed:sold_food>=1"]},
+			{"where": "point:farm", "note": "Till the plots by the Lease and plant the glowbeet seeds. Glowbeets like it warm, wet and lit.", "advance": ["planted>=1"]},
+			{"where": "point:farm", "note": "Keep them watered. Lamps and glowroots help; sour air doesn't.", "advance": ["deed:harvested>=1"]},
+			{"where": "point:exchange_counter", "note": "Glowbeets! Sell a few at the Exchange, or keep them for something better.", "advance": ["deed:sold_food>=1"]},
 			{"note": "Your first harvest is on someone's table tonight.", "done": true, "on_enter": ["respect:odile+2", "affection:mags+2"]}
 		]
 	},
@@ -32,8 +32,8 @@
 		"priority": 9,
 		"start": ["flag:b_thanked_well"],
 		"stages": [
-			{"note": "Nothing refills the cistern since the Station pump died. Put a pump down in the Sink and pipe it to the cistern outlet.", "advance": ["machine.pump>=1"]},
-			{"note": "The pump needs power. Odile sells burners. Hesper swears by the spring. Barnaby has a crank and opinions.", "advance": ["running.pump"]},
+			{"where": "point:well", "note": "Nothing refills the cistern since the Station pump died. Put a pump down in the Sink and pipe it to the cistern outlet.", "advance": ["machine.pump>=1"]},
+			{"where": "point:well", "note": "The pump needs power. Odile sells burners. Hesper swears by the spring. Barnaby has a crank and opinions.", "advance": ["running.pump"]},
 			{"note": "Water climbs to the cistern again. Whatever is making that power, people will notice it.", "done": true, "on_enter": ["deed:water_restored+2", "deed:community_help+2", "flag:cistern_fed"]}
 		]
 	},
@@ -43,8 +43,8 @@
 		"priority": 5,
 		"start": ["flag:reach_open"],
 		"stages": [
-			{"note": "The Reach gate is open. Brass scrap, glowglass and blackstone lie below. Be home by Hush.", "advance": ["seen_places>=2"]},
-			{"note": "Someone built things down here once. Find a ruin and see what they left.", "advance": ["lore:tier1"]},
+			{"where": "area:reach", "note": "The Reach gate is open. Brass scrap, glowglass and blackstone lie below. Be home by Hush.", "advance": ["seen_places>=2"]},
+			{"where": "area:ruin", "note": "Someone built things down here once. Find a ruin and see what they left.", "advance": ["lore:tier1"]},
 			{"note": "A Station 7 crew log, in a ruin a long way from Station 7.", "done": true, "on_enter": ["deed:studied_life+1"]}
 		]
 	},
@@ -54,12 +54,12 @@
 		"priority": 8,
 		"start": ["flag:b_station_asked"],
 		"stages": [
-			{"note": "Barnaby wants you to look at the Station pump. Just look. Use the glass in the pump hall.", "advance": ["flag:seen_station_pump"]},
-			{"note": "The pump needs a governor coil and four seal gum. Barnaby says the only coil is in the Trunk chamber, past a passage that's been sealed for years.", "advance": ["flag:tremor_done"]},
-			{"note": "The Tremor broke the seal. The Trunk chamber in the Reach is open. Find the governor coil.", "advance": ["item:governor_coil>=1"]},
-			{"note": "Fit the governor coil and four seal gum to the Station pump, then give it fifty-five power.", "advance": ["running.station_pump"]},
-			{"note": "Station 7 is breathing. Barnaby is standing very still in the pump hall.", "advance": ["flag:b_valve_talk"]},
-			{"note": "Meet Barnaby at the Trunk valve, in the Sink beneath the pump hall. Through the glass.", "advance": ["flag:knock_heard"]},
+			{"where": "point:pumphall_door", "note": "Barnaby wants you to look at the Station pump. Just look. Use the glass in the pump hall.", "advance": ["flag:seen_station_pump"]},
+			{"where": "npc:barnaby", "note": "The pump needs a governor coil and four seal gum. Barnaby says the only coil is in the Trunk chamber, past a passage that's been sealed for years.", "advance": ["flag:tremor_done"]},
+			{"where": "area:trunk", "note": "The Tremor broke the seal. The Trunk chamber in the Reach is open. Find the governor coil.", "advance": ["item:governor_coil>=1"]},
+			{"where": "point:pumphall_door", "note": "Fit the governor coil and four seal gum to the Station pump, then give it fifty-five power.", "advance": ["running.station_pump"]},
+			{"where": "npc:barnaby", "note": "Station 7 is breathing. Barnaby is standing very still in the pump hall.", "advance": ["flag:b_valve_talk"]},
+			{"where": "point:pumphall_door", "note": "Meet Barnaby at the Trunk valve, in the Sink beneath the pump hall. Through the glass.", "advance": ["flag:knock_heard"]},
 			{"note": "Three. Two. Three.", "done": true, "on_enter": ["flag:station_running"]}
 		]
 	},
@@ -69,8 +69,8 @@
 		"priority": 7,
 		"start": ["flag:took_crew_tag"],
 		"stages": [
-			{"note": "A brass tag from a crew locker under the lane: W. ASKEW — TRUNK CREW. It's warm. Barnaby might know the name.", "advance": ["flag:b_wren_talk"]},
-			{"note": "Wren Askew was down-line when Barnaby closed the Trunk valve. She knocked for an hour.", "advance": ["lore:trunk"]},
+			{"where": "npc:barnaby", "note": "A brass tag from a crew locker under the lane: W. ASKEW — TRUNK CREW. It's warm. Barnaby might know the name.", "advance": ["flag:b_wren_talk"]},
+			{"where": "area:trunk", "note": "Wren Askew was down-line when Barnaby closed the Trunk valve. She knocked for an hour.", "advance": ["lore:trunk"]},
 			{"note": "A note in Wren's hand, in the Trunk chamber. Eleven years old. 'Don't wait up.'", "done": true, "on_enter": ["flag:read_wren_note"]}
 		]
 	},
@@ -80,7 +80,7 @@
 		"priority": 9,
 		"start": ["flag:tremor_done"],
 		"stages": [
-			{"note": "The Tremor split the ground under the Lease. Sour gas is climbing out of the old pocket. Pack the fissure with blackstone, scrub the air, or lose the plots.", "advance": ["fissure_sealed"]},
+			{"where": "point:farm", "note": "The Tremor split the ground under the Lease. Sour gas is climbing out of the old pocket. Pack the fissure with blackstone, scrub the air, or lose the plots.", "advance": ["fissure_sealed"]},
 			{"note": "The fissure is packed. The air over the farm is clearing.", "done": true, "on_enter": ["deed:ecosystem_restored+1", "deed:community_help+1", "mem:hesper:sealed_fissure:4:0.5"]}
 		]
 	},
@@ -90,7 +90,7 @@
 		"priority": 6,
 		"start": ["flag:quietlight_announced"],
 		"stages": [
-			{"note": "On the fifth night Wick puts out every lamp to watch the grove bloom. Hesper and Odile disagree about the market lamps.", "advance": ["flag:quietlight_done"],
+			{"where": "point:lake_view", "note": "On the fifth night Wick puts out every lamp to watch the grove bloom. Hesper and Odile disagree about the market lamps.", "advance": ["flag:quietlight_done"],
 				"branch": [{"when": ["flag:quietlight_done", "flag:ql_bloom=bright"], "goto": 2}, {"when": ["flag:quietlight_done", "!flag:ql_bloom=bright"], "goto": 3}]},
 			{"note": "The grove bloomed so bright the lake held it twice. Hesper cried, efficiently.", "done": true, "on_enter": ["affection:hesper+5", "shared:hesper+4"]},
 			{"note": "The bloom came up thin. Nobody said why out loud. Everybody knew.", "done": true, "on_enter": ["resentment:hesper+3"]}
@@ -102,7 +102,7 @@
 		"priority": 4,
 		"start": ["flag:o_trade_talk"],
 		"stages": [
-			{"note": "Odile wants to sell water and beets down-river for medicine before the damp season. She needs twenty glowbeets in the Exchange's stock.", "advance": ["deed:sold_food>=20"]},
+			{"where": "point:exchange_counter", "note": "Odile wants to sell water and beets down-river for medicine before the damp season. She needs twenty glowbeets in the Exchange's stock.", "advance": ["deed:sold_food>=20"]},
 			{"note": "The first trade crate went down-river. Odile wrote a number in the ledger and underlined it twice.", "done": true, "on_enter": ["trust:odile+6", "affection:odile+4", "money+60"]}
 		]
 	}

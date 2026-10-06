@@ -63,6 +63,7 @@ var audio := {"Master": 0.85, "Music": 0.7, "Ambience": 0.8, "SFX": 0.85, "UI": 
 var access := {
 	"screen_shake": true, "shake_scale": 0.6, "flash": 0.7, "text_speed": 1.0,
 	"font_scale": 1.0, "readable_font": false, "high_contrast": false, "captions": true,
+	"minimap": 1, "objective_marker": true,
 }
 var bindings: Dictionary = {}       ## action -> Array of serialized events
 

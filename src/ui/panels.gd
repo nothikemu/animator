@@ -614,12 +614,35 @@ func _journal() -> Control:
 
 func _map() -> Control:
 	title_label.text = "Map"
+	var tabs := TabContainer.new()
+	tabs.custom_minimum_size = Vector2(W - 40, H - 120)
+	# Here: the current area, whole, with names, residents and the objective.
+	var here := VBoxContainer.new()
+	var mm := Minimap.new()
+	mm.full = true
+	mm.custom_minimum_size = Vector2(W - 60, H - 210)
+	mm.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	here.add_child(mm)
+	var o := Objectives.current()
+	var hint := "Amber ring: where your notes point. Arrows: ways out." if not o.is_empty() else "No notes pointing anywhere just now."
+	if not o.is_empty():
+		hint = "%s — %s" % [String(o.title), String(o.note)]
+	here.add_child(_label(hint, 15, UiTheme.DIM))
+	tabs.add_child(here)
+	var here_name := "Wick" if GameState.current_area == "wick" else String(ReachGen.node_by_id(GameState.reach_graph, GameState.current_area).get("name", "Here"))
+	tabs.set_tab_title(0, here_name)
+	# The Reach: the graph of caverns.
 	var v := VBoxContainer.new()
 	var mv := MapView.new()
-	mv.custom_minimum_size = Vector2(W - 40, H - 150)
+	mv.custom_minimum_size = Vector2(W - 60, H - 210)
+	mv.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(mv)
 	v.add_child(_label("Wick sits at the top. Every passage you've walked is drawn; the rest is guesswork.", 15, UiTheme.DIM))
-	return v
+	tabs.add_child(v)
+	tabs.set_tab_title(1, "The Reach")
+	tabs.current_tab = clampi(int(data.get("tab", 0)), 0, 1)
+	tabs.tab_changed.connect(func(t: int) -> void: data["tab"] = t)
+	return tabs
 
 
 ## Draws the Reach graph: discovered nodes named, unknown ones as faint question marks.
@@ -660,6 +683,9 @@ class MapView:
 			var here := GameState.current_area == id
 			var c: Color = UiTheme.LIVING if here else (UiTheme.ACCENT if known else Color(UiTheme.DIM, 0.3))
 			draw_rect(Rect2(pos[id] - Vector2(7, 7), Vector2(14, 14)), c)
+			var obj := Objectives.current()
+			if not obj.is_empty() and String(obj.area) == id and id != "wick":
+				draw_arc(pos[id], 13.0, 0, TAU, 24, UiTheme.ACCENT, 2.0)
 			var label := "Wick" if id == "wick" else (String(ReachGen.node_by_id(GameState.reach_graph, id).get("name", id)) if known else "?")
 			draw_string(font, pos[id] + Vector2(12, 6), label, HORIZONTAL_ALIGNMENT_LEFT, -1, UiTheme.size(16), c)
 			if here:
