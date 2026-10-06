@@ -5,6 +5,7 @@ extends RefCounted
 
 const ACTION_NAMES := {
 	"move_up": "Move up", "move_down": "Move down", "move_left": "Move left", "move_right": "Move right",
+	"run": "Run (hold)", "minimap": "Minimap size",
 	"interact": "Interact / talk", "context": "Use tool", "confirm": "Confirm", "cancel": "Back / cancel",
 	"menu": "Pause", "inventory": "Pack", "tool_next": "Next tool", "tool_prev": "Previous tool",
 	"primary": "Primary (cut view: place)", "secondary": "Secondary (cycle seed / stop)",

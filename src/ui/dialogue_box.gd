@@ -4,7 +4,6 @@ extends CanvasLayer
 ## Works with mouse, keyboard and gamepad (choices are focusable buttons).
 
 const CHARS_PER_SEC := 48.0
-const EMOTE_FRAME := {"happy": 0, "sad": 1, "surprised": 2, "annoyed": 3}
 
 var root: Control
 var panel: PanelContainer
@@ -184,14 +183,12 @@ static func portrait_for(char_id: String, emote: String) -> Texture2D:
 	var tex: Texture2D = load("res://assets/textures/chars/%s.png" % sprite_id)
 	var fw := int(meta.w)
 	var fh := int(meta.h)
-	var row := 0
-	var col := 0
-	if EMOTE_FRAME.has(emote):
-		row = int(meta.anims.get("emote_down", {}).get("row", 0))
-		col = int(EMOTE_FRAME[emote])
+	var cols := int(meta.cols)
+	var portraits: Dictionary = meta.get("portraits", {})
+	var idx := int(portraits.get(emote if portraits.has(emote) else "neutral", 0))
 	var a := AtlasTexture.new()
 	a.atlas = tex
 	var crop_h := int(fh * 0.62)
-	a.region = Rect2(col * fw, row * fh, fw, crop_h)
+	a.region = Rect2((idx % cols) * fw, (idx / cols) * fh, fw, crop_h)
 	_portraits[key] = a
 	return a

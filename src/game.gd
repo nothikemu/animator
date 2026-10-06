@@ -59,6 +59,10 @@ func _ready() -> void:
 	Clock.hour_changed.connect(func(_h: int) -> void: _update_music())
 	Events.world_event.connect(func(_id: StringName, _d: Dictionary) -> void: _update_music())
 	Events.dialogue_ended.connect(_on_dialogue_ended)
+	Events.thread_updated.connect(func(tid: StringName, _s: int) -> void:
+		# A finished thread gets a little fist in the air (only when the salvager is free).
+		if Threads.is_done(String(tid)) and not player.frozen and player.busy <= 0.0 and not _busy:
+			player.react("celebrate"))
 	Events.grid_cells_changed.connect(func(_c: Array) -> void: pass)
 	if Dev.has_arg("scenario"):
 		Scenarios.run(self, Dev.arg("scenario"))
@@ -125,6 +129,7 @@ func _spawn_npcs() -> void:
 	for id in Content.npcs:
 		var n := Npc.new()
 		n.setup(id, area, astar)
+		n.watch(player)
 		actors.add_child(n)
 		n.place_at_schedule()
 		npcs[id] = n
@@ -258,6 +263,8 @@ func _process(delta: float) -> void:
 			env.pollution = 0.15
 		else:
 			env.pollution = 0.0
+		player.air_bad = env.pollution > 0.3
+		player.cold = area.biome == "sump"
 		_update_target()
 		_check_reveal()
 		for n: Npc in npcs.values():
@@ -363,6 +370,8 @@ func _on_exhausted() -> void:
 		return
 	_busy = true
 	player.frozen = true
+	player.perform("collapse")
+	await get_tree().create_timer(0.9).timeout
 	await fade.fade_out(1.6, "You don't remember lying down.")
 	var outside := area.id != "wick" or not Rect2(3, 10, 6, 5).has_point(Vector2(player.position.x, player.position.z))
 	if area.id != "wick":
@@ -418,10 +427,12 @@ func mine_at(c: Vector2i) -> bool:
 					monologue("The crate's seal parts like it was waiting to. Inside, packed in wax paper and labelled in a neat hand: one governor coil. NEVER THE LAST ONE UP-LINE. Somebody already broke that rule once.")
 				left -= take
 				mined[id] = left
-				player.use_tool_anim(0.45)
-				fx_burst(c, "rock" if String(r.type) != "glowglass_node" else "glint")
-				Audio.play_at("mine", cell_pos(c), -3.0)
-				Events.camera_impulse.emit(0.08)
+				var glint := String(r.type) == "glowglass_node"
+				player.perform("hammer", func() -> void:
+					fx_burst(c, "rock" if not glint else "glint")
+					fx_burst(c, "spark")
+					Audio.play_at("mine", cell_pos(c), -3.0)
+					Events.camera_impulse.emit(0.08))
 				GameState.add_deed("mined", float(take))
 			if int(mined.get(id, 1)) <= 0:
 				var node := resources_root.get_node_or_null(id)
@@ -494,6 +505,8 @@ func opening() -> void:
 	Audio.play("fall", -4.0)
 	await _black_caption("[a long fall — then moss, softer than it has any right to be]", 3.0)
 	Clock.resume("opening")
+	player.facing = Vector2(0, 1)
+	player.perform("getup")          # sprawled in the moss, then up onto unsteady feet
 	await fade.fade_in(2.2)
 	GameState.set_flag("intro_done")
 	player.frozen = false

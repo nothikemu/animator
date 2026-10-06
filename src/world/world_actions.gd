@@ -96,9 +96,9 @@ func _well_action() -> void:
 		Events.toast.emit("Can filled from the well.", &"info")
 		return
 	Sim.crank(w.id)
-	game.player.use_tool_anim(0.6)
-	Audio.play_at("well_crank", Vector3(24.5, 0.5, 20.5), -4.0)
-	Events.camera_impulse.emit(0.05)
+	game.player.perform("crank", func() -> void:
+		Audio.play_at("well_crank", Vector3(24.5, 0.5, 20.5), -4.0)
+		Events.camera_impulse.emit(0.05))
 	GameState.set_flag("cranked_well", int(GameState.flag("cranked_well") if GameState.flag("cranked_well") else 0) + 1)
 	if not GameState.has_flag("well_fixed"):
 		Events.caption.emit("[the pump coughs; somewhere below, water hisses]", 2.5)
@@ -160,10 +160,10 @@ func _till_or_plant(cell: Vector2i) -> bool:
 	var p := Sim.plot_at(cell)
 	if p.is_empty():
 		if Sim.till(cell):
-			game.player.use_tool_anim(0.45)
-			game.fx_burst(cell, "dirt")
-			Audio.play_at("till", game.cell_pos(cell), -4.0)
-			Events.camera_impulse.emit(0.04)
+			game.player.perform("till", func() -> void:
+				game.fx_burst(cell, "dirt")
+				Audio.play_at("till", game.cell_pos(cell), -4.0)
+				Events.camera_impulse.emit(0.04))
 			GameState.add_deed("tilled", 1.0)
 			return true
 		Events.toast.emit("This ground won't take a tiller.", &"info")
@@ -176,8 +176,9 @@ func _till_or_plant(cell: Vector2i) -> bool:
 		var seed: String = seeds[int(GameState.player.get("seed_index", 0)) % seeds.size()]
 		var crop := String(Content.item(seed).get("crop", ""))
 		if GameState.take(seed, 1) and Sim.plant(cell, crop):
-			game.player.use_tool_anim(0.35)
-			Audio.play_at("plant", game.cell_pos(cell), -6.0)
+			game.player.perform("plant", func() -> void:
+				game.fx_burst(cell, "seed")
+				Audio.play_at("plant", game.cell_pos(cell), -6.0))
 			Events.toast.emit("Planted %s." % Content.crop(crop).get("name", crop), &"info")
 			return true
 	return false
@@ -228,9 +229,9 @@ func _water(cell: Vector2i) -> bool:
 	if GameState.player.get("can_brine", false) and String(p.crop) != "":
 		p.health = maxf(0.0, float(p.health) - 0.08)
 		GameState.add_deed("brine_watered", 1.0)
-	game.player.use_tool_anim(0.4)
-	game.fx_burst(cell, "water")
-	Audio.play_at("water_pour", game.cell_pos(cell), -5.0)
+	game.player.perform("water", func() -> void:
+		game.fx_burst(cell, "water")
+		Audio.play_at("water_pour", game.cell_pos(cell), -5.0))
 	return true
 
 
@@ -254,7 +255,7 @@ func _hands(cell: Vector2i) -> bool:
 	var got := Sim.harvest(cell)
 	if was_dead:
 		Events.toast.emit("Cleared the dead %s." % Content.crop(crop).get("name", crop), &"info")
-		game.player.use_tool_anim(0.3)
+		game.player.perform("pickup", func() -> void: game.fx_burst(cell, "dirt"))
 		return true
 	if got.is_empty():
 		var def: Dictionary = Content.crop(crop)
@@ -265,11 +266,12 @@ func _hands(cell: Vector2i) -> bool:
 		return true
 	for item in got:
 		GameState.give(item, int(got[item]))
-		Fx.item_pop(game.area_view, game.cell_pos(cell), game.player, String(item), int(got[item]))
 	GameState.add_deed("harvested", 1.0, {"crop": crop})
-	game.player.use_tool_anim(0.35)
-	game.fx_burst(cell, "harvest")
-	Audio.play_at("harvest", game.cell_pos(cell), -4.0)
+	game.player.perform("harvest", func() -> void:
+		for item in got:
+			Fx.item_pop(game.area_view, game.cell_pos(cell), game.player, String(item), int(got[item]))
+		game.fx_burst(cell, "harvest")
+		Audio.play_at("harvest", game.cell_pos(cell), -4.0))
 	return true
 
 

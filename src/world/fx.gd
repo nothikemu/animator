@@ -39,6 +39,7 @@ const KINDS := {
 	"spark": {"color": Color("f5c875"), "n": 14, "speed": 3.2, "gravity": -6.0, "size": 0.04, "life": 0.4, "glow": 3.0},
 	"dust": {"color": Color("a89e86"), "n": 30, "speed": 1.4, "gravity": -1.0, "size": 0.09, "life": 1.4, "glow": 0.0},
 	"sour": {"color": Color("b5b84a"), "n": 10, "speed": 0.5, "gravity": 0.3, "size": 0.12, "life": 2.0, "glow": 0.0},
+	"seed": {"color": Color("c9a25a"), "n": 6, "speed": 0.8, "gravity": -6.0, "size": 0.04, "life": 0.4, "glow": 0.0},
 }
 
 
@@ -62,6 +63,45 @@ static func burst(parent: Node3D, pos: Vector3, kind: String) -> void:
 	p.material_override = _mat(k.color, float(k.glow))
 	var ramp := Gradient.new()
 	ramp.set_color(0, Color(1, 1, 1, 1))
+	ramp.set_color(1, Color(1, 1, 1, 0))
+	p.color_ramp = ramp
+	p.position = pos
+	parent.add_child(p)
+	p.emitting = true
+	p.finished.connect(p.queue_free)
+
+
+## A little puff of whatever the ground is made of, kicked up by a footfall.
+static func puff(parent: Node3D, pos: Vector3, material: String) -> void:
+	if _quality() < 0.2:
+		return
+	var col := Color("a89e86")
+	match material:
+		"mud", "farm_soil": col = Color("5a4636")
+		"moss", "moss_deep", "grass": col = Color("6f8a48")
+		"ash": col = Color("8a8790")
+		"plank": col = Color("8a7458")
+		"gravel": col = Color("9a958c")
+	var p := CPUParticles3D.new()
+	p.one_shot = true
+	p.explosiveness = 0.95
+	p.amount = maxi(2, int(5 * _quality()))
+	p.lifetime = 0.45
+	p.direction = Vector3(0, 1, 0)
+	p.spread = 80.0
+	p.initial_velocity_min = 0.3
+	p.initial_velocity_max = 0.8
+	p.gravity = Vector3(0, -1.5, 0)
+	p.damping_min = 1.0
+	p.damping_max = 2.0
+	p.scale_amount_min = 0.8
+	p.scale_amount_max = 1.4
+	var q := QuadMesh.new()
+	q.size = Vector2.ONE * 0.07
+	p.mesh = q
+	p.material_override = _mat(col, 0.0)
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(1, 1, 1, 0.9))
 	ramp.set_color(1, Color(1, 1, 1, 0))
 	p.color_ramp = ramp
 	p.position = pos

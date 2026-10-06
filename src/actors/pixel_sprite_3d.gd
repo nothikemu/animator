@@ -3,6 +3,14 @@ extends MeshInstance3D
 ## A pixel-art billboard: a quad whose bottom edge sits on the node origin, rendered with
 ## shaders/pixel_sprite.gdshader. Materials are shared per texture so instances batch;
 ## frame/flip/tint/flash/fade are per-instance uniforms.
+##
+## Character sheets carry named animations ("walk_side", "till_down"...). Each has a first
+## frame, a length, a rate, a loop flag and events on particular frames ("step", "hit"),
+## which are emitted as the frame comes up so sounds and particles land on the right pixel.
+## A one-shot animation emits `finished` on its last frame and holds there.
+
+signal event(name: String)
+signal finished(anim: String)
 
 const PIXEL := 1.0 / 16.0
 const SHADER := preload("res://shaders/pixel_sprite.gdshader")
@@ -14,8 +22,10 @@ var columns := 1
 var rows := 1
 var anims: Dictionary = {}
 var current := ""
+var speed := 1.0                         ## playback rate multiplier
 var _t := 0.0
 var _frame_index := 0
+var _done := false
 var playing := true
 
 
@@ -69,15 +79,63 @@ func setup_character(id: String) -> void:
 		Vector2i(int(meta.cols), int(meta.rows)), {"rim_strength": 0.5})
 
 
-func play(anim: String, restart := false) -> void:
-	if anim == current and not restart:
-		return
-	if not anims.has(anim):
-		return
-	current = anim
+## Plays `anim`, falling back to the same animation in another view, then to idle.
+## Returns the name actually played.
+func play(anim: String, restart := false) -> String:
+	var name := resolve(anim)
+	if name == "":
+		return ""
+	if name == current and not restart:
+		return name
+	current = name
 	_t = 0.0
 	_frame_index = 0
+	_done = false
 	_apply()
+	_emit_events(0)
+	return name
+
+
+func resolve(anim: String) -> String:
+	if anims.has(anim):
+		return anim
+	var base := anim.get_slice("_", 0)
+	var view := anim.get_slice("_", 1) if anim.contains("_") else "down"
+	for v in [view, "down", "side", "up"]:
+		if anims.has(base + "_" + v):
+			return base + "_" + v
+	if anims.has("idle_" + view):
+		return "idle_" + view
+	return ""
+
+
+func has_anim(anim: String) -> bool:
+	return anims.has(anim)
+
+
+## Seconds from the start of `anim` until its first `ev` event (or its end).
+func time_to_event(anim: String, ev: String) -> float:
+	var name := resolve(anim)
+	if name == "":
+		return 0.0
+	var a: Dictionary = anims[name]
+	var fps := maxf(1.0, float(a.get("fps", 6))) * speed
+	var evs: Dictionary = a.get("events", {})
+	if evs.has(ev) and not (evs[ev] as Array).is_empty():
+		return float(evs[ev][0]) / fps
+	return float(a.get("frames", 1)) / fps
+
+
+func length_of(anim: String) -> float:
+	var name := resolve(anim)
+	if name == "":
+		return 0.0
+	var a: Dictionary = anims[name]
+	return float(a.get("frames", 1)) / (maxf(1.0, float(a.get("fps", 6))) * speed)
+
+
+func is_done() -> bool:
+	return _done
 
 
 func set_flip(f: bool) -> void:
@@ -101,26 +159,39 @@ func set_frame(i: int) -> void:
 
 
 func _process(delta: float) -> void:
-	if not playing or current == "" or not anims.has(current):
+	if not playing or current == "" or not anims.has(current) or _done:
 		return
 	var a: Dictionary = anims[current]
-	_t += delta * float(a.get("fps", 6))
+	_t += delta * float(a.get("fps", 6)) * speed
 	var n := int(a.get("frames", 1))
 	var idx := int(_t)
-	if bool(a.get("loop", true)):
+	var looping := bool(a.get("loop", true))
+	if looping:
 		idx = idx % n
-	else:
-		idx = mini(idx, n - 1)
+	elif idx >= n:
+		idx = n - 1
+		if not _done:
+			_done = true
+			finished.emit(current)
 	if idx != _frame_index:
 		_frame_index = idx
 		_apply()
+		_emit_events(idx)
+
+
+func _emit_events(idx: int) -> void:
+	var evs: Dictionary = anims.get(current, {}).get("events", {})
+	for ev: String in evs:
+		if (evs[ev] as Array).has(idx) or (evs[ev] as Array).has(float(idx)):
+			event.emit(ev)
 
 
 func _apply() -> void:
 	if not anims.has(current):
 		return
 	var a: Dictionary = anims[current]
-	set_frame(int(a.get("row", 0)) * columns + _frame_index)
+	var start := int(a.get("start", int(a.get("row", 0)) * columns))
+	set_frame(start + _frame_index)
 
 
 func frame_in_anim() -> int:

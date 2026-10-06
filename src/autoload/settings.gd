@@ -13,6 +13,8 @@ const DEFAULT_BINDINGS := {
 	"move_left": [["key", KEY_A], ["key", KEY_LEFT], ["axis", JOY_AXIS_LEFT_X, -1.0]],
 	"move_right": [["key", KEY_D], ["key", KEY_RIGHT], ["axis", JOY_AXIS_LEFT_X, 1.0]],
 	"interact": [["key", KEY_E], ["joy", JOY_BUTTON_A]],
+	"run": [["key", KEY_SHIFT], ["joy", JOY_BUTTON_B]],
+	"minimap": [["key", KEY_N], ["joy", JOY_BUTTON_DPAD_RIGHT]],
 	"context": [["key", KEY_F], ["joy", JOY_BUTTON_X]],
 	"confirm": [["key", KEY_SPACE], ["key", KEY_ENTER], ["joy", JOY_BUTTON_A]],
 	"cancel": [["key", KEY_ESCAPE], ["joy", JOY_BUTTON_B]],
@@ -37,9 +39,9 @@ const DEFAULT_BINDINGS := {
 }
 
 ## Actions the player may remap in the Controls menu (order = display order).
-const REMAPPABLE := ["move_up", "move_down", "move_left", "move_right", "interact", "context",
+const REMAPPABLE := ["move_up", "move_down", "move_left", "move_right", "run", "interact", "context",
 	"confirm", "cancel", "menu", "inventory", "tool_next", "tool_prev", "primary", "secondary",
-	"cut_view", "journal", "map", "overlay_next", "build_menu", "time_pause", "time_speed"]
+	"cut_view", "journal", "map", "minimap", "overlay_next", "build_menu", "time_pause", "time_speed"]
 
 const PRESETS := {
 	"low": {"shadows": false, "dof": false, "glow": false, "ssao": false, "volumetric": false,

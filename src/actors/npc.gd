@@ -6,7 +6,10 @@ extends Node3D
 
 const SPEED := 2.1
 const INDOOR := ["sleep", "away", "ill"]
-const WORK_ANIMS := ["work", "crank", "tend", "cook", "inspect"]
+## Schedule activity -> the animation that shows it (falls back to idle if a sheet lacks it).
+const DO_ANIM := {"tea": "tea", "work": "wrench", "crank": "crank", "inspect": "inspect", "sit": "sit",
+	"ledger": "ledger", "trade": "coins", "tend": "tend", "observe": "observe", "cook": "cook",
+	"serve": "serve", "talk": "talk"}
 
 var id := ""
 var def: Dictionary = {}
@@ -28,6 +31,12 @@ var _bark_cooldown := 20.0
 var _bark_t := 0.0
 var _fade := 1.0
 var _blocked_notice := false
+var _speaking := false                   ## their line is on screen
+var _oneshot := ""                       ## emote / fidget / wave in progress
+var _idle_t := 0.0
+var _next_fidget := 12.0
+var _waved_day := -1
+var _player: Node3D
 
 
 func setup(npc_id: String, a: AreaMap, grid: AStarGrid2D) -> void:
@@ -39,7 +48,15 @@ func setup(npc_id: String, a: AreaMap, grid: AStarGrid2D) -> void:
 	sprite = PixelSprite3D.new()
 	sprite.setup_character(String(def.get("sprite", id)))
 	sprite.play("idle_down")
+	sprite.finished.connect(func(a: String) -> void:
+		if a == _oneshot:
+			_oneshot = "")
+	sprite.event.connect(func(ev: String) -> void:
+		if ev == "step" and visible and _fade > 0.5:
+			Audio.play_at("step_soft" if id != "grist" else "step_stone", global_position, -22.0 if id != "grist" else -14.0, 0.15))
 	add_child(sprite)
+	Events.dialogue_line.connect(_on_line)
+	_next_fidget = randf_range(8.0, 20.0)
 	shadow = Player.make_blob_shadow(0.45 if id != "grist" else 0.8)
 	add_child(shadow)
 	bark_label = Label3D.new()
@@ -146,7 +163,8 @@ func _process(delta: float) -> void:
 			bark_label.visible = false
 	_bark_cooldown -= delta
 	if talking:
-		sprite.play("talk_down" if view == "down" else "idle_" + view)
+		if _oneshot == "":
+			sprite.play(("talk_" if _speaking else "idle_") + view)
 		return
 	var moving := false
 	if not path.is_empty() and path_i < path.size():
@@ -168,25 +186,75 @@ func _process(delta: float) -> void:
 
 
 func _animate(moving: bool) -> void:
+	if moving:
+		_oneshot = ""
+	elif _oneshot == "" and not talking and _player and is_instance_valid(_player):
+		# Notice the salvager standing nearby, unless busy with their hands.
+		var d := Vector2(_player.global_position.x - position.x, _player.global_position.z - position.z)
+		var act := String(DO_ANIM.get(String(block.get("do", "")), ""))
+		if d.length() < 2.6 and act in ["", "talk", "observe", "tea", "coins", "inspect"]:
+			facing = d.normalized()
+		elif d.length() < 5.5 and _waved_day != Clock.day and Society.is_met(id) and act in ["", "talk", "tea", "observe"]:
+			_waved_day = Clock.day
+			facing = d.normalized()
+			_set_view()
+			_play_once("wave")
+	_set_view()
+	if _oneshot != "":
+		return
+	var hour := Clock.hour()
+	if moving:
+		var walk := "tired" if (hour >= 22 or hour < 5) and sprite.resolve("tired_" + view).begins_with("tired") else "walk"
+		sprite.play(walk + "_" + view)
+		_idle_t = 0.0
+		return
+	var act_anim := String(DO_ANIM.get(String(block.get("do", "")), ""))
+	if act_anim != "" and sprite.resolve(act_anim + "_" + view).begins_with(act_anim):
+		sprite.play(act_anim + "_" + view)
+		return
+	_idle_t += get_process_delta_time()
+	if _idle_t > _next_fidget:
+		_idle_t = 0.0
+		_next_fidget = randf_range(10.0, 24.0)
+		var pool := ["look", "look", "stretch"]
+		if hour >= 21 or hour < 6:
+			pool = ["yawn", "look"]
+		_play_once(pool[randi() % pool.size()])
+		return
+	sprite.play("idle_" + view)
+
+
+func _set_view() -> void:
 	if absf(facing.x) > absf(facing.y) * 1.1:
 		view = "side"
 		sprite.set_flip(facing.x < 0.0)
 	else:
 		view = "down" if facing.y > 0.0 else "up"
 		sprite.set_flip(false)
-	if moving:
-		sprite.play("walk_" + view)
-	elif WORK_ANIMS.has(String(block.get("do", ""))):
-		sprite.play("work_" + view)
-	else:
-		sprite.play("idle_" + view)
+
+
+func _play_once(anim: String) -> void:
+	var played := sprite.play(anim + "_" + view, true)
+	if played != "" and not bool(sprite.anims.get(played, {}).get("loop", true)):
+		_oneshot = played
+
+
+func _on_line(speaker: StringName, _text: String, emote: StringName) -> void:
+	if not talking:
+		_speaking = false
+		return
+	_speaking = String(speaker) == id
+	if _speaking and String(emote) in ["happy", "sad", "surprised", "annoyed"]:
+		_play_once(String(emote))
+	elif _speaking:
+		_oneshot = ""
 
 
 func face_towards(p: Vector3) -> void:
 	var d := Vector2(p.x - position.x, p.z - position.z)
 	if d.length() > 0.01:
 		facing = d.normalized()
-	_animate(false)
+	_set_view()
 
 
 func bark(text: String, seconds := 4.0) -> void:
@@ -197,6 +265,11 @@ func bark(text: String, seconds := 4.0) -> void:
 	bark_label.modulate.a = 1.0
 	_bark_t = seconds
 	Events.caption.emit("%s: %s" % [Society.display_name(id) if Society.is_met(id) else _unknown_name(), text], seconds)
+
+
+## The game hands every resident the player node so they can notice them.
+func watch(p: Node3D) -> void:
+	_player = p
 
 
 func try_bark(player_pos: Vector3) -> void:

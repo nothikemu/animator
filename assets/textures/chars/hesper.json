@@ -1,75 +1,338 @@
 {
  "w": 24,
  "h": 34,
- "cols": 4,
- "rows": 11,
+ "cols": 24,
+ "rows": 20,
  "emit": true,
  "anims": {
   "idle_down": {
-   "row": 0,
-   "frames": 4,
-   "fps": 3,
-   "loop": true
+   "start": 0,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
   },
   "idle_up": {
-   "row": 1,
-   "frames": 4,
-   "fps": 3,
-   "loop": true
+   "start": 12,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
   },
   "idle_side": {
-   "row": 2,
-   "frames": 4,
-   "fps": 3,
-   "loop": true
+   "start": 24,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
   },
   "walk_down": {
-   "row": 3,
-   "frames": 4,
-   "fps": 8,
-   "loop": true
+   "start": 36,
+   "frames": 8,
+   "fps": 11,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
   },
   "walk_up": {
-   "row": 4,
-   "frames": 4,
-   "fps": 8,
-   "loop": true
+   "start": 48,
+   "frames": 8,
+   "fps": 11,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
   },
   "walk_side": {
-   "row": 5,
-   "frames": 4,
-   "fps": 8,
-   "loop": true
+   "start": 60,
+   "frames": 8,
+   "fps": 11,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
   },
-  "work_down": {
-   "row": 6,
-   "frames": 4,
-   "fps": 8,
-   "loop": true
+  "tired_down": {
+   "start": 72,
+   "frames": 8,
+   "fps": 7,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
   },
-  "work_up": {
-   "row": 7,
-   "frames": 4,
-   "fps": 8,
-   "loop": true
+  "tired_up": {
+   "start": 84,
+   "frames": 8,
+   "fps": 7,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
   },
-  "work_side": {
-   "row": 8,
-   "frames": 4,
-   "fps": 8,
-   "loop": true
+  "tired_side": {
+   "start": 96,
+   "frames": 8,
+   "fps": 7,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
+  },
+  "look_down": {
+   "start": 108,
+   "frames": 12,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "look_side": {
+   "start": 120,
+   "frames": 12,
+   "fps": 6,
+   "loop": false,
+   "events": {}
   },
   "talk_down": {
-   "row": 9,
-   "frames": 4,
+   "start": 132,
+   "frames": 8,
    "fps": 8,
-   "loop": true
+   "loop": true,
+   "events": {}
   },
-  "emote_down": {
-   "row": 10,
+  "talk_side": {
+   "start": 144,
+   "frames": 8,
+   "fps": 8,
+   "loop": true,
+   "events": {}
+  },
+  "happy_down": {
+   "start": 156,
+   "frames": 8,
+   "fps": 9,
+   "loop": false,
+   "events": {}
+  },
+  "happy_side": {
+   "start": 168,
+   "frames": 8,
+   "fps": 9,
+   "loop": false,
+   "events": {}
+  },
+  "sad_down": {
+   "start": 180,
+   "frames": 8,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "sad_side": {
+   "start": 192,
+   "frames": 8,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "surprised_down": {
+   "start": 204,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "surprised_side": {
+   "start": 216,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "annoyed_down": {
+   "start": 228,
+   "frames": 8,
+   "fps": 6,
+   "loop": true,
+   "events": {}
+  },
+  "annoyed_side": {
+   "start": 240,
+   "frames": 8,
+   "fps": 6,
+   "loop": true,
+   "events": {}
+  },
+  "wave_down": {
+   "start": 252,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "wave_side": {
+   "start": 264,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "sit_down": {
+   "start": 276,
    "frames": 4,
-   "fps": 1,
-   "loop": false
+   "fps": 3,
+   "loop": true,
+   "events": {}
+  },
+  "sit_side": {
+   "start": 288,
+   "frames": 4,
+   "fps": 3,
+   "loop": true,
+   "events": {}
+  },
+  "stretch_down": {
+   "start": 300,
+   "frames": 12,
+   "fps": 7,
+   "loop": false,
+   "events": {}
+  },
+  "stretch_side": {
+   "start": 312,
+   "frames": 12,
+   "fps": 7,
+   "loop": false,
+   "events": {}
+  },
+  "yawn_down": {
+   "start": 324,
+   "frames": 10,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "yawn_side": {
+   "start": 336,
+   "frames": 10,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "cough_down": {
+   "start": 348,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "cough_side": {
+   "start": 360,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "tend_down": {
+   "start": 372,
+   "frames": 8,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "tend_side": {
+   "start": 384,
+   "frames": 8,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "observe_down": {
+   "start": 396,
+   "frames": 12,
+   "fps": 4,
+   "loop": true,
+   "events": {}
+  },
+  "observe_side": {
+   "start": 408,
+   "frames": 12,
+   "fps": 4,
+   "loop": true,
+   "events": {}
+  },
+  "plant_down": {
+   "start": 420,
+   "frames": 8,
+   "fps": 11,
+   "loop": false,
+   "events": {
+    "hit": [
+     4
+    ]
+   }
+  },
+  "plant_up": {
+   "start": 432,
+   "frames": 8,
+   "fps": 11,
+   "loop": false,
+   "events": {
+    "hit": [
+     4
+    ]
+   }
+  },
+  "plant_side": {
+   "start": 444,
+   "frames": 8,
+   "fps": 11,
+   "loop": false,
+   "events": {
+    "hit": [
+     4
+    ]
+   }
+  },
+  "listen_down": {
+   "start": 456,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "listen_side": {
+   "start": 468,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
   }
+ },
+ "portraits": {
+  "neutral": 0,
+  "happy": 158,
+  "sad": 184,
+  "surprised": 206,
+  "annoyed": 229
  }
 }
