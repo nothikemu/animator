@@ -1,0 +1,60 @@
+{
+	"_comment": "The Old Stone, eldest Knapper. Very slow. Remembers the agreement with the builders. Listens through the floor.",
+
+	"lines": [
+		{"id": "os_intro", "tier": "story", "once": true, "priority": 50, "when": ["!flag:old_stone_met"], "convo": "intro"},
+		{"id": "os_test", "tier": "story", "priority": 40, "when": ["flag:old_stone_met", "!flag:ways_open"], "convo": "ask"},
+		{"id": "os_after", "tier": "ambient", "when": ["flag:ways_open"], "text": "...The ways are open. ...The rock is listening to walkers again. ...Do not make it sorry."},
+		{"id": "os_bark", "tier": "bark", "text": "...hm..."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "The great stone shape on the carved seat doesn't move as you come in. Then you realise the floor is humming, very faintly, under your boots, and that the humming is it.", "who": "narrator", "do": ["flag:old_stone_met", "met:old_stone"]},
+			{"say": "...Walker."},
+			{"say": "...Grist says: this walker answers. ...This walker learned the knocking. ...This walker walks soft."},
+			{"say": "...Long ago, the builders came to the Knappers. ...They said: make ways for our air. ...For our water. ...For our children."},
+			{"say": "...We made the ways. ...Forty stations. ...Every Trunk. ...We asked one thing. ...Quiet rock. ...Machines that sing, not machines that shout."},
+			{"say": "...Then the cough came. ...The walkers shut the ways. ...They shut them with our rock. ...They did not ask. ...They did not answer, after."},
+			{"say": "...Two hundred years. ...Now walkers knock. ...Now walkers want the low ways open. ...Why should the Knappers listen?"},
+			{"choice": [
+				{"text": "Because we're listening now.", "do": ["affection:old_stone+4", "trust:old_stone+3"], "goto": "listen"},
+				{"text": "Because the Heart is dying, and the air with it.", "do": ["respect:old_stone+3"], "goto": "heart"},
+				{"text": "We were wrong. We should have answered.", "do": ["trust:old_stone+5", "shared:old_stone+4"], "goto": "wrong"}
+			]},
+			{"label": "listen"},
+			{"say": "...Listening is a start. ...Listening is not quiet.", "goto": "terms"},
+			{"label": "heart"},
+			{"say": "...Knappers do not breathe as walkers breathe. ...But we hear the Heart. ...It is slow. ...We are sad for it.", "goto": "terms"},
+			{"label": "wrong"},
+			{"say": "...", "emote": "surprised"},
+			{"say": "...No walker has said that. ...Two hundred years. ...Say it again, slower.", "do": ["affection:old_stone+3"]},
+			{"label": "terms"},
+			{"say": "...The agreement, then. ...Quiet rock above the ways: no shouting machines by the Reach. ...And a gift of glowglass. ...Three. ...So the Knappers know walkers still make light, not only noise."},
+			{"say": "...Bring both. ...Then the Knappers open the low ways."}
+		],
+
+		"ask": [
+			{"say": "...Walker. ...The agreement?"},
+			{"if": ["noise_lane>=6"], "goto": "loud"},
+			{"if": ["item:glowglass>=3"], "goto": "ready"},
+			{"say": "...The rock is quiet. ...Good. ...But no light. ...Three glowglass. ...Then the ways."},
+			{"goto": "end"},
+			{"label": "loud"},
+			{"say": "...Loud. ...Above the Reach, something shouts. ...The rock is sorry. ...Make it quiet. ...Then ask again.", "do": ["flag:old_stone_refused"], "emote": "sad"},
+			{"goto": "end"},
+			{"label": "ready"},
+			{"choice": [
+				{"text": "Give the Old Stone three glowglass.", "do": ["take:glowglass*3", "flag:ways_open", "affection:old_stone+6", "trust:grist+6", "affection:grist+6", "mem:grist:kept_agreement:9:0.9:lasting", "deed:kept_word+2"], "goto": "yes"},
+				{"text": "Not yet.", "goto": "end"}
+			]},
+			{"label": "yes"},
+			{"say": "...Light. ...Walkers still make light.", "emote": "happy"},
+			{"say": "...The agreement is kept. ...Tonight the Knappers open the low ways. ...To the Heart door. ...It will be loud. ...Once."},
+			{"if": ["affection:old_stone>=10"], "goto": "come"},
+			{"goto": "end"},
+			{"label": "come"},
+			{"say": "...And when the Heart breathes, ...the Old Stone will come and listen. ...It has not heard it breathe since it was small.", "do": ["flag:old_stone_comes"]}
+		]
+	}
+}

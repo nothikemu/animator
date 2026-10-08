@@ -219,6 +219,11 @@
    "x": 30,
    "y": 13,
    "fixed": true
+  },
+  {
+   "def": "lift_winch",
+   "x": 42,
+   "y": 12
   }
  ],
  "water": [

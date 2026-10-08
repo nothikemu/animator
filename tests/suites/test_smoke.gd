@@ -31,7 +31,12 @@ func _shutdown(g: Node3D) -> void:
 func test_wick_interactables_and_tools() -> void:
 	var g := _boot()
 	check(g.area != null and g.area.id == "wick", "Wick loaded")
-	check(g.npcs.size() == Content.npcs.size(), "every resident spawned")
+	var here := 0
+	for id: String in Content.npcs:
+		if Npc.area_of(id) == "wick":
+			here += 1
+	check(g.npcs.size() == here, "every resident who lives in Wick spawned (%d of %d)" % [g.npcs.size(), here])
+	check(here >= 5, "Wick's five residents live in Wick at the start")
 	# Every prompt in town evaluates.
 	for node in g.get_tree().get_nodes_in_group("interactable"):
 		var it := node as Interactable
@@ -60,13 +65,16 @@ func test_wick_interactables_and_tools() -> void:
 func test_every_reach_cavern_loads() -> void:
 	var g := _boot()
 	GameState.set_flag("tremor_done")   # opens the Trunk passage so every node is reachable
+	var ids: Array = []
 	for node: Dictionary in GameState.reach_graph.nodes:
-		g.load_area(String(node.id))
-		eq(g.area.id, String(node.id), "loaded %s" % node.id)
+		ids.append(String(node.id))       # a snapshot: visiting the Unmapped grows the graph
+	for id: String in ids:
+		g.load_area(id)
+		eq(g.area.id, id, "loaded %s" % id)
 		for it in g.get_tree().get_nodes_in_group("interactable"):
 			(it as Interactable).prompt()
 		for r: Dictionary in g.area.resources:
-			check(ResourceLoader.exists("res://assets/textures/props/%s.png" % String(r.type)), "resource %s in %s has a sprite" % [r.type, node.id])
+			check(ResourceLoader.exists("res://assets/textures/props/%s.png" % String(r.type)), "resource %s in %s has a sprite" % [r.type, id])
 		# Mine whatever is there (lore pages open a panel; close it).
 		GameState.add_tool("hammer")
 		for r: Dictionary in g.area.resources.duplicate():

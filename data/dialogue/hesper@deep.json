@@ -1,0 +1,79 @@
+{
+	"_comment": "Hesper, Chapters Two to Four: the damp season, Strain Seven (the moss was made), the tincture, and what the Heart's first breath needs from the grove.",
+
+	"lines": [
+		{"id": "h_strain_told", "tier": "story", "once": true, "priority": 40, "when": ["lore:station_9", "!flag:h_strain_talk", "place:wick"], "convo": "strain_told"},
+		{"id": "h_strain", "tier": "story", "once": true, "priority": 35, "when": ["flag:strain_found", "!flag:h_strain_talk", "place:wick"], "convo": "strain"},
+		{"id": "h_tincture", "tier": "story", "once": true, "priority": 30, "when": ["flag:h_strain_talk", "!flag:learned_tincture", "pollution<0.12", "affection:hesper>=2"], "convo": "tincture"},
+		{"id": "h_tincture_grey", "tier": "story", "priority": 12, "when": ["flag:h_strain_talk", "!flag:learned_tincture", "pollution>=0.12"], "text": "The frames are grey at the edges. I'm not steeping anything from moss that's half-dead. Clean the air. Then ask me.", "emote": "sad"},
+		{"id": "h_heart_air", "tier": "story", "once": true, "priority": 25, "when": ["flag:heart_seen", "!flag:h_heart_talk"], "convo": "heart_air"},
+
+		{"id": "h_tg", "tier": "reactive", "once": true, "when": ["flag:tg_knows_need"], "text": "Bad air, they said. Bad air at the bottom of the Deep. Everything that sinks ends up there. Everything we breathe out, eventually, they breathe in.", "emote": "sad"},
+		{"id": "h_damp", "tier": "reactive", "when": ["flag:damp_season"], "text": "The lake's breathing out. The frames are working twice as hard and getting no thanks for it, as usual. Listen. You can hear them. No. You can't. They're still working."},
+		{"id": "h_lift", "tier": "reactive", "once": true, "when": ["flag:lift_built"], "text": "A lift into the lower air. Wear a respirator. Wear two. If you come back coughing I'll make you sit in the frames until you stop.", "emote": "annoyed"},
+		{"id": "h_pell", "tier": "reactive", "once": true, "when": ["flag:met_pell"], "text": "They grow pale fungus down there. In the dark. On purpose. I'd like to meet whoever thought of that and shout at them, and then I'd like to learn everything they know."},
+		{"id": "h_saved_wren", "tier": "reactive", "once": true, "when": ["flag:wren_saved_tincture"], "text": "The tincture worked. Strain Seven worked. I'm told it did exactly what it was made to do. I'm still angry about the 'made'. I'm less angry than I was.", "emote": "happy"},
+
+		{"id": "h_amb_strain", "tier": "ambient", "when": ["flag:h_strain_talk"], "text": "My grandmother's tags go back forty years. The builders' go back two hundred. I've started reading the old ones out loud to the frames. They seem to like the names."},
+		{"id": "h_bark_damp", "tier": "bark", "when": ["flag:damp_season"], "text": "Breathe through the moss. Not you. Them."},
+		{"id": "h_bark_strain", "tier": "bark", "when": ["flag:h_strain_talk"], "text": "Strain Seven. Hm."}
+	],
+
+	"convos": {
+		"strain_told": [
+			{"say": "You've got paper. Crew paper. I can smell the oil on it from here. What is it.", "do": ["flag:h_strain_talk", "flag:strain_found"]},
+			{"say": "She reads the seeding schedule twice, slowly, and then a third time with her finger on the lines, the way she counts lampmoths.", "who": "narrator"},
+			{"say": "'Scrubber moss, strain seven. Seed at stations one to forty. Target: damp-cough spore load. Expected self-sustaining within three generations.'"},
+			{"say": "It's my moss. It's Clara. It's the Old Frame. It's every frame my grandmother ever tagged.", "emote": "surprised"},
+			{"say": "Somebody MADE it. Somebody sat in an office and drew it and gave it a NUMBER."},
+			{"goto": "choice"},
+			{"label": "choice"},
+			{"choice": [
+				{"text": "It's still alive. Made or not, it's alive.", "do": ["flag:h_strain_choice=alive", "affection:hesper+5", "respect:hesper+3"], "goto": "alive"},
+				{"text": "They were wrong to make something and leave it.", "do": ["flag:h_strain_choice=wrong", "resentment:hesper+2", "trust:hesper+3"], "goto": "wrong"},
+				{"text": "Your grandmother knew. That's why she tagged them.", "do": ["flag:h_strain_choice=grandmother", "shared:hesper+6", "affection:hesper+3"], "goto": "gran"}
+			]},
+			{"label": "alive"},
+			{"say": "...It is. Isn't it. It breathes. I've watched it breathe for forty years. A number doesn't stop it breathing.", "emote": "sad"},
+			{"say": "It was made to eat the cough. And it does. Every damp season it does, and nobody thanks it, and I thought that was because nobody understood it."},
+			{"say": "Turns out it was because everybody forgot. That's worse. That's much worse. And much easier to fix.", "goto": "end"},
+			{"label": "wrong"},
+			{"say": "Yes. YES. Thank you. They made it and walked away and called it balance and let it be MINE without telling me what it was.", "emote": "annoyed"},
+			{"say": "...And it's still doing what they made it for. Without them. Without anyone. That's not their achievement. That's the moss's.", "goto": "end"},
+			{"label": "gran"},
+			{"say": "...Her tags. The old ones. 'S7'. I always thought it was a frame number.", "emote": "surprised"},
+			{"say": "She knew. She knew, and she didn't tell me, because she knew I'd make exactly this face.", "emote": "sad"},
+			{"say": "She was right. I'm making it. Go away for a minute while I make it."}
+		],
+
+		"strain": [
+			{"say": "Don't talk to me. I'm reading. It came out of the Reach in a crate of Grist's and it's ruining my life.", "do": ["flag:h_strain_talk"]},
+			{"say": "It's a seeding schedule. Crew paper. 'Scrubber moss, strain seven. Seed at stations one to forty. Target: damp-cough spore load.'"},
+			{"say": "It's my moss. Somebody MADE my moss and gave it a NUMBER.", "emote": "annoyed"},
+			{"choice": [
+				{"text": "It's still alive. Made or not.", "do": ["flag:h_strain_choice=alive", "affection:hesper+4", "respect:hesper+2"], "goto": "alive"},
+				{"text": "They were wrong to make it and leave it.", "do": ["flag:h_strain_choice=wrong", "trust:hesper+3"], "goto": "wrong"},
+				{"text": "Maybe your grandmother knew.", "do": ["flag:h_strain_choice=grandmother", "shared:hesper+4"], "goto": "gran"}
+			]},
+			{"label": "alive"},
+			{"say": "...It is. A number doesn't stop it breathing. I've watched it breathe for forty years.", "emote": "sad", "goto": "end"},
+			{"label": "wrong"},
+			{"say": "Yes. They made it and walked away. And it carried on without them. That's the moss's achievement, not theirs.", "goto": "end"},
+			{"label": "gran"},
+			{"say": "Her old tags. 'S7'. I thought it was a frame number. ...Go away for a minute. I'm going to be furious at someone who's been dead nine years.", "emote": "sad"}
+		],
+
+		"tincture": [
+			{"say": "The frames are clean. Clean enough. I can work with clean enough.", "do": ["learn:learned_tincture", "toast:Learned: Moss Tincture"]},
+			{"say": "If the moss eats the cough in the air, it'll eat it in a cup. Three fibres, one bellcap, a cup of moss tea. Steep it overnight at the bench. It tastes of frames after rain."},
+			{"say": "It's not a cure. It's a kindness with a recipe. Give it to whoever's coughing worst."},
+			{"say": "And don't tell Odile I've gone into medicine. She'll want to price it.", "emote": "annoyed"}
+		],
+
+		"heart_air": [
+			{"say": "The Heart, then. If it breathes, everything breathes together. If the cough's in one station, it's in all forty by morning.", "do": ["flag:h_heart_talk"]},
+			{"say": "That's what the Quiet was, wasn't it? Not a war. Not a disaster. A quarantine that worked so well everybody forgot it was a quarantine."},
+			{"say": "If you want me to say yes, I need clean air in Wick and the tincture in hand. Or a scrubber running, if you must use a machine. Strain Seven can do the rest. It's been waiting two hundred years to be asked."}
+		]
+	}
+}

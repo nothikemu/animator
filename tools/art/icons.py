@@ -236,6 +236,76 @@ def tag():
     return finish(c)
 
 
+def cable():
+    c = icon()
+    rope = ramp(pal("sand"), 3, 0.3)
+    for k in range(4):
+        c.ellipse(8, 8, 6 - k * 1.2, 4.5 - k * 0.9, rope[k % 2 + 1] if k < 3 else rope[0])
+    c.disc(8, 8, 1.2, (0, 0, 0, 0))
+    c.line(12, 10, 14, 14, rope[1])
+    c.set(14, 14, pal("brass_light")); c.set(13, 13, pal("brass"))
+    return finish(c)
+
+
+def vial(liquid, cork):
+    c = icon()
+    c.rect(6, 4, 4, 2, cork)
+    c.rect(5, 6, 6, 8, (200, 215, 220, 255))
+    c.rect(6, 8, 4, 5, liquid)
+    c.set(6, 8, shade(liquid, 0.4))
+    c.vline(10, 7, 12, (240, 250, 255, 255))
+    return finish(c)
+
+
+def crate_icon(mark):
+    c = icon()
+    wood = ramp(shade(pal("clay"), 0.05), 3, 0.3)
+    c.rect(2, 5, 12, 9, wood[1])
+    c.hline(2, 13, 5, wood[2]); c.hline(2, 13, 13, wood[0])
+    c.line(2, 6, 13, 12, wood[0])
+    c.rect(6, 7, 4, 3, pal("cream")); c.set(7, 8, mark); c.set(8, 8, mark); c.set(8, 7, mark); c.set(8, 9, mark)
+    return finish(c)
+
+
+def salt_icon():
+    c = icon()
+    for (x, y, h) in [(4, 9, 5), (7, 5, 9), (10, 7, 7), (12, 10, 4)]:
+        for k in range(h):
+            c.hline(x - 1 + (1 if k < 2 else 0), x + 1 - (1 if k < 2 else 0), y + k, (238, 236, 244, 255) if k % 3 else (205, 202, 220, 255))
+    c.set(7, 6, (255, 255, 255, 255))
+    return finish(c)
+
+
+def salted_beets():
+    c = icon()
+    c.rect(4, 4, 8, 10, shade(pal("clay"), 0.15))
+    c.rect(5, 6, 6, 7, shade(pal("violet"), -0.1))
+    c.set(6, 7, pal("glow")); c.set(9, 10, pal("glow"))
+    for (x, y) in [(6, 9), (8, 8), (9, 11), (7, 12)]:
+        c.set(x, y, (238, 236, 244, 255))
+    c.rect(4, 3, 8, 1, shade(pal("clay"), -0.2))
+    return finish(c)
+
+
+def journal():
+    c = icon()
+    c.rect(3, 3, 10, 11, shade(pal("danger"), -0.45))
+    c.rect(4, 4, 8, 9, shade(pal("danger"), -0.3))
+    c.vline(4, 3, 13, shade(pal("danger"), -0.6))
+    c.hline(6, 10, 6, pal("cream")); c.hline(6, 9, 8, pal("cream"))
+    c.set(11, 3, pal("brass_light"))
+    return finish(c)
+
+
+def chalk():
+    c = icon()
+    c.line(4, 12, 11, 5, (236, 232, 222, 255)); c.line(5, 12, 12, 5, (210, 206, 196, 255))
+    c.line(4, 13, 11, 6, (236, 232, 222, 255))
+    for (x, y) in [(2, 3), (4, 3), (6, 3)]:
+        c.set(x, y, (236, 232, 222, 255))
+    return finish(c)
+
+
 def sludge():
     c = icon()
     c.ellipse(8, 11, 6, 3.5, shade(pal("sour"), -0.45))
@@ -376,6 +446,9 @@ def build():
         ("seal_gum", seal_gum()), ("fertiliser", sack(pal("clay"), pal("moss_light"))), ("sludge", sludge()),
         ("moss_tea", cup(pal("moss"))), ("glowbeet_stew", bowl(shade(pal("danger"), -0.2))),
         ("respirator", respirator()), ("lamp_lens", lens()), ("governor_coil", coil()), ("crew_tag", tag()),
+        ("crew_cable", cable()), ("moss_tincture", vial(pal("glow"), shade(pal("clay"), 0.1))),
+        ("river_medicine", crate_icon(shade(pal("danger"), -0.1))), ("salt", salt_icon()),
+        ("salted_beets", salted_beets()), ("wren_journal", journal()), ("knock_chalk", chalk()),
         ("tool_hands", tool_hands()), ("tool_tiller", tool_tiller()), ("tool_can", tool_can()),
         ("tool_hammer", tool_hammer()), ("tool_wrench", tool_wrench()), ("tool_glass", tool_glass()),
         ("st_power", st_power()), ("st_water", st_water()), ("st_gas", st_gas()), ("st_heat", st_heat()),

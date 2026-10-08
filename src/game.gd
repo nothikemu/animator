@@ -22,6 +22,7 @@ var _target: Interactable
 var _busy := false                       ## transitions in progress
 var _talking_npc: Npc
 var marker: Node3D                      ## floating objective marker
+var breath := 1.0                        ## 1 = full lungs; drains in bad air
 
 
 func _ready() -> void:
@@ -62,6 +63,7 @@ func _ready() -> void:
 	Clock.hour_changed.connect(func(_h: int) -> void: _update_music())
 	Events.world_event.connect(func(_id: StringName, _d: Dictionary) -> void: _update_music())
 	Events.dialogue_ended.connect(_on_dialogue_ended)
+	Events.flag_changed.connect(_chapter_banner)
 	Events.thread_updated.connect(func(tid: StringName, _s: int) -> void:
 		# A finished thread gets a little fist in the air (only when the salvager is free).
 		if Threads.is_done(String(tid)) and not player.frozen and player.busy <= 0.0 and not _busy:
@@ -89,7 +91,15 @@ func load_area(id: String, initial := false) -> void:
 	npcs.clear()
 	if id == "wick":
 		area = AreaMap.from_ascii(Content.wick_map)
+	elif Content.maps.has(id):
+		area = AreaMap.from_ascii(Content.maps[id])
+		_resolve_authored_exits(area)
+		_apply_area_deltas(id)
 	else:
+		var node := ReachGen.node_by_id(GameState.reach_graph, id)
+		if node.has("unmapped"):
+			GameState.set_flag("deepest", maxi(int(GameState.flag("deepest") if GameState.flag("deepest") else 0), int(node.unmapped)))
+			ReachGen.ensure_unmapped(GameState.reach_graph, int(node.unmapped))
 		area = ReachGen.generate_cavern(GameState.seed_value, GameState.reach_graph, id)
 		_apply_area_deltas(id)
 	GameState.current_area = id
@@ -108,12 +118,12 @@ func load_area(id: String, initial := false) -> void:
 		farm = FarmView.new()
 		area_view.add_child(farm)
 		farm.setup(area)
-		_spawn_npcs()
 		_spawn_surface_machines()
 	else:
 		farm = null
 		_spawn_resources()
 		GameState.discover("places", id)
+	_spawn_npcs()
 	env.set_biome(area.biome)
 	rig.bounds = Rect2(0, 0, area.w, area.d)
 	var pos: Array = GameState.player.get("pos", [4.5, 5.5])
@@ -128,8 +138,12 @@ func load_area(id: String, initial := false) -> void:
 
 
 func _spawn_npcs() -> void:
-	var astar := area.build_astar()
+	var astar: AStarGrid2D = null
 	for id in Content.npcs:
+		if Npc.area_of(id) != area.id:
+			continue
+		if astar == null:
+			astar = area.build_astar()
 		var n := Npc.new()
 		n.setup(id, area, astar)
 		n.watch(player)
@@ -143,6 +157,37 @@ func _spawn_surface_machines() -> void:
 		var sm: Node3D = load("res://src/engineering/surface_machines.gd").new()
 		sm.name = "SurfaceMachines"
 		area_view.add_child(sm)
+
+
+## Authored maps name their ways out "up" and "down"; the graph says where those go.
+func _resolve_authored_exits(a: AreaMap) -> void:
+	var node := ReachGen.node_by_id(GameState.reach_graph, a.id)
+	var tier := int(node.get("tier", 0))
+	var ups: Array = []
+	var downs: Array = []
+	for e: Dictionary in GameState.reach_graph.get("edges", []):
+		if String(e.a) != a.id and String(e.b) != a.id:
+			continue
+		var other := String(e.b) if String(e.a) == a.id else String(e.a)
+		var ot := 0 if other == "wick" else int(ReachGen.node_by_id(GameState.reach_graph, other).get("tier", 0))
+		(ups if ot < tier else downs).append({"to": other, "kind": String(e.kind)})
+	var used := {"up": 0, "down": 0}
+	var keep: Array = []
+	for ex: Dictionary in a.exits:
+		var slot := String(ex.get("to", ""))
+		if slot in ["up", "down"]:
+			var pool: Array = ups if slot == "up" else downs
+			var k := int(used[slot])
+			used[slot] = k + 1
+			if k >= pool.size():
+				continue
+			ex["to"] = String(pool[k].to)
+			ex["kind"] = String(pool[k].kind)
+		keep.append(ex)
+		a.points["from_" + String(ex.to)] = Vector2i(int(ex.arrive[0]), int(ex.arrive[1]))
+	a.exits = keep
+	if not a.points.has("arrival") and a.points.has("hub"):
+		a.points["arrival"] = a.points.hub
 
 
 func _apply_area_deltas(id: String) -> void:
@@ -188,12 +233,21 @@ func travel(to: String) -> void:
 	player.frozen = true
 	var from := GameState.current_area
 	var label := "Wick" if to == "wick" else String(ReachGen.node_by_id(GameState.reach_graph, to).get("name", to))
-	Audio.play("travel", -6.0)
+	var lift := (from == "wick" and to == "d1_0") or (to == "wick" and from == "d1_0")
+	Audio.play("lift" if lift and ResourceLoader.exists("res://assets/audio/sfx/lift.ogg") else "travel", -6.0)
+	if lift:
+		Events.caption.emit("[the lift cage shudders, and the cable takes the weight]", 2.5)
 	await fade.fade_out(0.5, label)
 	load_area(to)
 	# Arrive at the exit that leads back where we came from.
 	var key := "from_" + from
-	if area.points.has(key):
+	var from_node := ReachGen.node_by_id(GameState.reach_graph, from)
+	if to == "wick" and bool(from_node.get("deep", false)):
+		# Up the Primary Lift: out into the pump hall's doorway.
+		var p3: Vector2i = area.points.get("pumphall_door", Vector2i(41, 11))
+		player.place(Vector2(p3.x + 0.5, p3.y + 1.5), area)
+		player.facing = Vector2(0, 1)
+	elif area.points.has(key):
 		var p: Vector2i = area.points[key]
 		player.place(Vector2(p.x + 0.5, p.y + 0.5), area)
 	elif to == "wick":
@@ -268,12 +322,68 @@ func _process(delta: float) -> void:
 			env.pollution = 0.15
 		else:
 			env.pollution = 0.0
-		player.air_bad = env.pollution > 0.3
-		player.cold = area.biome == "sump"
+		player.air_bad = env.pollution > 0.3 or _hazard() in ["sour", "stale"]
+		player.cold = area.biome in ["sump", "drowned", "salt"]
+		_breathe(delta)
 		_update_target()
 		_check_reveal()
 		for n: Npc in npcs.values():
 			n.try_bark(player.global_position)
+
+
+## The air hazard where the salvager stands ("" when the air is fine).
+func _hazard() -> String:
+	if area == null:
+		return ""
+	if area.id == "wick":
+		return "sour" if env.pollution > 0.6 else ""
+	return String(Content.biomes.get(area.biome, {}).get("hazard", ""))
+
+
+## Bad air empties the lungs; a respirator makes it last five times as long. Run out and you
+## black out, and someone carries you home.
+func _breathe(delta: float) -> void:
+	var hz := _hazard()
+	var drain := {"sour": 1.0 / 210.0, "stale": 1.0 / 150.0, "damp": 1.0 / 300.0}.get(hz, 0.0) as float
+	if GameState.has_gear("respirator"):
+		drain *= 0.2
+	if player.frozen or _busy or Dialogue.active or (panels and panels.has_method("is_open") and panels.is_open()):
+		drain = 0.0
+	if drain > 0.0:
+		breath = maxf(0.0, breath - drain * delta)
+	else:
+		breath = minf(1.0, breath + delta / (6.0 if hz == "" else 40.0))
+	hud.set_breath(breath, hz != "" and drain > 0.0 or breath < 0.999)
+	if breath <= 0.0 and not _busy:
+		breath = 0.35
+		_blackout()
+
+
+func _blackout() -> void:
+	_busy = true
+	player.frozen = true
+	player.perform("collapse")
+	Audio.play("thud" if ResourceLoader.exists("res://assets/audio/sfx/thud.ogg") else "travel", -6.0)
+	await get_tree().create_timer(0.9).timeout
+	await fade.fade_out(1.4, "The air goes thin, then goes out.")
+	var deep := bool(ReachGen.node_by_id(GameState.reach_graph, area.id).get("deep", false))
+	var rescuer := "pell" if deep and GameState.has_flag("met_pell") else "barnaby"
+	load_area("wick")
+	var bed: Vector2i = area.points.get("lease_inside", Vector2i(6, 12))
+	player.place(Vector2(bed.x + 0.5, bed.y + 0.5), area)
+	rig.snap()
+	Clock.advance(240.0)
+	Society.remember(rescuer, "carried_home", 4.0, 0.2, true)
+	Society.change(rescuer, "shared", 4.0)
+	GameState.set_flag("blackouts", int(GameState.flag("blackouts") if GameState.flag("blackouts") else 0) + 1)
+	breath = 1.0
+	await fade.fade_in(1.0)
+	player.frozen = false
+	_busy = false
+	if rescuer == "pell":
+		monologue("You wake in the Lease. There's a chalk mark on the door: 3·2·3. Pell carried you all the way to the lift.")
+	else:
+		monologue("You wake in the Lease with a headache and a blanket you don't own. Barnaby's handwriting on a note: 'Respirator. Bench. Hesper knows how.'")
 
 
 func _update_target() -> void:
@@ -473,13 +583,20 @@ func _update_music() -> void:
 	elif GameState.view_mode == "cut":
 		cue = "cut"
 	elif area and area.id != "wick":
-		cue = "reach"
+		cue = String(Content.biomes.get(area.biome, {}).get("music", "reach"))
 	elif Clock.phase() in ["hush", "night"]:
 		cue = "hush"
 	var stems := {"pad": 1.0, "melody": 0.8, "counter": 0.55 if Clock.phase() == "bloom" else 0.0,
 		"pulse": 0.6 if Clock.phase() in ["wake", "bloom"] else 0.25, "glass": 0.7, "drone": 1.0,
 		"bass": 1.0, "ostinato": 0.85, "perc": 0.7, "alarm": 0.9 if crisis or int(Sim.fact("leaks") if Sim.grid != null else 0) >= 4 else 0.0,
-		"brass": 0.9, "knock": 1.0 if GameState.has_flag("knock_heard") else 0.0}
+		"brass": 0.9, "knock": 1.0 if GameState.has_flag("knock_heard") else 0.0,
+		"breath": 1.0, "pluck": 0.8}
+	if cue == "heart":
+		stems.brass = 1.0 if GameState.has_flag("heart_running") else 0.0
+	elif cue == "sallow":
+		stems.melody = 0.85 if not GameState.has_flag("wren_died") else 0.4
+	elif cue == "deep":
+		stems.knock = 0.8
 	if area and area.id != "wick":
 		stems.pulse = 0.7 if area.biome in ["sump", "ember"] else 0.35
 	if rig and rig.mode == "dialogue":
@@ -578,9 +695,59 @@ func show_ending() -> void:
 	lines.append("And under the Lower Stations, someone is still running the machine.")
 	await fade.card(lines, 2.8)
 	await fade.card(["I want to see what is deeper down."], 3.6, UiTheme.LIVING)
-	GameState.set_flag("ending_seen")
+	GameState.set_flag("chapter_one_done")
 	GameState.discover("lore", "the_knock")
 	Saves.save(0)
-	await fade.card(["Thank you for playing the first chapter.", "Wick carries on. So can you."], 2.6, UiTheme.DIM)
+	await fade.card(["End of Chapter One: The Dry Well"], 2.2, UiTheme.DIM)
 	await fade.fade_in(1.6)
 	_busy = false
+
+
+## The real ending, from the Bellows console: title, the world, each person, and you. Then the
+## game carries on (the Unmapped opens below the Heart), unless you go topside.
+func play_ending() -> void:
+	if _busy:
+		return
+	_busy = true
+	player.frozen = true
+	var id := Ending.resolve()
+	GameState.set_flag("ending_" + id, true)
+	GameState.set_flag("ending_seen", true)
+	GameState.set_flag("unmapped_open", true)
+	Almanac.record_ending(id)
+	await get_tree().create_timer(1.5).timeout
+	await fade.fade_out(2.4)
+	_update_music()
+	for c: Dictionary in Ending.cards(id):
+		await fade.card(c.lines, float(c.hold), c.color)
+	Saves.save(0)
+	_busy = false
+	# The last question: home, or here.
+	if GameState.has_flag("heart_running"):
+		Dialogue.start_convo("_bellows", "topside")
+		await Events.dialogue_ended
+	if GameState.has_flag("went_topside"):
+		_busy = true
+		Almanac.record_ending("topside")
+		await fade.card(["The great lift ran again, and one morning it went up.",
+			"%s went home. Wick writes. The letters always start the same way." % String(GameState.player.get("name", "The salvager")),
+			"Still here."], 2.8, UiTheme.LIVING)
+		Saves.save(0)
+		await fade.card(["Thank you for playing Bellows."], 3.0, UiTheme.ACCENT)
+		_busy = false
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		return
+	await fade.card(["Thank you for playing Bellows.", "Wick carries on. Below the Heart, the stair goes on into the Unmapped."], 2.6, UiTheme.DIM)
+	await fade.fade_in(1.6)
+	player.frozen = false
+	_update_music()
+
+
+## A banner at the top of the screen as each chapter begins (it doesn't stop play).
+func _chapter_banner(flag: StringName, _value: Variant) -> void:
+	var titles := {&"learned_codes": ["Chapter Two", "Answering"], &"lift_built": ["Chapter Three", "The Lower Stations"],
+		&"ways_open": ["Chapter Four", "The Bellows"]}
+	if not titles.has(flag) or GameState.has_flag("banner_" + String(flag)):
+		return
+	GameState.set_flag("banner_" + String(flag), true)
+	hud.banner(String(titles[flag][0]), String(titles[flag][1]))

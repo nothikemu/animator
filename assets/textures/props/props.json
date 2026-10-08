@@ -1,4 +1,22 @@
 {
+ "chalk_wall": {
+  "w": 64,
+  "h": 30,
+  "frames": 1,
+  "emit": false
+ },
+ "cookfire": {
+  "w": 16,
+  "h": 18,
+  "frames": 1,
+  "emit": true
+ },
+ "salt_node": {
+  "w": 20,
+  "h": 18,
+  "frames": 1,
+  "emit": false
+ },
  "glowroot_0": {
   "w": 40,
   "h": 60,

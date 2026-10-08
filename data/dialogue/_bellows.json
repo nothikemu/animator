@@ -1,0 +1,318 @@
+{
+	"_comment": "The Bellows console in the Heart. Shows what the restart still needs, and offers the ending choice once the town has come down together.",
+	"lines": [
+		{
+			"id": "bl_console",
+			"tier": "story",
+			"when": [
+				"!flag:ending_chosen"
+			],
+			"convo": "console"
+		},
+		{
+			"id": "bl_after",
+			"tier": "story",
+			"when": [
+				"flag:ending_chosen"
+			],
+			"convo": "after"
+		}
+	],
+	"convos": {
+		"console": [
+			{
+				"say": "A brass console the width of a door. Dials under glass, and one lever as long as your arm, cold, its handle worn smooth by hands that haven't touched it in two hundred years.",
+				"who": "narrator",
+				"do": [
+					"flag:heart_seen"
+				]
+			},
+			{
+				"say": "Four plates under four needles. PRESSURE. AIR. WAYS. And a fourth plate scratched in by hand, not by the builders: WICK SAYS?",
+				"who": "narrator"
+			},
+			{
+				"if": [
+					"pressure_ready"
+				],
+				"goto": "p_ok"
+			},
+			{
+				"say": "PRESSURE lies flat on its pin. Nothing is pushing from above. Wick's Trunk valve, or the Station pump, isn't giving it anything.",
+				"who": "narrator"
+			},
+			{
+				"goto": "air"
+			},
+			{
+				"label": "p_ok"
+			},
+			{
+				"say": "PRESSURE stands up and trembles, like something holding its breath.",
+				"who": "narrator"
+			},
+			{
+				"label": "air"
+			},
+			{
+				"if": [
+					"air_ready"
+				],
+				"goto": "a_ok"
+			},
+			{
+				"say": "AIR sits in the red. Whatever rises from here would carry the cough with it. Hesper would know what to do about that.",
+				"who": "narrator"
+			},
+			{
+				"goto": "ways"
+			},
+			{
+				"label": "a_ok"
+			},
+			{
+				"say": "AIR sits in the green. Somewhere above, Strain Seven is doing what it was made for.",
+				"who": "narrator"
+			},
+			{
+				"label": "ways"
+			},
+			{
+				"say": "WAYS is wide open. The Knappers kept their word. You can hear them, faintly, still humming in the rock.",
+				"who": "narrator"
+			},
+			{
+				"if": [
+					"flag:consent"
+				],
+				"goto": "c_ok"
+			},
+			{
+				"say": "The last plate is blank.",
+				"who": "narrator"
+			},
+			{
+				"goto": "choose"
+			},
+			{
+				"label": "c_ok"
+			},
+			{
+				"say": "Someone has chalked YES on the last plate in a round, generous hand. Mags.",
+				"who": "narrator"
+			},
+			{
+				"label": "choose"
+			},
+			{
+				"if": [
+					"flag:consent",
+					"!flag:heart_gathering"
+				],
+				"goto": "bring"
+			},
+			{
+				"choice": [
+					{
+						"text": "Pull the lever, together. (Restart the Heart.)",
+						"when": [
+							"pressure_ready",
+							"air_ready",
+							"flag:consent",
+							"flag:heart_gathering"
+						],
+						"do": [
+							"flag:ending_chosen",
+							"flag:ending=breathe"
+						],
+						"goto": "breathe"
+					},
+					{
+						"text": "Leave the Heart to Sallow. Keep the lift and the telegraph. (The Long Watch.)",
+						"when": [
+							"flag:met_pell",
+							"flag:knows_truth"
+						],
+						"do": [
+							"flag:ending_chosen",
+							"flag:ending=watch"
+						],
+						"goto": "watch"
+					},
+					{
+						"text": "Seal Wick off. For good. (Close the Trunk valve forever.)",
+						"when": [
+							"flag:knows_truth"
+						],
+						"do": [
+							"flag:ending_chosen",
+							"flag:ending=sealed"
+						],
+						"goto": "sealed"
+					},
+					{
+						"text": "Not yet.",
+						"goto": "end"
+					}
+				]
+			},
+			{
+				"label": "bring"
+			},
+			{
+				"say": "Nothing this size should be started by one person. That's how you get a Council. Go and tell Mags: everybody comes down. Together.",
+				"who": "player"
+			},
+			{
+				"goto": "end"
+			},
+			{
+				"label": "breathe"
+			},
+			{
+				"say": "Everyone is here. Barnaby takes the handle first, then Wren's hand, or Pell's, then Odile's, Mags', Hesper's green fingers, Tolley apologising, a great stone palm, and yours.",
+				"who": "narrator"
+			},
+			{
+				"say": "On three.",
+				"who": "barnaby"
+			},
+			{
+				"say": "After three!",
+				"who": "pell"
+			},
+			{
+				"say": "The lever comes down, all of you hanging on it, and for a long moment nothing happens at all.",
+				"who": "narrator"
+			},
+			{
+				"say": "Then the Bellows breathes in.",
+				"who": "narrator",
+				"do": [
+					"event:restart_heart"
+				]
+			},
+			{
+				"say": "It takes eight seconds. You feel it in your chest, in the floor, in the rock. Forty stations of air, drawn down through every Trunk at once, and then, slow and enormous, pushed back up.",
+				"who": "narrator"
+			},
+			{
+				"say": "Somewhere far above, in Wick, every pipe-head in the lane knocks at once.",
+				"who": "narrator",
+				"do": [
+					"event:ending"
+				]
+			},
+			{
+				"goto": "end"
+			},
+			{
+				"label": "watch"
+			},
+			{
+				"say": "You take your hand off the lever.",
+				"who": "narrator"
+			},
+			{
+				"say": "Not this. Not all at once. Not every station's weather in every station's lungs. The lift, the telegraph, the slow trade. Two towns, carefully.",
+				"who": "player"
+			},
+			{
+				"say": "The Heart keeps breathing, slowly, the way it has for eleven years. Pell keeps the pumps. Wick keeps the knock.",
+				"who": "narrator",
+				"do": [
+					"event:ending"
+				]
+			},
+			{
+				"goto": "end"
+			},
+			{
+				"label": "sealed"
+			},
+			{
+				"say": "You go back up the lift. You go down into the Sink with Barnaby, and you close the Trunk valve, and this time you both wire it shut.",
+				"who": "narrator",
+				"do": [
+					"!flag:valve_open"
+				]
+			},
+			{
+				"say": "He wraps the copper slowly and evenly. He takes his time. He doesn't want to be quick about it.",
+				"who": "narrator",
+				"do": [
+					"event:ending"
+				]
+			}
+		],
+		"after": [
+			{
+				"if": [
+					"flag:heart_running"
+				],
+				"goto": "running"
+			},
+			{
+				"say": "The lever is where you left it. The Heart breathes, slowly, the way it always has.",
+				"who": "narrator"
+			},
+			{
+				"goto": "end"
+			},
+			{
+				"label": "running"
+			},
+			{
+				"say": "The Bellows breathes in. Eight seconds. Breathes out. The needles stand in the green. Somebody has chalked a heart on the console, badly, and three-two-three under it.",
+				"who": "narrator"
+			}
+		],
+		"topside": [
+			{
+				"say": "Weeks later, the morning cage brings word from the grotto: with the Heart breathing, the old Chute winch has pressure again. The way you fell in goes up.",
+				"who": "narrator"
+			},
+			{
+				"say": "Forty metres of new cable. A cage. The sky, if there is one, at the top.",
+				"who": "narrator"
+			},
+			{
+				"choice": [
+					{
+						"text": "Go home. Up the Chute.",
+						"do": [
+							"flag:went_topside"
+						],
+						"goto": "up"
+					},
+					{
+						"text": "Stay. This is home now.",
+						"do": [
+							"flag:stayed",
+							"affection:mags+4",
+							"affection:barnaby+4"
+						],
+						"goto": "stay"
+					}
+				]
+			},
+			{
+				"label": "up"
+			},
+			{
+				"say": "Everyone comes to the grotto. Barnaby says one thing. Mags says several. Pell asks what the sky is for.",
+				"who": "narrator"
+			},
+			{
+				"goto": "end"
+			},
+			{
+				"label": "stay"
+			},
+			{
+				"say": "You watch the cage go up empty, for the test run, and come back down. You don't get in. Barnaby doesn't say anything. He doesn't have to.",
+				"who": "narrator"
+			}
+		]
+	}
+}

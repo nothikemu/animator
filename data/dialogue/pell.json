@@ -1,0 +1,87 @@
+{
+	"_comment": "Pell. Grew up at Sallow. Taught the codes by Wren. Has knocked every night for four years. Asks questions in the order they occur.",
+
+	"lines": [
+		{"id": "pe_intro", "tier": "story", "once": true, "priority": 50, "when": ["!flag:met_pell", "place:sallow"], "convo": "intro"},
+		{"id": "pe_dead", "tier": "story", "once": true, "priority": 55, "when": ["flag:wren_died", "flag:met_pell", "!flag:pe_dead_talk", "place:sallow"], "convo": "wren_died"},
+		{"id": "pe_heart", "tier": "story", "once": true, "priority": 30, "when": ["flag:knows_truth", "!flag:pe_heart_talk", "place:sallow"], "convo": "heart"},
+		{"id": "pe_wick_first", "tier": "story", "once": true, "priority": 40, "when": ["flag:pell_in_wick", "place:wick"], "convo": "wick_first"},
+		{"id": "pe_ways", "tier": "story", "once": true, "priority": 25, "when": ["flag:met_pell", "flag:knows_truth", "!flag:ways_open", "!flag:pe_ways_talk"], "convo": "ways"},
+
+		{"id": "pe_lamp", "tier": "reactive", "once": true, "when": ["flag:met_pell", "place:sallow"], "text": "Can I— can I look at your lamp again? Does it get hot? Does it ever go out? What do you feed it? Sorry. Sorry. I'll stop.", "emote": "surprised"},
+		{"id": "pe_saved", "tier": "reactive", "once": true, "when": ["flag:wren_saved"], "text": "She's eating. She's being rude to everyone about the taste. That's how you know. That's how you always know with her.", "emote": "happy"},
+		{"id": "pe_sky", "tier": "reactive", "once": true, "when": ["flag:met_pell", "flag:pell_in_wick"], "text": "Wren says there's a sky above Wick, too, a long way up. Is it like your lake but on the ceiling? Do things fall out of it? Does it have a floor?"},
+		{"id": "pe_reunion", "tier": "reactive", "once": true, "when": ["flag:reunion_done"], "text": "So THAT'S Barnaby. He's taller than in the stories. Wren made him sound shorter. I think so she could look down at him.", "emote": "happy"},
+
+		{"id": "pe_amb_pumps", "tier": "ambient", "when": ["place:sallow"], "text": "Three pumps, twelve people, one Heart. The middle pump has a cough in its bearing. If you hear it stop, run. Not away. Towards."},
+		{"id": "pe_amb_wall", "tier": "ambient", "when": ["place:sallow"], "text": "That's the wall. Every night since the stair, a mark. The early ones are Wren's. The neat ones are mine. The crooked ones are when she was teaching me."},
+		{"id": "pe_amb_wick", "tier": "ambient", "when": ["place:wick"], "text": "Everything here GLOWS. The trees. The beets. The water. Do you ever just— stop, and look at it? You don't, do you. You've got used to it. That's terrible. That's wonderful."},
+		{"id": "pe_amb_heart", "tier": "ambient", "when": ["flag:heart_seen"], "text": "I used to sit by the Heart door when I was small and listen to it breathe. Then it got slower. Now I sit there and count between breaths. It's getting harder to wait."},
+		{"id": "pe_bark1", "tier": "bark", "text": "Three-two-three!"},
+		{"id": "pe_bark2", "tier": "bark", "when": ["place:sallow"], "text": "Middle pump's coughing again."},
+		{"id": "pe_bark3", "tier": "bark", "when": ["place:wick"], "text": "It's so BRIGHT."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "There's someone at the chalk wall with their back to you, knocking on a pipe with the heel of their hand. Three. Two. Three.", "who": "narrator", "do": ["flag:met_pell", "met:pell"]},
+			{"say": "They turn round. They see your headlamp, and then they see you, and then they drop the chalk.", "who": "narrator"},
+			{"say": "You're— you're the one who answered.", "emote": "surprised"},
+			{"say": "You're real. You've got a LAMP. You came down the— is the lift working? It's working! Wren said it would never work again. Wren's going to be so annoyed!", "emote": "happy"},
+			{"say": "I'm Pell. I knock. I've knocked every night for four years. Wren said someone would answer one day and I believed her for about two of the years."},
+			{"choice": [
+				{"text": "I heard you every night. Well— after I learned how.", "do": ["affection:pell+6", "trust:pell+4"], "goto": "heard"},
+				{"text": "Who's Wren?", "when": ["!flag:b_wren_talk"], "goto": "who"},
+				{"text": "Wren Askew? Trunk crew?", "when": ["flag:b_wren_talk"], "do": ["trust:pell+3"], "goto": "askew"}
+			]},
+			{"label": "heard"},
+			{"say": "You learned the CODE? For us? Oh no, I'm going to cry, and Wren says crying in front of strangers is fine as long as you keep knocking.", "emote": "happy"},
+			{"goto": "wren"},
+			{"label": "who"},
+			{"say": "Wren! Wren Askew! Trunk crew! She came down the dry stair before I was born— well, when I was nine— and she fixed everything and taught everybody and— you don't know Wren?"},
+			{"goto": "wren"},
+			{"label": "askew"},
+			{"say": "You KNOW her? Someone up there remembers her? She said someone would. She said one person, and he'd be late, and he'd make a face."},
+			{"label": "wren"},
+			{"say": "She's in her shack. By the Heart door. She's— she's not well. The damp's in her chest. It's been in her chest since the season turned and it's worse every day.", "emote": "sad"},
+			{"say": "Will you see her? Please. She'll pretend she's fine. Don't believe her. Believe me."},
+			{"say": "And— thank you. For knocking. For coming. For the lamp. Mostly for the knocking.", "do": ["mem:pell:you_answered:10:0.9:lasting", "discover:people:pell"]}
+		],
+
+		"wren_died": [
+			{"say": "You came back.", "do": ["flag:pe_dead_talk", "give:wren_journal"]},
+			{"say": "She went in the night. Two nights ago. I was sitting with her. She was talking, and then she was asleep, and then she wasn't talking any more.", "emote": "sad"},
+			{"say": "She asked for him. Barnaby. She said 'Coil' like it was a joke she'd been saving."},
+			{"say": "She left this. It's for him. Every page starts with 'B'. I didn't read it. I read one page. I'm sorry. I read three.", "emote": "sad"},
+			{"say": "Will you take it up? I can't. If I go up the lift right now I won't come back down, and somebody has to knock tonight."},
+			{"choice": [
+				{"text": "I'll take it to him.", "do": ["trust:pell+5", "affection:pell+3"], "goto": "take"},
+				{"text": "You don't have to knock tonight.", "do": ["affection:pell+5", "shared:pell+5"], "goto": "knock"}
+			]},
+			{"label": "take"},
+			{"say": "Thank you. Tell him— tell him she said he'd be late.", "goto": "end"},
+			{"label": "knock"},
+			{"say": "Yes I do. That's the whole point. That's what she taught me. You knock because somebody might be listening, and you keep knocking because one day somebody was.", "emote": "sad"}
+		],
+
+		"heart": [
+			{"say": "You've read the archive. You've got that face. Everyone gets that face the first time.", "do": ["flag:pe_heart_talk"]},
+			{"say": "The Heart pushes air up the Trunks. Every station breathes because it breathes. When the Trunks closed, it had to push against nothing, and nothing's very heavy."},
+			{"say": "Wren kept it going with three pumps and spite. But it's slowing. Every year the Breath comes later and leaves sooner. Up in Wick you call it exhale days. Have you noticed they're further apart?"},
+			{"say": "To start it properly, the Trunks have to open. Wick's included. Pressure from above, clean air in the lines, and the ways open between here and the Heart door, which only Knappers can do."},
+			{"say": "And everyone has to agree. Wren says that's the hard part. Wren says machines are easy and people are pumps you can't open up."}
+		],
+
+		"ways": [
+			{"say": "The Heart door is sealed from this side by rock. Old rock. Knapper rock. They closed the low ways when the Council closed the Trunks.", "do": ["flag:pe_ways_talk"]},
+			{"say": "We've knocked on the rock too. Nobody answers. Wren says Knappers only listen to people who listen first."},
+			{"say": "Do you know any Knappers? You look like someone who knows a Knapper."}
+		],
+
+		"wick_first": [
+			{"say": "It's— it's all LIT. Everything's lit. Even the trees are lit. Is that tree on fire? No. Is it supposed to do that?", "emote": "surprised"},
+			{"say": "Mags gave me a bowl of something orange. I don't know what it was. I'd like to know what it was for the rest of my life."},
+			{"say": "I'm going to stand by the lake for a while. Is that allowed? You've got a whole sky made of water. It's upside down, but it's a sky."}
+		]
+	}
+}

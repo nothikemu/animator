@@ -4,6 +4,12 @@ extends TestCase
 const SEEDS := [1, 2, 3, 42, 1337, 9001, 271828, 31415]
 
 
+## The Reach proper: tiers 1-3 below the gate, not the Lower Stations, the Ways or the Unmapped.
+static func _reach_only(g: Dictionary) -> Array:
+	return (g.nodes as Array).filter(func(n: Dictionary) -> bool:
+		return not bool(n.get("deep", false)) and String(n.id) != "ways")
+
+
 func test_same_seed_same_world() -> void:
 	var a := ReachGen.generate_graph(1234)
 	var b := ReachGen.generate_graph(1234)
@@ -55,17 +61,26 @@ func test_critical_path_opens_after_the_tremor() -> void:
 		for n in g.nodes:
 			if n.trunk:
 				trunk_id = n.id
+		var reach := _reach_only(g)
 		var before := ReachGen.reachable(g, {})
 		check(not before.has(trunk_id), "seed %d: Trunk sealed before the tremor" % s)
 		var after := ReachGen.reachable(g, {"tremor_done": true})
-		eq(after.size(), g.nodes.size() + 1, "seed %d: every cavern reachable after the tremor" % s)
-		eq(before.size(), g.nodes.size(), "seed %d: everything but the Trunk reachable before" % s)
+		eq(after.size(), reach.size() + 1, "seed %d: every Reach cavern reachable after the tremor" % s)
+		eq(before.size(), reach.size(), "seed %d: everything but the Trunk reachable before" % s)
+		# The rest of the world opens with the story: the lift, the Knappers, the Heart door, the ending.
+		var all_open := ReachGen.reachable(g, {"tremor_done": true, "lift_built": true, "grist_guide": true,
+			"ways_open": true, "unmapped_open": true})
+		eq(all_open.size(), g.nodes.size() + 1, "seed %d: every place reachable once the story opens it" % s)
+		check(all_open.has("sallow") and all_open.has("heart") and all_open.has("ways"), "seed %d: Sallow, the Heart and the Ways reachable" % s)
+		check(not ReachGen.reachable(g, {"tremor_done": true, "lift_built": true}).has("heart"), "seed %d: the Heart needs the Knappers" % s)
 
 
 func test_every_cavern_connects_its_exits() -> void:
 	for s in [1, 42, 9001]:
 		var g := ReachGen.generate_graph(s)
 		for n in g.nodes:
+			if n.get("authored", false):
+				continue
 			var a := ReachGen.generate_cavern(s, g, n.id)
 			var astar := a.build_astar()
 			var hub: Vector2i = a.points.hub
@@ -85,6 +100,8 @@ func test_every_cavern_connects_its_exits() -> void:
 func test_heights_are_climbable() -> void:
 	var g := ReachGen.generate_graph(5)
 	for n in g.nodes:
+		if n.get("authored", false):
+			continue
 		var a := ReachGen.generate_cavern(5, g, n.id)
 		for z in a.d:
 			for x in a.w:
@@ -96,3 +113,17 @@ func test_heights_are_climbable() -> void:
 					if a.is_walkable(nx, nz):
 						check(absi(a.h_at(x, z) - a.h_at(nx, nz)) <= AreaMap.MAX_CLIMB,
 							"%s: step too tall at %d,%d" % [n.id, x, z])
+
+
+func test_unmapped_goes_on() -> void:
+	var g := ReachGen.generate_graph(77)
+	ReachGen.ensure_unmapped(g, 6)
+	var deepest := 0
+	for n: Dictionary in g.nodes:
+		deepest = maxi(deepest, int(n.get("unmapped", 0)))
+	eq(deepest, 7, "the Unmapped always has one more station below the deepest visited")
+	var a := ReachGen.generate_cavern(77, g, "u7")
+	check(a.points.has("ruin"), "an Unmapped station has a ruin to read")
+	var again := ReachGen.generate_graph(77)
+	ReachGen.ensure_unmapped(again, 6)
+	eq(JSON.stringify(g), JSON.stringify(again), "the Unmapped is deterministic per seed")

@@ -624,7 +624,74 @@ def draw_crop(kind, stage, f, g, W, H):
                 g.set(x - 1, soil_y - hgt, shade(pal("cream"), -0.6))
 
 
+def chalk_wall():
+    """A stretch of Sallow's back wall, chalked with eleven years of 3·2·3."""
+    w, h = 64, 30
+    c = blank(w, h)
+    stone = ramp(pal("stone"), 4, 0.35)
+    for y in range(h):
+        for x in range(w):
+            course = (y // 5) % 2
+            joint = (x + course * 4) % 8 == 0 or y % 5 == 0
+            c.set(x, y, stone[0] if joint else dither_pick(stone[1:], 0.35 + 0.3 * fbm(x, y, 64, 9), x, y))
+    chalk = (226, 222, 210, 255)
+    chalk2 = (190, 186, 176, 255)
+    r = rng(911)
+    y = 3
+    while y < h - 3:
+        x = 2 + r.randrange(0, 3)
+        while x < w - 9:
+            for group in (3, 2, 3):
+                for k in range(group):
+                    col = chalk if r.random() < 0.8 else chalk2
+                    c.vline(x, y, y + 2, col)
+                    x += 1
+                    if r.random() < 0.15:
+                        x += 1
+                x += 2
+            x += 2 + r.randrange(0, 3)
+        y += 5
+    c.outline(-0.6)
+    return c
+
+
+def cookfire():
+    c, g = blank(16, 18), blank(16, 18)
+    stones = ramp(pal("stone"), 3, 0.3)
+    for k in range(7):
+        a = k / 7 * math.tau
+        x = 8 + math.cos(a) * 5.5
+        y = 14 + math.sin(a) * 2.2
+        c.rect(int(x) - 1, int(y) - 1, 2, 2, stones[k % 3])
+    for (x, y, col) in [(7, 12, pal("ember")), (8, 11, pal("amber")), (9, 12, pal("ember")), (8, 9, pal("amber_light")),
+                        (7, 10, pal("amber")), (9, 10, pal("ember")), (8, 7, pal("amber_light")), (6, 11, pal("danger")), (10, 11, pal("danger"))]:
+        c.set(x, y, col)
+        g.set(x, y, col)
+    c.hline(5, 11, 13, shade(pal("clay"), -0.4))
+    return c, g
+
+
+def salt_node(seed):
+    c = blank(20, 18)
+    r = rng(seed)
+    rock_base(c, seed, 20, 18, 5)
+    for k in range(5):
+        x = r.uniform(3, 17)
+        top = r.uniform(3, 9)
+        for y in range(int(top), 14):
+            half = 1 + (y - top) * 0.25
+            for xx in range(int(x - half), int(x + half) + 1):
+                col = (246, 244, 250, 255) if xx < x else ((214, 210, 228, 255) if xx > x else (232, 230, 240, 255))
+                c.set(xx, y, col)
+    c.outline(-0.55)
+    return c
+
+
 def build():
+    save("chalk_wall", chalk_wall())
+    c, g = cookfire()
+    save("cookfire", c, g)
+    save("salt_node", salt_node(950))
     for i in range(3):
         c, g = glowroot(100 + i * 17)
         save(f"glowroot_{i}", c, g)

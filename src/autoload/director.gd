@@ -174,6 +174,27 @@ func _hook_knock(_c: Dictionary) -> void:
 	GameState.discover("lore", "the_knock")
 
 
+## Mags counts the hands at the second meeting: three of five is Wick's yes.
+func _hook_count_votes(_c: Dictionary) -> void:
+	GameState.set_flag("consent", int(GameState.value("votes_yes")) >= 3)
+
+
+## The Bellows breathes in: forty stations of air, through every open Trunk at once.
+func _hook_restart_heart(_c: Dictionary) -> void:
+	GameState.set_flag("heart_running", true)
+	GameState.set_flag("valve_open", true)
+	Audio.play("heart_breath" if ResourceLoader.exists("res://assets/audio/sfx/heart_breath.ogg") else "valve_turn", 0.0)
+	Events.camera_impulse.emit(0.5)
+	Events.flash.emit(Color(0.75, 1.0, 0.95), 0.35)
+
+
+## The ending sequence (cards and epilogue) belongs to the game scene.
+func _hook_ending(_c: Dictionary) -> void:
+	var game := get_tree().current_scene
+	if game and game.has_method("play_ending"):
+		game.play_ending.call_deferred()
+
+
 func to_dict() -> Dictionary:
 	return {"tension": tension, "last_fired": last_fired.duplicate(), "fired_once": fired_once.duplicate(),
 		"rng": str(rng.state)}

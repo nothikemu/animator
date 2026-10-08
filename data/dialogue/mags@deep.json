@@ -1,0 +1,164 @@
+{
+	"_comment": "Mags, Chapters Two to Four: the first town meeting, the count in the pantry, salt, the vote, and the Long Table.",
+
+	"lines": [
+		{"id": "m_meeting1", "tier": "story", "once": true, "priority": 40, "when": ["flag:meeting_1_called", "!flag:meeting_1_done", "phase:dimming|hush|night", "place:wick"], "convo": "meeting1"},
+		{"id": "m_meeting1_wait", "tier": "story", "priority": 10, "when": ["flag:meeting_1_called", "!flag:meeting_1_done", "phase:wake|bloom"], "text": "Tonight, at the Lantern House. Everyone. I've told Odile it's compulsory and Hesper it's optional, and they'll both come to prove me wrong.", "emote": "happy"},
+		{"id": "m_count", "tier": "story", "once": true, "priority": 30, "when": ["flag:damp_season", "phase:hush|night|dimming", "!flag:mags_count_seen", "place:wick"], "convo": "count"},
+		{"id": "m_jars", "tier": "story", "priority": 20, "when": ["flag:mags_help", "!flag:mags_stores_ok", "item:salted_beets>=6"], "convo": "jars"},
+		{"id": "m_salt", "tier": "story", "once": true, "priority": 25, "when": ["item:salt>=1", "!flag:learned_salting"], "convo": "salt"},
+		{"id": "m_meeting2", "tier": "story", "once": true, "priority": 50, "when": ["flag:meeting_2_called", "!flag:meeting_2_done", "phase:dimming|hush|night", "place:wick"], "convo": "meeting2"},
+		{"id": "m_meeting2_again", "tier": "story", "priority": 45, "when": ["flag:meeting_2_done", "!flag:consent", "since:meeting_2_done>=2", "place:wick"], "convo": "revote"},
+		{"id": "m_gather", "tier": "story", "once": true, "priority": 45, "when": ["flag:consent", "!flag:heart_gathering", "!flag:gather_called", "place:wick"], "convo": "gather"},
+		{"id": "m_long_table", "tier": "story", "once": true, "priority": 35, "when": ["flag:pell_in_wick", "flag:mags_stores_ok", "!flag:long_table_done", "phase:dimming|hush", "place:wick"], "convo": "long_table"},
+
+		{"id": "m_tg_rumour", "tier": "reactive", "once": true, "when": ["flag:tg_knows_many"], "text": "Twelve people! Barnaby told me eleven, then he counted again. I've told everyone fourteen. It sounds friendlier.", "emote": "happy", "open": "shop:lantern"},
+		{"id": "m_pell_name", "tier": "reactive", "once": true, "when": ["flag:tg_knows_pell"], "text": "Pell. Pell what? Pell who? Is Pell a first name? Is it a family? I've made them a stew in my head and it's a very big stew.", "open": "shop:lantern"},
+		{"id": "m_lift", "tier": "reactive", "once": true, "when": ["flag:lift_built"], "text": "A lift! Down! I've packed you a lunch. It's mostly bread. Bread travels. Bread doesn't spill on a lift, whatever else might.", "do": ["give:glowbeet_stew"], "emote": "happy"},
+		{"id": "m_damp", "tier": "reactive", "when": ["flag:damp_season", "!flag:mags_stores_ok"], "text": "Damp season. Everybody wants soup, nobody wants to pay for it, and the jars are the jars. Never you mind the jars.", "open": "shop:lantern"},
+		{"id": "m_sallow_folk", "tier": "reactive", "once": true, "when": ["flag:pell_in_wick"], "text": "Pell ate three bowls and asked what the orange bits were. Carrots, love. They'd never had a carrot. I may never recover.", "emote": "happy", "open": "shop:lantern"},
+		{"id": "m_wren_died", "tier": "reactive", "once": true, "when": ["flag:wren_died", "place:wick"], "text": "Barnaby's been at the quiet table again. I put a second cup out. He didn't say anything. He didn't move it either.", "emote": "sad"},
+		{"id": "m_reunion", "tier": "reactive", "once": true, "when": ["flag:reunion_done", "place:wick"], "text": "He laughed! In my Lantern House! Barnaby Coil! At a joke! I had to sit down and someone had to serve, and it was Odile, and she overcharged everyone, and nobody minded.", "emote": "happy"},
+
+		{"id": "m_amb_deep", "tier": "ambient", "when": ["flag:lift_built"], "text": "Bring me a story from down there. Not a sad one. Well. A sad one with a good bit at the end.", "open": "shop:lantern"},
+		{"id": "m_amb_salt", "tier": "ambient", "when": ["flag:learned_salting"], "text": "Salt, beets, a jar, a season. My grandmother called it 'putting the summer away', which is nonsense, we don't have summers. We had a word for one, though.", "open": "shop:lantern"},
+		{"id": "m_bark_meet", "tier": "bark", "when": ["flag:meeting_1_called", "!flag:meeting_1_done"], "text": "Tonight! Lantern House! Bring a cup!"},
+		{"id": "m_bark_count", "tier": "bark", "when": ["flag:damp_season", "!flag:mags_stores_ok"], "text": "...thirty-one, thirty-two..."}
+	],
+
+	"convos": {
+		"meeting1": [
+			{"say": "Right. Everyone sit. Odile, that means you. Grist, you can stand, I know you can't sit, it's fine.", "emote": "happy"},
+			{"say": "{player} has been knocking on the pipes. And the pipes have been knocking back. Twelve people, one of them called Pell, and their air's gone bad."},
+			{"say": "Twelve people who know where the Lower Stations are. Twelve pairs of hands. And whatever they've got down there that we haven't.", "who": "odile"},
+			{"say": "Twelve people breathing air we've never tasted. Do you know what comes up a Trunk with the air, Odile? Everything does.", "who": "hesper", "emote": "annoyed"},
+			{"say": "...The rock has been listening. ...A long time. ...It says: they are tired.", "who": "grist"},
+			{"say": "They said 'still here' before they said 'help'. That's crew manners. Whoever taught them taught them right.", "who": "barnaby"},
+			{"say": "So. {player}. You started this. What do we do?"},
+			{"choice": [
+				{"text": "We go down. As soon as we can.", "do": ["flag:m1_stance=go", "trust:odile+3", "respect:barnaby+2", "resentment:hesper+2", "affection:mags+1"], "goto": "go"},
+				{"text": "We wait. We learn more first.", "do": ["flag:m1_stance=wait", "affection:hesper+3", "respect:odile-1", "trust:barnaby+2"], "goto": "wait"},
+				{"text": "We send food down first. Then we go.", "do": ["flag:m1_stance=food", "affection:mags+4", "respect:odile+1", "affection:grist+2"], "goto": "food"}
+			]},
+			{"label": "go"},
+			{"say": "Good. Fast. I like fast. Fast is cheaper.", "who": "odile"},
+			{"say": "Fast is how the Quiet started, probably. Somebody being fast.", "who": "hesper"},
+			{"goto": "close"},
+			{"label": "wait"},
+			{"say": "Thank you. Somebody in this room has heard of the word 'careful'.", "who": "hesper"},
+			{"say": "Careful is how people stay down there for eleven years, love.", "who": "mags"},
+			{"goto": "close"},
+			{"label": "food"},
+			{"say": "Now THAT is a plan. You can't argue with a full stomach. Well, Odile can. But slower.", "emote": "happy"},
+			{"say": "...Food is... a good first word.", "who": "grist"},
+			{"label": "close"},
+			{"say": "Barnaby says there's a lift. Barnaby says it in the voice he uses for things he's frightened of. So there's a lift.", "who": "mags"},
+			{"say": "I'll put it on the board. In chalk. Like them.", "do": ["flag:meeting_1_done", "mem:mags:meeting1:4:0.4", "mem:odile:meeting1:3:0.2", "mem:hesper:meeting1:3:0.0"]}
+		],
+
+		"count": [
+			{"say": "You follow the sound of counting into the Lantern House pantry. Mags is on a stool with a lamp, touching the lids of jars one by one, lips moving.", "who": "narrator", "do": ["flag:mags_count_seen"]},
+			{"say": "...forty, forty-one— oh. Oh, it's you. Don't look at the shelves. Look at me. Look at my lovely face.", "emote": "surprised"},
+			{"say": "...Fine. It's not enough. It's never enough in the damp, and this year there's more mouths, and if those twelve come up, it's twelve more, and they'll be thin, love, they'll be so thin."},
+			{"say": "I've been skipping supper so the stew lasts. Don't tell Barnaby. He'll start skipping it too, out of spite, and then where will we be."},
+			{"choice": [
+				{"text": "The town should know. Tell them.", "do": ["flag:mags_choice=tell", "trust:mags+3", "affection:mags-1", "deed:community_help+1"], "goto": "tell"},
+				{"text": "Let me help. Quietly.", "do": ["flag:mags_choice=help", "flag:mags_help", "affection:mags+5", "shared:mags+4"], "goto": "help"},
+				{"text": "I won't say anything.", "do": ["flag:mags_choice=quiet", "trust:mags+4"], "goto": "quiet"}
+			]},
+			{"label": "tell"},
+			{"say": "...You're right. You're horrible and you're right. Odile will put it in a column. Hesper will start a garden. Barnaby will fix something that wasn't broken.", "emote": "sad"},
+			{"say": "Alright. Tomorrow. Bring salt, if you ever find any. Salt keeps a season in a jar.", "do": ["flag:mags_help"], "goto": "end"},
+			{"label": "help"},
+			{"say": "...Salt. If you find salt, down there. Salt keeps glowbeets a season. Six jars and I can stop doing sums in my sleep.", "emote": "happy"},
+			{"say": "And eat your supper. One of us should.", "goto": "end"},
+			{"label": "quiet"},
+			{"say": "Thank you. It's not a secret. It's a stew."}
+		],
+
+		"salt": [
+			{"say": "Is that— that's SALT. Real salt. Where on earth— below the earth— where did you—", "emote": "surprised", "do": ["learn:learned_salting", "toast:Learned: Salted Beets"]},
+			{"say": "Three beets, one salt, one jar. At the bench. Pack them tight and they'll glow on the shelf all season. My grandmother called it putting the summer away."},
+			{"say": "We don't have summers. We had a word for one, though. That's nearly as good."}
+		],
+
+		"jars": [
+			{"say": "Six jars! Six! Look at them glowing on the shelf like little lamps of not-starving!", "emote": "happy", "do": ["take:salted_beets*6", "flag:mags_stores_ok", "affection:mags+6", "deed:community_help+2", "mem:mags:filled_stores:6:0.8:lasting"]},
+			{"say": "I'm going to eat supper tonight. A whole one. In front of people."}
+		],
+
+		"meeting2": [
+			{"say": "Second time in a season. People will start thinking we're organised.", "do": ["flag:meeting_2_done"]},
+			{"say": "{player} has seen the Heart. Wren— or Pell, or whoever's been writing the notes down there— says it's dying, and it takes the air with it when it goes. Every station's air. Ours too, in the end."},
+			{"say": "To start it again, every Trunk has to be open. Ours included. We breathe with them. Their weather, our weather, all one weather."},
+			{"say": "So we're voting. Say it plain. Yes or no."},
+			{"if": ["trust:odile>=10"], "goto": "odile_yes"},
+			{"if": ["flag:o_trade_sent", "respect:odile>=6"], "goto": "odile_yes"},
+			{"say": "No. I've done the sums and I don't like where the column goes. Open lines bring trade, and trade brings everything. Every cough on every station.", "who": "odile", "do": ["flag:vote_odile=no"]},
+			{"goto": "hesper"},
+			{"label": "odile_yes"},
+			{"say": "Yes. Not out of kindness. The ledger says a town of twelve hundred breathes cheaper than a town of four hundred, and children cough less where there are more doctors.", "who": "odile", "do": ["flag:vote_odile=yes"]},
+			{"label": "hesper"},
+			{"if": ["air_ready", "affection:hesper>=6"], "goto": "hesper_yes"},
+			{"say": "No. Not while the air could carry it. Not while the frames are what they are. I won't be the one who let the cough up the Trunk twice.", "who": "hesper", "do": ["flag:vote_hesper=no"], "emote": "sad"},
+			{"goto": "grist"},
+			{"label": "hesper_yes"},
+			{"say": "Yes. The moss is ready. That's what it was made for, it turns out. I've decided to be furious about that later.", "who": "hesper", "do": ["flag:vote_hesper=yes"]},
+			{"label": "grist"},
+			{"if": ["flag:ways_open"], "goto": "grist_yes"},
+			{"say": "...Grist does not know. ...The ways are closed. ...Grist will not vote for a door it cannot open.", "who": "grist", "do": ["flag:vote_grist=no"]},
+			{"goto": "barnaby"},
+			{"label": "grist_yes"},
+			{"say": "...Yes. ...Lonely, otherwise.", "who": "grist", "do": ["flag:vote_grist=yes"]},
+			{"label": "barnaby"},
+			{"if": ["flag:reunion_done"], "goto": "barnaby_yes"},
+			{"if": ["flag:grief_done"], "goto": "barnaby_yes"},
+			{"if": ["trust:barnaby>=22"], "goto": "barnaby_yes"},
+			{"say": "No. I closed that valve once. I'm not ready to stand next to it while it's open and listen to the whole Deep come up it.", "who": "barnaby", "do": ["flag:vote_barnaby=no"]},
+			{"goto": "mags"},
+			{"label": "barnaby_yes"},
+			{"say": "Yes. She knocked for an hour. Then she knocked for eleven years. Somebody should answer properly.", "who": "barnaby", "do": ["flag:vote_barnaby=yes"]},
+			{"label": "mags"},
+			{"if": ["flag:mags_stores_ok"], "goto": "mags_yes"},
+			{"if": ["affection:mags>=12"], "goto": "mags_yes"},
+			{"say": "And me? Not yet. Not with the shelves the way they are. You can't open a door to hungry people with empty jars. That's not kindness, that's a trap with a ribbon on.", "do": ["flag:vote_mags=no"]},
+			{"goto": "count"},
+			{"label": "mags_yes"},
+			{"say": "And me? Yes. Obviously yes. I've got jars. Let them come and eat.", "do": ["flag:vote_mags=yes"], "emote": "happy"},
+			{"label": "count"},
+			{"do": ["event:count_votes"]},
+			{"if": ["flag:consent"], "goto": "yes"},
+			{"say": "That's not enough. Wick says no. For now.", "emote": "sad"},
+			{"say": "Things change. People change, the shelves change, the air changes. Ask me again when something has."},
+			{"goto": "end"},
+			{"label": "yes"},
+			{"say": "That's enough. Wick says yes.", "emote": "happy"},
+			{"say": "We breathe with them, then. All one weather. Somebody write it down. Odile, you're already writing it down. Good."}
+		],
+
+		"revote": [
+			{"say": "You've got the look of someone who wants another meeting. Everyone's still sore from the last one."},
+			{"choice": [
+				{"text": "Call it again. Tonight.", "do": ["!flag:meeting_2_done", "flag:meeting_2_called"], "goto": "again"},
+				{"text": "Not yet.", "goto": "end"}
+			]},
+			{"label": "again"},
+			{"say": "Tonight, then. I'll put the big pot on. Nobody votes no on a full stomach. Well. Odile does."}
+		],
+
+		"gather": [
+			{"say": "Well. If we're doing it, we're doing it together. Everyone who wants to see the Heart breathe, we go down. Tomorrow.", "do": ["flag:gather_called"]},
+			{"say": "Barnaby says the lift takes four at a time. Grist says Knappers don't take lifts. Hesper is bringing moss. Odile is bringing the ledger. I'm bringing soup.", "emote": "happy"},
+			{"say": "Go on ahead, love. We'll meet you at the bottom of everything."}
+		],
+
+		"long_table": [
+			{"say": "Tonight we're putting the tables end to end. All of them. Even the one with the leg.", "do": ["flag:long_table_done"]},
+			{"say": "The Lantern House is full: Wick at one end, Sallow at the other, and the middle has gone so loud nobody can tell which end anyone came from.", "who": "narrator"},
+			{"say": "Is it always this bright? Is it always this LOUD? Is that a carrot?", "who": "pell"},
+			{"say": "Every night, love. Well. Every night from now on.", "emote": "happy"},
+			{"say": "Somebody starts knocking the table: three-two-three. Then everybody is, Wick and Sallow both, until the jars rattle on the shelf.", "who": "narrator", "do": ["affection:mags+6", "affection:pell+6", "deed:community_help+3", "mem:mags:long_table:8:1.0:lasting", "mem:pell:long_table:8:1.0:lasting"]},
+			{"say": "Still here.", "who": "player"}
+		]
+	}
+}

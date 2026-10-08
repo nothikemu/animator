@@ -116,5 +116,27 @@
 		"size": [2, 2], "cost": {"brass_scrap": 4, "blackstone": 2}, "placement": "floor", "waterproof": true,
 		"tank": {"capacity": 12},
 		"sprite": "tank", "sound": "", "unlock": "schematic_tank"
+	},
+	"lift_winch": {
+		"name": "Primary Lift Winch",
+		"desc": "STN-7 PRIMARY LIFT. A cable drum the size of a cart, a brake, and a cage somewhere below. The cable rotted away years ago.",
+		"size": [
+			2,
+			3
+		],
+		"cost": {},
+		"fixed": true,
+		"placement": "floor",
+		"waterproof": true,
+		"power": {
+			"consume": 30
+		},
+		"requires": {
+			"crew_cable": 2,
+			"brass_scrap": 6
+		},
+		"noise": 4.0,
+		"sprite": "lift_winch",
+		"sound": "station_pump"
 	}
 }

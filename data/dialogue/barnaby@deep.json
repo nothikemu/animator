@@ -1,0 +1,242 @@
+{
+	"_comment": "Barnaby, Chapters Two to Four: the codes, Pell's name, the lift he won't ride, the news about Wren, the reunion or the grief, and what the Heart needs from him.",
+
+	"lines": [
+		{"id": "b_codes", "tier": "story", "once": true, "priority": 30, "when": ["flag:knock_heard", "since:knock_heard>=1", "!flag:learned_codes"], "convo": "codes"},
+		{"id": "b_pell", "tier": "story", "once": true, "priority": 20, "when": ["flag:tg_knows_pell", "!flag:b_pell_talk"], "convo": "pell_name"},
+		{"id": "b_need", "tier": "story", "once": true, "priority": 18, "when": ["flag:tg_knows_need", "!flag:b_need_talk"], "convo": "need"},
+		{"id": "b_lift", "tier": "story", "once": true, "priority": 25, "when": ["flag:tg_come", "!flag:b_lift_talk"], "convo": "lift"},
+		{"id": "b_w", "tier": "story", "once": true, "priority": 22, "when": ["flag:b_lift_talk", "trust:barnaby>=12", "phase:dimming|hush|night", "!flag:b_w_knock"], "convo": "w_knock"},
+		{"id": "b_wren_alive", "tier": "story", "once": true, "priority": 40, "when": ["flag:met_wren", "!flag:wren_died", "!flag:told_barnaby", "place:wick"], "convo": "wren_alive"},
+		{"id": "b_wren_dead", "tier": "story", "once": true, "priority": 40, "when": ["flag:wren_died", "!flag:told_barnaby", "!flag:barnaby_at_sallow", "place:wick"], "convo": "wren_dead"},
+		{"id": "b_ready", "tier": "story", "once": true, "priority": 30, "when": ["flag:barnaby_refuses", "trust:barnaby>=20", "!flag:barnaby_descends", "!flag:journal_given", "place:wick"], "convo": "ready"},
+		{"id": "b_reunion", "tier": "story", "once": true, "priority": 60, "when": ["place:sallow", "flag:barnaby_at_sallow", "!flag:wren_died", "!flag:reunion_done"], "convo": "reunion"},
+		{"id": "b_grief", "tier": "story", "once": true, "priority": 60, "when": ["place:sallow", "flag:barnaby_at_sallow", "flag:wren_died", "!flag:grief_done"], "convo": "grief"},
+		{"id": "b_journal", "tier": "story", "once": true, "priority": 35, "when": ["item:wren_journal>=1", "!flag:barnaby_at_sallow", "!flag:journal_given", "place:wick"], "convo": "journal"},
+		{"id": "b_heart", "tier": "story", "once": true, "priority": 30, "when": ["flag:heart_seen", "!flag:b_heart_talk"], "convo": "heart"},
+		{"id": "b_open_now", "tier": "story", "priority": 28, "when": ["flag:b_heart_talk", "!flag:valve_open", "place:wick"], "convo": "open_now"},
+
+		{"id": "b_lift_running", "tier": "reactive", "once": true, "when": ["running.lift_winch"], "text": "The winch is singing. Cable's taking the cage's weight down there in the dark. I could hear it from the annex. I went and stood next to it for an hour, which is not the same as getting in."},
+		{"id": "b_wont_ride", "tier": "reactive", "once": true, "when": ["flag:lift_built", "!flag:met_wren"], "text": "No. I'm not getting in it. You know why. If you find them, knock. I'll be by the gauge, pretending to read it.", "emote": "sad"},
+		{"id": "b_after_reunion", "tier": "reactive", "once": true, "when": ["flag:reunion_done", "place:wick"], "text": "She told me to stop that face. I said I'd stop when she stopped coughing. She laughed until she coughed. We're both very stubborn and only one of us is right.", "emote": "happy"},
+		{"id": "b_after_grief", "tier": "reactive", "once": true, "when": ["flag:grief_done", "place:wick"], "text": "I read the journal on the lift up. All the way. The cage stopped and I stayed in it. Eleven years, and every page starts with my initial. I don't know what to do with being remembered that hard.", "emote": "sad"},
+		{"id": "b_damp", "tier": "reactive", "when": ["flag:damp_season"], "text": "Damp season. The lake breathes out and the children breathe in. Same every year. Odile counts the coughs. I count the pipes that sweat. Nobody counts the moss, except Hesper, who's right to."},
+		{"id": "b_tolley", "tier": "reactive", "once": true, "when": ["flag:tolley_met", "!flag:tolley_returned"], "text": "Tolley? Tolley Brand? Down there? He owes me a spanner. I mean: good. Good that he's alive. Also the spanner."},
+		{"id": "b_tolley_back", "tier": "reactive", "once": true, "when": ["flag:tolley_returned", "place:wick"], "text": "Tolley's back on the Lease cot. He brought me a spanner. Not mine. Better than mine. I've never been so annoyed to be given something."},
+
+		{"id": "b_amb_codes", "tier": "ambient", "when": ["flag:learned_codes", "!flag:tg_come"], "text": "Knock at Hush, from the pipe-heads in the lane. If the answer comes, write it down before you decide what it means."},
+		{"id": "b_amb_gauge", "tier": "ambient", "when": ["flag:knock_heard"], "text": "The gauge reads two-point-eight now. Somebody below is pushing back. I stare at it so you don't have to."},
+		{"id": "b_amb_cable", "tier": "ambient", "when": ["flag:b_lift_talk", "!flag:lift_built"], "text": "Crew cable: four moss fibre, two brass, plaited tight. Two lengths for the drum. Fit them through the glass, under the pump hall. Then feed it thirty power. Then don't look down."},
+		{"id": "b_amb_deep", "tier": "ambient", "when": ["flag:lift_built"], "text": "Take a respirator. Take a lens. Take somebody's word that you'll come back, and keep it."},
+		{"id": "b_amb_hands", "tier": "ambient", "when": ["flag:reunion_done"], "text": "Hands are steadier in the mornings now. I'm blaming the tea. I'm told that's cowardly."},
+		{"id": "b_bark_tg", "tier": "bark", "when": ["flag:learned_codes"], "text": "Three. Two. Three."},
+		{"id": "b_bark_lift", "tier": "bark", "when": ["flag:lift_built", "!flag:reunion_done"], "text": "Cable's holding. Probably."},
+		{"id": "b_bark_wren", "tier": "bark", "when": ["flag:reunion_done"], "text": "She's still talking. I can tell from here."}
+	],
+
+	"convos": {
+		"codes": [
+			{"say": "I've been up all night with the gauge. It moved twice. There's pressure on the far side, and someone leaning on it.", "do": ["flag:b_codes_talk"]},
+			{"say": "You want to answer them. You've got a face like a dropped spanner."},
+			{"say": "Crew code. Wren and I wrote half of it on a bet. Write this down."},
+			{"say": "Three-two-three: still here. One-one: yes. Two-two: no. Four: come. Three-three: bad air. One-two-one: how many. Two-one-two: who. Five: help.", "do": ["discover:lore:crew_codes", "flag:learned_codes", "toast:Learned: the crew codes (Journal)"]},
+			{"say": "Letters are a tap for the row and a tap for the column. Nobody uses letters. Letters are for when you've run out of everything else."},
+			{"say": "The pipe-heads in the lane go down to the Trunk the long way round. Knock at Hush, when Wick's own water goes quiet. Answers take a day."},
+			{"choice": [
+				{"text": "Come and knock with me.", "goto": "come"},
+				{"text": "What if it isn't people?", "goto": "not"}
+			]},
+			{"label": "come"},
+			{"say": "No. ...Not yet. If it's someone who knows the code, they'll know my hand. I'm not ready to be known.", "emote": "sad", "do": ["shared:barnaby+3"], "goto": "end"},
+			{"label": "not"},
+			{"say": "Then it's a very polite pipe, and I'll owe it an apology."}
+		],
+
+		"pell_name": [
+			{"say": "Pell. Say it again.", "do": ["flag:b_pell_talk"]},
+			{"say": "Not a crew name. Not one of ours. Trunk crew were thirty-one people and I knew all their names, and the names of their cats."},
+			{"say": "Which means somebody taught a stranger the code. Properly. Letters and all.", "emote": "surprised"},
+			{"say": "Only two people ever used the letters, topper. I'm one."},
+			{"choice": [
+				{"text": "Wren.", "do": ["shared:barnaby+4"], "goto": "wren"},
+				{"text": "Don't get your hopes up.", "do": ["trust:barnaby+2"], "goto": "hope"}
+			]},
+			{"label": "wren"},
+			{"say": "I didn't say that. You said that. I'm going to go and look at a pipe for a while.", "emote": "sad", "goto": "end"},
+			{"label": "hope"},
+			{"say": "Hope? I gave it up eleven years ago. It keeps sending letters."}
+		],
+
+		"need": [
+			{"say": "Bad air. Help. Of course it is.", "do": ["flag:b_need_talk"]},
+			{"say": "The Lower Stations were always the first to go stale. The Breath reaches them last and leaves first. Old crew joke. Wasn't funny then either."},
+			{"say": "Whoever's down there is breathing the bottom of the barrel. And they've still got the manners to say 'still here' first."}
+		],
+
+		"lift": [
+			{"say": "Two-two, four. No. Come.", "do": ["flag:b_lift_talk"]},
+			{"say": "They don't want to come up. Of course they don't. Something down there needs minding, or they'd have climbed out years ago."},
+			{"say": "There's one way down that isn't eleven years of collapsed Trunk. The stencil in the pump hall. STN-7 PRIMARY LIFT."},
+			{"say": "The winch is still there, under the hall. The cable rotted when I was young. Crew cable: moss fibre round brass wire. Four and two, plaited tight.", "do": ["learn:learned_cable", "toast:Learned: Crew Cable"]},
+			{"say": "Two lengths of cable and six brass for the drum fittings. Thirty power, steady. The cage is at the bottom. It's always been at the bottom."},
+			{"choice": [
+				{"text": "Will you come down with me?", "goto": "come"},
+				{"text": "I'll build it.", "do": ["trust:barnaby+2"], "goto": "build"}
+			]},
+			{"label": "come"},
+			{"say": "Into a cage. On a cable. Over a drop. Toward the thing I sealed a valve on.", "emote": "annoyed"},
+			{"say": "...Build it first. Then ask me again. I'll say no then too, but it'll take me longer.", "do": ["shared:barnaby+3"], "goto": "end"},
+			{"label": "build"},
+			{"say": "I know you will. That's the trouble with you. Things get built."}
+		],
+
+		"w_knock": [
+			{"say": "Walk with me. To the pipe-heads. Bring the chalk.", "do": ["flag:b_w_knock"]},
+			{"say": "He stands in front of the pipe-head for a long time. Then he takes his glove off, which you've never seen him do.", "who": "narrator"},
+			{"say": "He knocks a letter. A tap for the row, a tap for the column. Just one letter, and a question.", "who": "narrator"},
+			{"say": "W?", "who": "narrator"},
+			{"say": "Nothing. The pipe ticks with Wick's water. Barnaby doesn't move.", "who": "narrator"},
+			{"say": "Then, slow, from very far down: three. Two. Three.", "who": "narrator", "do": ["caption:[three knocks, two, three]"]},
+			{"say": "...", "emote": "sad"},
+			{"say": "That could mean anything. It means 'still here'. It doesn't mean 'yes'. It could be anyone saying 'still here'."},
+			{"say": "Goodnight, topper.", "do": ["shared:barnaby+8", "mem:barnaby:knocked_w:7:0.6:lasting"]}
+		],
+
+		"wren_alive": [
+			{"say": "You've been down. I can see it. You've got salt on your boots and a look I don't like.", "do": ["flag:told_barnaby"]},
+			{"say": "Tell me. All at once. Don't soften it."},
+			{"choice": [
+				{"text": "Wren is alive. She's at a place called Sallow.", "goto": "blunt"},
+				{"text": "Sit down first.", "do": ["affection:barnaby+2"], "goto": "sit"},
+				{"text": "She says: stop that face.", "when": ["flag:wren_message"], "do": ["shared:barnaby+6"], "goto": "message"}
+			]},
+			{"label": "sit"},
+			{"say": "I'm sitting. I'm sat. Look. Bench. Go on."},
+			{"label": "blunt"},
+			{"say": "...", "emote": "surprised"},
+			{"say": "Alive."},
+			{"say": "Alive, and down there, eleven years, keeping something running. That's her. That's exactly her. She'd keep a corpse running if it had a valve."},
+			{"goto": "cough"},
+			{"label": "message"},
+			{"say": "...", "emote": "surprised"},
+			{"say": "She would. She'd say exactly that. Every time I— every single time."},
+			{"say": "Alive. Eleven years.", "emote": "sad"},
+			{"label": "cough"},
+			{"if": ["flag:wren_saved"], "goto": "saved"},
+			{"say": "And she's ill. You'd have said by now if she weren't. You're terrible at keeping your face still."},
+			{"say": "The cough. It's the cough, isn't it. It always comes up with the damp."},
+			{"goto": "decide"},
+			{"label": "saved"},
+			{"say": "And you brought her medicine. Before I even knew she was alive to need it. I'm going to need a minute to decide whether to thank you or shout."},
+			{"label": "decide"},
+			{"if": ["trust:barnaby>=18", "shared:barnaby>=14"], "goto": "goes"},
+			{"if": ["flag:wren_message", "trust:barnaby>=12"], "goto": "goes"},
+			{"say": "I can't. Not the lift. Not yet. I'd get to the bottom and find out I was wrong about everything, and I've only just got used to being wrong about the one thing.", "emote": "sad", "do": ["flag:barnaby_refuses"]},
+			{"say": "Tell her I— no. Don't tell her anything. Tell her the gauge reads two-point-eight. She'll know what it means."},
+			{"goto": "end"},
+			{"label": "goes"},
+			{"say": "I'm going down. Tomorrow. First cage.", "do": ["flag:barnaby_descends", "flag:barnaby_at_sallow", "mem:barnaby:going_down:9:0.7:lasting"]},
+			{"say": "Don't come with me. Come after. I want to be stupid at her on my own for an hour first."},
+			{"say": "...Thank you, topper. For knocking.", "emote": "happy"}
+		],
+
+		"ready": [
+			{"say": "I rode the lift to the bottom last night. Didn't get out. Rode it back up.", "emote": "sad"},
+			{"say": "Then I did it again. Third time I got one foot out. The cage creaked and I got the foot back in."},
+			{"say": "Tomorrow I'm getting both feet out. Don't come with me. Come after.", "do": ["flag:barnaby_descends", "flag:barnaby_at_sallow", "trust:barnaby+3"]}
+		],
+
+		"wren_dead": [
+			{"say": "You've been down. I can see it on you. Say it.", "do": ["flag:told_barnaby"]},
+			{"choice": [
+				{"text": "Wren was alive. Until a few days ago.", "goto": "say"},
+				{"text": "I'm so sorry, Barnaby.", "do": ["affection:barnaby+3"], "goto": "say"}
+			]},
+			{"label": "say"},
+			{"say": "...", "emote": "sad"},
+			{"say": "Alive. Down there. All this time."},
+			{"say": "And I sat at the quiet table and grieved the wrong thing. For eleven years. And then I was late for the right one."},
+			{"say": "Was it the cough?"},
+			{"choice": [
+				{"text": "Yes. She asked for you.", "do": ["shared:barnaby+6"], "goto": "asked"},
+				{"text": "She went in her sleep.", "do": ["trust:barnaby-2", "affection:barnaby+2"], "goto": "sleep"}
+			]},
+			{"label": "asked"},
+			{"say": "Of course she did. She always asked for me at the worst possible time. Usually to hold the lamp.", "emote": "sad", "goto": "after"},
+			{"label": "sleep"},
+			{"say": "...You're kind. You're a bad liar. Those two things go together more often than people think.", "goto": "after"},
+			{"label": "after"},
+			{"if": ["trust:barnaby>=14"], "goto": "goes"},
+			{"say": "I'm going to go and sit in the pump hall. Don't follow me. I'll be there in the morning.", "do": ["flag:barnaby_refuses"], "goto": "end"},
+			{"label": "goes"},
+			{"say": "I'm going down. Tomorrow. Somebody should stand where she stood. Someone should meet this Pell and say thank you in the right voice.", "do": ["flag:barnaby_descends", "flag:barnaby_at_sallow"]}
+		],
+
+		"reunion": [
+			{"say": "He's at the door of Wren's shack with his helmet under his arm. You've never seen his face before. It's older than his voice.", "who": "narrator", "do": ["flag:reunion_done", "flag:wren_seen_barnaby"]},
+			{"say": "Look at him. Look at this face. Eleven years and he still makes it.", "who": "wren", "emote": "happy"},
+			{"say": "Wren.", "who": "barnaby"},
+			{"say": "Stop that face, Coil.", "who": "wren"},
+			{"say": "I closed it. The valve. You were knocking and I closed it and I sat on the other side and listened.", "who": "barnaby", "emote": "sad"},
+			{"say": "I know, love. I was there. I was knocking. That was the job. You did the job.", "who": "wren"},
+			{"say": "You could have come back up. The stair—", "who": "barnaby"},
+			{"say": "I could have. There were twelve people down here with the air going bad and a Heart nobody could read. You'd have stayed too. You'd have stayed and complained about it, which is the only difference between us.", "who": "wren", "emote": "happy"},
+			{"say": "...", "who": "barnaby"},
+			{"say": "He sits down on the bench beside her. It creaks. Neither of them says anything for a long time, and Pell, wisely, takes you to see the pumps.", "who": "narrator"},
+			{"say": "When you come back they're arguing about whether it's 'on three' or 'after three'. They've been arguing for eleven years. They've only just started again.", "who": "narrator", "do": ["shared:barnaby+12", "affection:barnaby+8", "mem:barnaby:reunion:10:0.9:lasting", "mem:wren:reunion:10:0.9:lasting", "affection:wren+10", "trust:wren+8"]}
+		],
+
+		"grief": [
+			{"say": "He's standing in front of the chalk wall with his helmet off. Eleven years of three-two-three, in Wren's hand and then in Pell's.", "who": "narrator", "do": ["flag:grief_done"]},
+			{"say": "She did all these. Look at the lines. Every night.", "who": "barnaby"},
+			{"say": "Pell gave me her journal. Every page starts 'B —'. She wrote to me every day for eleven years and she never once sent it.", "who": "barnaby", "emote": "sad"},
+			{"say": "She said you'd come. She said you'd come late and make a face about it.", "who": "pell"},
+			{"say": "...She was right about that too.", "who": "barnaby"},
+			{"say": "He picks up a stub of chalk from the ledge and adds one more mark to the wall. Three. Two. Three.", "who": "narrator"},
+			{"say": "Still here.", "who": "barnaby", "do": ["shared:barnaby+10", "affection:barnaby+6", "mem:barnaby:chalk_wall:10:0.4:lasting", "trust:pell+6", "affection:pell+4"]}
+		],
+
+		"journal": [
+			{"say": "What's that. In your hand. That's a crew journal.", "do": ["flag:journal_given", "take:wren_journal"]},
+			{"say": "He doesn't open it at first. He holds it, the way he held the crew tag.", "who": "narrator"},
+			{"say": "Her writing. On the cover. B."},
+			{"say": "He opens it to the middle. Reads a line. Closes it. Opens it at the start.", "who": "narrator"},
+			{"say": "'B — The water went down. I found a stair. You'd hate it. I'm going to see where it goes.'", "emote": "sad"},
+			{"say": "Eleven years. She wrote to me every day and never once sent it, because there was nowhere to send it, because I closed the only door."},
+			{"choice": [
+				{"text": "She didn't blame you.", "do": ["trust:barnaby+4"], "goto": "blame"},
+				{"text": "(Sit with him.)", "do": ["shared:barnaby+6", "affection:barnaby+4"], "goto": "sit"}
+			]},
+			{"label": "blame"},
+			{"say": "No. That's the worst of it. I'd have known what to do with blame.", "goto": "end"},
+			{"label": "sit"},
+			{"say": "You sit on the bench outside the annex until the Hush, and he reads, and sometimes he laughs, and once he has to stop for a long while.", "who": "narrator", "do": ["mem:barnaby:read_journal:10:0.5:lasting", "flag:grief_done"]}
+		],
+
+		"heart": [
+			{"say": "So that's the Heart. Bigger than the stories. Quieter, too.", "do": ["flag:b_heart_talk"]},
+			{"say": "Wren's notes say it needs three things to breathe again. Pressure from above. Air that won't carry the cough. And the ways open, which the Knappers have given us."},
+			{"say": "Pressure's mine. The Station pump at full, and the Trunk valve open, all the way. Every station's valve open, eventually. Wick's first."},
+			{"if": ["flag:valve_open"], "goto": "already"},
+			{"say": "And I've still got it wired shut. Copper wraps. Very even. I took my time."},
+			{"say": "When you're ready, tell me, and I'll cut the wire. Not before. I want someone there who'll stop me if I can't."},
+			{"goto": "end"},
+			{"label": "already"},
+			{"say": "Wick's valve is already open. We did that. On three. Or after three. Keep the pump fed and the pressure will hold."}
+		],
+
+		"open_now": [
+			{"say": "You came to tell me to cut the wire.", "do": []},
+			{"choice": [
+				{"text": "Open it. For good.", "do": ["flag:valve_open", "event:valve_turn", "shared:barnaby+6", "mem:barnaby:opened_for_good:8:0.6:lasting"], "goto": "open"},
+				{"text": "Not yet.", "goto": "wait"}
+			]},
+			{"label": "open"},
+			{"say": "He cuts the copper one wrap at a time and coils it neatly on the floor of the Sink. Then he puts both hands on the wheel and waits for you to put yours on too.", "who": "narrator"},
+			{"say": "On three.", "do": ["caption:[the Trunk valve groans open]"]},
+			{"say": "...Somebody really ought to decide what that means.", "emote": "happy", "goto": "end"},
+			{"label": "wait"},
+			{"say": "Good. Neither am I. But one of us is going to have to be, soon."}
+		]
+	}
+}

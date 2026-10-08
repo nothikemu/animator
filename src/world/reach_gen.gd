@@ -18,6 +18,40 @@ const NAME_PARTS := {
 	"blackstone": [["Rust", "Cinder", "Slag", "Iron", "Knapper", "Gallows"], ["Cut", "Gallery", "Seam", "Works", "Shelf"]],
 	"ember": [["Ember", "Kiln", "Smoulder", "Bellows", "Ash"], ["Vents", "Throat", "Flue", "Hearth"]],
 	"sump": [["Cold", "Drowned", "Low", "Gloam", "Still"], ["Sump", "Cistern", "Sink", "Basin"]],
+	"drowned": [["Drowned", "Flooded", "Sunken", "Weeping"], ["Gallery", "Concourse", "Platform", "Arcade"]],
+	"roots": [["Root", "Rooted", "Lantern", "Green"], ["Cathedral", "Nave", "Tangle", "Choir"]],
+	"ashworks": [["Ash", "Cinder", "Iron", "Soot"], ["Works", "Foundry", "Yards", "Furnace"]],
+	"salt": [["Salt", "White", "Bitter", "Bright"], ["Flats", "Pans", "Steps", "Terraces"]],
+}
+
+
+## Per-biome generation: floor materials, ore and finds along the walls, ambient light,
+## and clutter.
+const BIOME_GEN := {
+	"fringe": {"floor": "moss_floor", "alt": "dirt", "light": "glow", "lamp": "glowroot",
+		"deco": ["moss_tuft", "glowroot_small", "mushroom"],
+		"res": [["glowglass_node", "glowglass", 2], ["moss_patch", "moss_fiber", 4], ["moss_patch", "moss_fiber", 4], ["blackstone_node", "blackstone", 4]]},
+	"blackstone": {"floor": "blackstone", "alt": "gravel", "light": "amber", "lamp": "work_lamp",
+		"deco": ["rubble_small", "rail", "crate_broken"],
+		"res": [["blackstone_node", "blackstone", 6], ["blackstone_node", "blackstone", 6], ["scrap_pile", "brass_scrap", 4], ["glowglass_node", "glowglass", 3]]},
+	"ember": {"floor": "ash", "alt": "basalt", "light": "ember", "lamp": "ember_crystal",
+		"deco": ["ash_pile", "cinder_rock"],
+		"res": [["thermal_node", "thermal_ore", 6], ["ember_crystal", "ember_resin", 3], ["emberroot_wild", "emberroot_seed", 2], ["thermal_node", "thermal_ore", 5], ["blackstone_node", "blackstone", 4]]},
+	"sump": {"floor": "mud", "alt": "stone", "light": "violet", "lamp": "pale_fungus",
+		"deco": ["pale_fungus_small", "reed", "drip_rock"],
+		"res": [["bellcap_wild", "bellcap_spore", 2], ["scrap_pile", "brass_scrap", 6], ["glowglass_node", "glowglass", 4], ["moss_patch", "moss_fiber", 3]]},
+	"drowned": {"floor": "stone", "alt": "plank", "light": "violet", "lamp": "pale_fungus",
+		"deco": ["reed", "drip_rock", "crate_broken", "pale_fungus_small"],
+		"res": [["scrap_pile", "brass_scrap", 6], ["glowglass_node", "glowglass", 4], ["bellcap_wild", "bellcap_spore", 2], ["scrap_pile", "brass_scrap", 5], ["moss_patch", "moss_fiber", 3]]},
+	"roots": {"floor": "moss_floor", "alt": "dirt", "light": "glow", "lamp": "glowroot", "lamp_scale": 1.7,
+		"deco": ["glowroot_small", "moss_tuft", "mushroom", "glowroot_small"],
+		"res": [["moss_patch", "moss_fiber", 5], ["glowglass_node", "glowglass", 4], ["moss_patch", "moss_fiber", 5], ["bellcap_wild", "bellcap_spore", 3]]},
+	"ashworks": {"floor": "rock_floor", "alt": "ash", "light": "amber", "lamp": "work_lamp",
+		"deco": ["rubble_small", "rail", "gear_pile", "crate_broken"],
+		"res": [["scrap_pile", "brass_scrap", 7], ["thermal_node", "thermal_ore", 5], ["scrap_pile", "brass_scrap", 6], ["blackstone_node", "blackstone", 5]]},
+	"salt": {"floor": "sand", "alt": "stone", "light": "cream", "lamp": "work_lamp",
+		"deco": ["shore_rock", "rubble_small", "drip_rock"],
+		"res": [["salt_node", "salt", 5], ["glowglass_node", "glowglass", 5], ["salt_node", "salt", 5], ["scrap_pile", "brass_scrap", 4]]},
 }
 
 
@@ -98,7 +132,75 @@ static func generate_graph(seed_value: int) -> Dictionary:
 	var shortcut := {"a": t1[t1.size() - 1].id, "b": _tier(nodes, 2)[0].id, "kind": "collapsible"}
 	if not _has_edge(edges, shortcut.a, shortcut.b):
 		edges.append(shortcut)
+	_add_deep(nodes, edges, rng_for(seed_value, "deep"))
 	return {"seed": seed_value, "nodes": nodes, "edges": edges}
+
+
+## The Lower Stations below the Primary Lift, Sallow, the Heart and the Knapper Ways. The
+## shape is fixed (the story needs it); names, sizes and contents come from the seed.
+static func _add_deep(nodes: Array, edges: Array, rng: RandomNumberGenerator) -> void:
+	var tiers := [["drowned", "drowned"], ["roots", "ashworks"], ["salt"]]
+	var prev: Array = []
+	for t in tiers.size():
+		var cur: Array = []
+		var station := 8 + t           # Stations 8, 9 and 10; Sallow is 11
+		for k in (tiers[t] as Array).size():
+			var biome: String = tiers[t][k]
+			var parts: Array = NAME_PARTS[biome]
+			var n := {"id": "d%d_%d" % [t + 1, k], "tier": 4 + t, "index": nodes.size(),
+				"heat": 0.3 + 0.15 * t, "moisture": 0.8 if biome == "drowned" else 0.4,
+				"biome": biome, "ruin": k == 0, "trunk": false, "deep": true, "station": station,
+				"name": "Station %d · %s %s" % [station, parts[0][rng.randi_range(0, parts[0].size() - 1)],
+					parts[1][rng.randi_range(0, parts[1].size() - 1)]]}
+			nodes.append(n)
+			cur.append(n)
+		for k in cur.size() - 1:
+			edges.append({"a": cur[k].id, "b": cur[k + 1].id, "kind": "passage"})
+		if prev.is_empty():
+			edges.append({"a": "wick", "b": cur[0].id, "kind": "lift"})
+		else:
+			for n: Dictionary in cur:
+				edges.append({"a": prev[rng.randi_range(0, prev.size() - 1)].id, "b": n.id, "kind": "descent"})
+		prev = cur
+	nodes.append({"id": "sallow", "tier": 7, "index": nodes.size(), "biome": "station", "name": "Sallow",
+		"authored": true, "ruin": false, "trunk": false, "deep": true, "station": 11, "heat": 0.4, "moisture": 0.6})
+	edges.append({"a": prev[0].id, "b": "sallow", "kind": "passage"})
+	nodes.append({"id": "heart", "tier": 8, "index": nodes.size(), "biome": "heart", "name": "The Heart",
+		"authored": true, "ruin": false, "trunk": false, "deep": true, "station": 1, "heat": 0.5, "moisture": 0.5})
+	edges.append({"a": "sallow", "b": "heart", "kind": "heartway"})
+	var t2 := _tier(nodes, 2)
+	nodes.append({"id": "ways", "tier": 3, "index": nodes.size(), "biome": "knapper", "name": "The Knapper Ways",
+		"authored": true, "ruin": false, "trunk": false, "deep": false, "heat": 0.3, "moisture": 0.3})
+	edges.append({"a": t2[t2.size() - 1].id, "b": "ways", "kind": "knapper"})
+	nodes.append({"id": "u1", "tier": 9, "index": nodes.size(), "biome": UNMAPPED_BIOMES[0],
+		"name": unmapped_name(1, rng), "ruin": true, "trunk": false, "deep": true, "unmapped": 1, "heat": 0.5, "moisture": 0.5})
+	edges.append({"a": "heart", "b": "u1", "kind": "unmapped"})
+
+
+const UNMAPPED_BIOMES := ["salt", "roots", "drowned", "ashworks", "ember", "sump", "blackstone", "fringe"]
+
+
+static func unmapped_name(depth: int, rng: RandomNumberGenerator) -> String:
+	var adj := ["Quiet", "Hollow", "Breathing", "Forgotten", "Unlit", "Singing", "Patient", "Bright", "Long", "Ninth"]
+	var noun := ["Gallery", "Station", "Lung", "Stair", "Reservoir", "Vault", "Choir", "Works", "Garden", "Throat"]
+	return "Unmapped %d · The %s %s" % [depth, adj[rng.randi_range(0, adj.size() - 1)], noun[rng.randi_range(0, noun.size() - 1)]]
+
+
+## The Unmapped has no bottom: make sure the chain reaches `depth` (+1 so there's always
+## a way further down).
+static func ensure_unmapped(graph: Dictionary, depth: int) -> void:
+	var have := 1
+	for n: Dictionary in graph.nodes:
+		have = maxi(have, int(n.get("unmapped", 0)))
+	while have < depth + 1:
+		var rng := rng_for(int(graph.get("seed", 0)), "unmapped", have + 1)
+		var nd := have + 1
+		var biome: String = UNMAPPED_BIOMES[(nd - 1 + rng.randi_range(0, 2)) % UNMAPPED_BIOMES.size()]
+		graph.nodes.append({"id": "u%d" % nd, "tier": 8 + nd, "index": graph.nodes.size(), "biome": biome,
+			"name": unmapped_name(nd, rng), "ruin": true, "trunk": false, "deep": true, "unmapped": nd,
+			"heat": rng.randf(), "moisture": rng.randf()})
+		graph.edges.append({"a": "u%d" % have, "b": "u%d" % nd, "kind": "descent"})
+		have = nd
 
 
 static func _tier(nodes: Array, t: int) -> Array:
@@ -143,6 +245,14 @@ static func passable(edge: Dictionary, flags: Dictionary) -> bool:
 			return tremor
 		"collapsible":
 			return not tremor
+		"lift":
+			return bool(flags.get("lift_built", false))
+		"knapper":
+			return bool(flags.get("grist_guide", false))
+		"heartway":
+			return bool(flags.get("ways_open", false))
+		"unmapped":
+			return bool(flags.get("unmapped_open", false))
 	return true
 
 
@@ -282,14 +392,15 @@ static func generate_cavern(seed_value: int, graph: Dictionary, node_id: String)
 			pass
 
 	# 5. Surface materials and biome features.
-	var floor_mat: String = {"fringe": "moss_floor", "blackstone": "blackstone", "ember": "ash", "sump": "mud"}[a.biome]
+	var gen: Dictionary = BIOME_GEN.get(a.biome, BIOME_GEN.blackstone)
+	var floor_mat: String = gen.floor
 	for z in d:
 		for x in w:
 			var i := z * w + x
 			a.mat[i] = "rock" if wall[i] == 1 else floor_mat
 			if wall[i] == 0 and rng.randf() < 0.12:
-				a.mat[i] = {"fringe": "dirt", "blackstone": "gravel", "ember": "basalt", "sump": "stone"}[a.biome]
-	if a.biome == "sump":
+				a.mat[i] = String(gen.alt)
+	if a.biome in ["sump", "drowned"]:
 		# Low ground floods, except on the guaranteed path.
 		var path := _path_cells(a, exit_list, hub)
 		for z in d:
@@ -322,6 +433,8 @@ static func generate_cavern(seed_value: int, graph: Dictionary, node_id: String)
 		a.points["from_" + String(ex.to)] = Vector2i(int(ex.arrive[0]), int(ex.arrive[1]))
 		if ex.kind == "sealed" or ex.kind == "collapsible":
 			a.props.append({"type": "rubble", "x": ex.x, "z": ex.z, "edge": ex.kind, "to": ex.to})
+		elif ex.kind == "lift":
+			a.props.append({"type": "lift_cage", "x": int(ex.arrive[0]) - 1, "z": int(ex.arrive[1]) - 1, "size": [2, 2]})
 
 	# 7. Resources along walls.
 	var wall_adjacent: Array = []
@@ -335,13 +448,8 @@ static func generate_cavern(seed_value: int, graph: Dictionary, node_id: String)
 				if near_wall:
 					wall_adjacent.append(Vector2i(x, z))
 	_shuffle(wall_adjacent, rng)
-	var table: Array = {
-		"fringe": [["glowglass_node", "glowglass", 2], ["moss_patch", "moss_fiber", 4], ["moss_patch", "moss_fiber", 4], ["blackstone_node", "blackstone", 4]],
-		"blackstone": [["blackstone_node", "blackstone", 6], ["blackstone_node", "blackstone", 6], ["scrap_pile", "brass_scrap", 4], ["glowglass_node", "glowglass", 3]],
-		"ember": [["thermal_node", "thermal_ore", 6], ["ember_crystal", "ember_resin", 3], ["emberroot_wild", "emberroot_seed", 2], ["thermal_node", "thermal_ore", 5], ["blackstone_node", "blackstone", 4]],
-		"sump": [["bellcap_wild", "bellcap_spore", 2], ["scrap_pile", "brass_scrap", 6], ["glowglass_node", "glowglass", 4], ["moss_patch", "moss_fiber", 3]],
-	}[a.biome]
-	var count := 8 + rng.randi_range(0, 4)
+	var table: Array = gen.res
+	var count := 8 + rng.randi_range(0, 4) + mini(4, int(node.get("unmapped", 0)) / 2)
 	for k in mini(count, wall_adjacent.size()):
 		var c: Vector2i = wall_adjacent[k]
 		var entry: Array = table[k % table.size()]
@@ -350,7 +458,7 @@ static func generate_cavern(seed_value: int, graph: Dictionary, node_id: String)
 		a.blocked[c.y * w + c.x] = 1
 
 	# 8. Ambient lights (glow crystals / fungus) — capped for performance.
-	var light_color: String = {"fringe": "glow", "blackstone": "amber", "ember": "ember", "sump": "violet"}[a.biome]
+	var light_color: String = gen.light
 	var floor_cells: Array = []
 	for z in d:
 		for x in w:
@@ -368,24 +476,52 @@ static func generate_cavern(seed_value: int, graph: Dictionary, node_id: String)
 		if too_close:
 			continue
 		a.lights.append({"x": c.x + 0.5, "z": c.y + 0.5, "y": 1.2, "color": light_color, "energy": 1.6, "range": 6.5, "kind": "ambient"})
-		a.props.append({"type": {"fringe": "glowroot", "blackstone": "work_lamp", "ember": "ember_crystal", "sump": "pale_fungus"}[a.biome], "x": c.x, "z": c.y})
+		a.props.append({"type": String(gen.lamp), "x": c.x, "z": c.y, "scale": float(gen.get("lamp_scale", 1.0))})
 		a.blocked[c.y * w + c.x] = 1
 		nl += 1
 	# Decorative clutter (non-blocking).
-	var deco: Array = {"fringe": ["moss_tuft", "glowroot_small", "mushroom"], "blackstone": ["rubble_small", "rail", "crate_broken"],
-		"ember": ["ash_pile", "cinder_rock"], "sump": ["pale_fungus_small", "reed", "drip_rock"]}[a.biome]
+	var deco: Array = gen.deco
 	for k in mini(18, floor_cells.size()):
 		var c: Vector2i = floor_cells[floor_cells.size() - 1 - k]
 		if a.blocked[c.y * w + c.x] == 0:
 			a.props.append({"type": deco[k % deco.size()], "x": c.x, "z": c.y, "deco": true})
 
 	# 9. Ruin vignette.
-	if node.ruin or node.trunk:
+	if node.get("ruin", false) or node.get("trunk", false):
 		_place_ruin(a, node, rng, protected, hub)
 
 	a.points["hub"] = hub
 	_ensure_connected(a, exit_list, hub)
+	_settle_heights(a)
 	return a
+
+
+## Final pass: no walkable cell may stand more than one level above a walkable neighbour
+## (carving a guaranteed path at hub height can leave a ledge). Cells only ever come down,
+## so this converges.
+static func _settle_heights(a: AreaMap) -> void:
+	for _pass in 12:
+		var changed := false
+		for z in a.d:
+			for x in a.w:
+				var i := z * a.w + x
+				var h := a.height[i]
+				if h >= AreaMap.WALL_LEVEL or h == AreaMap.WATER_LEVEL:
+					continue
+				for dd in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]:
+					var nx: int = x + dd.x
+					var nz: int = z + dd.y
+					if not a.inside(nx, nz):
+						continue
+					var nh := a.height[nz * a.w + nx]
+					if nh >= AreaMap.WALL_LEVEL or nh == AreaMap.WATER_LEVEL:
+						continue
+					if h > nh + 1:
+						h = nh + 1
+						a.height[i] = h
+						changed = true
+		if not changed:
+			break
 
 
 ## Safety net: if anything still separates an exit or the ruin from the hub, clear the
@@ -549,7 +685,7 @@ static func _place_ruin(a: AreaMap, node: Dictionary, rng: RandomNumberGenerator
 					best = Vector2i(x, z)
 	if best.x < 0:
 		best = Vector2i(clampi(hub.x - 3, 1, a.w - 7), clampi(hub.y - 2, 1, a.d - 6))
-	var kind := "trunk" if node.trunk else ("crew_post_%d" % int(node.tier))
+	var kind := "trunk" if node.trunk else ("crew_post_%d" % clampi(int(node.tier), 1, 3))
 	a.props.append({"type": "ruin", "variant": kind, "x": best.x, "z": best.y, "size": [6, 5]})
 	a.points["ruin"] = best + Vector2i(3, 2)
 	# Walls on three sides of the ruin (back + sides), leaving the front open.
@@ -575,10 +711,22 @@ static func _place_ruin(a: AreaMap, node: Dictionary, rng: RandomNumberGenerator
 		a.resources.append({"id": "%s_scrap" % a.id, "type": "scrap_pile", "x": best.x + 1, "z": best.y + 3,
 			"item": "brass_scrap", "n": 5})
 	a.resources.append({"id": "%s_lore" % a.id, "type": "lore_page", "x": best.x + 3, "z": best.y + 3,
-		"item": "", "n": 0, "lore": "tier%d" % int(node.tier) if not node.trunk else "trunk"})
+		"item": "", "n": 0, "lore": lore_for(node)})
 	for r in a.resources:
 		if r.id.begins_with(a.id + "_coil") or r.id.begins_with(a.id + "_scrap") or r.id.begins_with(a.id + "_lore"):
 			a.blocked[int(r.z) * a.w + int(r.x)] = 1
+
+
+## Which page a ruin holds: the Reach tiers, the Trunk, one per Lower Station, and a page
+## from the deep pool for the Unmapped.
+static func lore_for(node: Dictionary) -> String:
+	if node.get("trunk", false):
+		return "trunk"
+	if node.has("unmapped"):
+		return "deep_pool_%d" % (int(node.unmapped) % 12)
+	if node.get("deep", false):
+		return "station_%d" % int(node.get("station", 8))
+	return "tier%d" % int(node.tier)
 
 
 static func _ruin_block(a: AreaMap, x: int, z: int, type: String) -> void:

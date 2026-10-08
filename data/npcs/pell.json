@@ -1,0 +1,149 @@
+{
+	"name": "Pell",
+	"short": "Pell",
+	"role": "pump keeper",
+	"title": "Keeps Sallow's pumps and knocks every night",
+	"area": "sallow",
+	"home": "pell_home",
+	"sprite": "pell",
+	"portrait": "pell",
+	"color": "glow",
+	"voice": {
+		"timbre": "player",
+		"pitch": 1.18,
+		"rate": 1.15
+	},
+	"motif": "sallow",
+	"profile": {
+		"personality": "Earnest, quick, asks questions in the order they occur. Has never seen a lamp that wasn't a candle and is trying hard not to stare at yours.",
+		"history": "Born at Sallow. Taught the crew codes by Wren from the age of nine. Has knocked up the Trunk every night for four years because Wren said someone would answer one day.",
+		"goals": "Keep the pumps running. See the sky, if there is one. Make Wren rest.",
+		"fears": "That the answer was a mistake. That the pumps stop while they sleep.",
+		"contradiction": "Brave about the dark, frightened of open spaces.",
+		"problem": "Twelve people, three pumps, and a Heart that breathes slower every year."
+	},
+	"values": {
+		"community_help": {
+			"affection": 3,
+			"trust": 2
+		},
+		"kept_word": {
+			"trust": 5
+		},
+		"broke_word": {
+			"trust": -6
+		},
+		"good_engineering": {
+			"respect": 4
+		},
+		"water_restored": {
+			"respect": 2
+		},
+		"gift_liked": {
+			"affection": 4
+		},
+		"curious_about_life": {
+			"affection": 2
+		},
+		"endangered_people": {
+			"fear": 3,
+			"trust": -4
+		}
+	},
+	"likes": [
+		"glowbeet",
+		"salted_beets",
+		"lamp_lens"
+	],
+	"loves": [
+		"glowbeet_stew"
+	],
+	"dislikes": [
+		"sludge"
+	],
+	"tolerance": {
+		"sour": 0.6,
+		"heat": 40,
+		"noise": 10
+	},
+	"schedule": [
+		{
+			"from": "06:00",
+			"to": "09:00",
+			"at": "pumps",
+			"do": "work",
+			"why": "Morning round of the three pumps."
+		},
+		{
+			"from": "09:00",
+			"to": "12:00",
+			"at": "table",
+			"do": "talk",
+			"why": "Breakfast, which at Sallow is a negotiation."
+		},
+		{
+			"from": "12:00",
+			"to": "17:00",
+			"at": "gallery",
+			"do": "inspect",
+			"why": "Listening to the pumps for the cough in the bearings."
+		},
+		{
+			"from": "17:00",
+			"to": "20:30",
+			"at": "fire",
+			"do": "sit",
+			"why": "By the fire with whoever's there."
+		},
+		{
+			"from": "20:30",
+			"to": "23:00",
+			"at": "pell",
+			"do": "observe",
+			"why": "At the chalk wall. Hush is when you knock."
+		},
+		{
+			"from": "23:00",
+			"to": "06:00",
+			"at": "pell_home",
+			"do": "sleep",
+			"why": "Asleep, with one ear on the pumps."
+		},
+		{
+			"from": "07:00",
+			"to": "20:00",
+			"at": "g_pell",
+			"do": "talk",
+			"why": "With everyone, at the Heart.",
+			"when": [
+				"flag:heart_gathering"
+			]
+		},
+		{
+			"from": "08:00",
+			"to": "18:00",
+			"at": "commons",
+			"do": "talk",
+			"why": "Visiting Wick, staring at everything.",
+			"when": [
+				"flag:pell_in_wick"
+			]
+		}
+	],
+	"areas": [
+		{
+			"when": [
+				"flag:heart_gathering"
+			],
+			"area": "heart"
+		},
+		{
+			"when": [
+				"flag:pell_in_wick",
+				"!flag:heart_gathering"
+			],
+			"area": "wick"
+		}
+	],
+	"unknown": "The knocker"
+}

@@ -75,9 +75,10 @@ func test_schedule_resolution_and_overrides() -> void:
 
 
 func test_every_npc_schedule_has_valid_places() -> void:
-	var points: Dictionary = Content.wick_map.get("points", {})
 	for npc in Content.npcs:
+		var points := Npc.points_for(npc)
 		for b in Content.npcs[npc].schedule:
 			var at := String(b.at)
 			check(at == "away" or at == "home" or points.has(at), "%s schedule uses unknown place '%s'" % [npc, at])
 		check(points.has(String(Content.npcs[npc].home)), "%s home is a known point" % npc)
+

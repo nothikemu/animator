@@ -39,6 +39,31 @@ var _waved_day := -1
 var _player: Node3D
 
 
+## Where a resident lives right now: their sheet's "area" (default Wick), overridden by the
+## last matching {"when": [...], "area": ...} rule in "areas" (Barnaby goes down to Sallow).
+static func area_of(npc_id: String) -> String:
+	var d := Content.npc(npc_id)
+	var out := String(d.get("area", "wick"))
+	for rule: Dictionary in d.get("areas", []):
+		if Conditions.check(rule.get("when", []), GameState):
+			out = String(rule.get("area", out))
+	return out
+
+
+## Every named spot in every place a resident can be (home area plus any "areas" rule).
+static func points_for(npc_id: String) -> Dictionary:
+	var def := Content.npc(npc_id)
+	var areas := [String(def.get("area", "wick"))]
+	for r: Dictionary in def.get("areas", []):
+		areas.append(String(r.get("area", "")))
+	var out := {}
+	for a: String in areas:
+		var m: Dictionary = Content.wick_map if a == "wick" else Content.maps.get(a, {})
+		for k in m.get("points", {}):
+			out[k] = true
+	return out
+
+
 func setup(npc_id: String, a: AreaMap, grid: AStarGrid2D) -> void:
 	id = npc_id
 	def = Content.npc(id)
@@ -94,7 +119,7 @@ func _point(name: String) -> Vector2i:
 	var pts: Dictionary = area.points
 	if pts.has(name):
 		return pts[name]
-	return pts.get("commons", Vector2i(area.w / 2, area.d / 2))
+	return pts.get("commons", pts.get("hub", Vector2i(area.w / 2, area.d / 2)))
 
 
 func cell() -> Vector2i:

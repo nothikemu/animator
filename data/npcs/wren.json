@@ -1,0 +1,160 @@
+{
+	"name": "Wren Askew",
+	"short": "Wren",
+	"role": "trunk crew",
+	"title": "Trunk crew, retired by nobody",
+	"area": "sallow",
+	"home": "wren_home",
+	"sprite": "wren",
+	"portrait": "wren",
+	"color": "verdigris",
+	"voice": {
+		"timbre": "reed_warm",
+		"pitch": 0.86,
+		"rate": 1.0
+	},
+	"motif": "sallow",
+	"profile": {
+		"personality": "Laughs at the wrong moments and is usually right about why. Talks the whole time. Calls everyone 'love' and means it about half the time.",
+		"history": "Barnaby's crew partner. Was down-line when the Sump flood came up the Trunk and he closed the valve. Followed a dry stair down for eleven years, found Sallow, kept its Heart alive, taught a child the codes.",
+		"goals": "Get the Heart breathing. See Barnaby's face when he finds out she was right.",
+		"fears": "Dying in a room nobody will open. Being forgiven before she's finished being angry.",
+		"contradiction": "Tells everyone to rest; has not rested in eleven years.",
+		"problem": "The damp cough. Half her sight. Twelve people who think she can't die."
+	},
+	"values": {
+		"kept_word": {
+			"trust": 5
+		},
+		"broke_word": {
+			"trust": -5,
+			"resentment": 3
+		},
+		"good_engineering": {
+			"respect": 5
+		},
+		"clean_power": {
+			"respect": 2
+		},
+		"community_help": {
+			"affection": 2
+		},
+		"gift_liked": {
+			"affection": 4
+		},
+		"helped_him": {
+			"affection": 3
+		},
+		"endangered_people": {
+			"fear": 2,
+			"trust": -5
+		}
+	},
+	"likes": [
+		"moss_tea",
+		"seal_gum",
+		"lamp_lens"
+	],
+	"loves": [
+		"glowbeet_stew",
+		"salted_beets"
+	],
+	"dislikes": [
+		"fertiliser"
+	],
+	"tolerance": {
+		"sour": 0.4,
+		"heat": 40,
+		"noise": 9
+	},
+	"schedule": [
+		{
+			"from": "07:00",
+			"to": "21:00",
+			"at": "wren_porch",
+			"do": "sit",
+			"why": "On the bench by her door, because it's where the Heart door is."
+		},
+		{
+			"from": "21:00",
+			"to": "07:00",
+			"at": "wren_home",
+			"do": "sleep",
+			"why": "Coughing in her sleep."
+		},
+		{
+			"from": "08:00",
+			"to": "12:00",
+			"at": "pumps",
+			"do": "inspect",
+			"why": "Back on her feet and back at the pumps.",
+			"when": [
+				"flag:wren_saved"
+			]
+		},
+		{
+			"from": "12:00",
+			"to": "18:00",
+			"at": "table",
+			"do": "talk",
+			"why": "Holding court at the long table.",
+			"when": [
+				"flag:wren_saved"
+			]
+		},
+		{
+			"from": "18:00",
+			"to": "21:00",
+			"at": "fire",
+			"do": "sit",
+			"why": "By the fire, telling it wrong on purpose.",
+			"when": [
+				"flag:wren_saved"
+			]
+		},
+		{
+			"from": "07:00",
+			"to": "20:00",
+			"at": "g_wren",
+			"do": "talk",
+			"why": "At the Heart.",
+			"when": [
+				"flag:heart_gathering"
+			]
+		},
+		{
+			"from": "08:00",
+			"to": "20:00",
+			"at": "commons_table",
+			"do": "sit",
+			"why": "In Wick, at the quiet table, which is no longer quiet.",
+			"when": [
+				"flag:wren_in_wick"
+			]
+		}
+	],
+	"areas": [
+		{
+			"when": [
+				"flag:wren_died"
+			],
+			"area": "gone"
+		},
+		{
+			"when": [
+				"flag:heart_gathering",
+				"!flag:wren_died"
+			],
+			"area": "heart"
+		},
+		{
+			"when": [
+				"flag:wren_in_wick",
+				"!flag:heart_gathering",
+				"!flag:wren_died"
+			],
+			"area": "wick"
+		}
+	],
+	"unknown": "The old woman in the crew coat"
+}

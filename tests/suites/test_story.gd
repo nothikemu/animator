@@ -5,7 +5,7 @@ extends TestCase
 const VALUE_KINDS := ["flag", "met", "trust", "respect", "affection", "resentment", "fear", "shared",
 	"mem", "mood", "thread", "item", "money", "deed", "tool", "day", "hour", "minute", "phase",
 	"breath", "place", "area", "view", "recipe", "lore", "discovered", "market_day", "talked",
-	"gifted", "seen_places", "weekday",
+	"gifted", "seen_places", "weekday", "since", "gear", "depth", "pressure_ready", "air_ready", "votes_yes",
 	# Sim facts
 	"pollution", "pollution_farm", "cistern", "town_water", "noise_lane", "exhale", "planted",
 	"well_flowing", "fissure_sealed", "power", "leaks", "machine", "running", "air_sour_hesper",
@@ -93,7 +93,8 @@ func _lint_effects(effects: Variant, where: String) -> void:
 func test_dialogue_content_lints_clean() -> void:
 	for npc in Content.dialogue:
 		var d: Dictionary = Content.dialogue[npc]
-		check(Content.npcs.has(npc), "dialogue for unknown npc %s" % npc)
+		# "_name" files are things you talk to (the telegraph, the archive, the Bellows console).
+		check(Content.npcs.has(npc) or npc.begins_with("_"), "dialogue for unknown npc %s" % npc)
 		for line: Dictionary in d.get("lines", []):
 			var where := "%s/%s" % [npc, line.get("id", "?")]
 			_lint_rules(line.get("when"), where)

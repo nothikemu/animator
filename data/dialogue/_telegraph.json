@@ -1,0 +1,116 @@
+{
+	"_comment": "The pipe telegraph at the pipe-heads in the lane. A slow correspondence in crew code with someone below, one exchange a night. Replies arrive the next Hush (since:tg_sent>=1).",
+
+	"lines": [
+		{"id": "tg_nocode", "tier": "ambient", "when": ["!flag:learned_codes"], "convo": "nocode"},
+		{"id": "tg_first", "tier": "story", "once": true, "when": ["flag:learned_codes", "!flag:tg_sent"], "convo": "first"},
+		{"id": "tg_r1", "tier": "story", "once": true, "when": ["flag:tg_sent=1", "since:tg_sent>=1"], "convo": "reply1"},
+		{"id": "tg_r2", "tier": "story", "once": true, "when": ["flag:tg_sent=2", "since:tg_sent>=1"], "convo": "reply2"},
+		{"id": "tg_r3", "tier": "story", "once": true, "when": ["flag:tg_sent=3", "since:tg_sent>=1"], "convo": "reply3"},
+		{"id": "tg_r4", "tier": "story", "once": true, "when": ["flag:tg_sent=4", "since:tg_sent>=1"], "convo": "reply4"},
+		{"id": "tg_r5", "tier": "story", "once": true, "when": ["flag:tg_sent=5", "since:tg_sent>=1"], "convo": "reply5"},
+		{"id": "tg_wait", "tier": "reactive", "when": ["flag:tg_sent", "!flag:tg_come", "since:tg_sent<1"], "convo": "wait"},
+		{"id": "tg_after", "tier": "ambient", "when": ["flag:tg_come", "!flag:met_pell"], "convo": "after"},
+		{"id": "tg_after_met", "tier": "ambient", "when": ["flag:met_pell"], "convo": "after_met"},
+		{"id": "tg_dead", "tier": "reactive", "when": ["flag:wren_died", "!flag:tg_dead_heard"], "convo": "after_wren"}
+	],
+
+	"convos": {
+		"nocode": [
+			{"say": "You rap on the pipe-head. The sound goes down and keeps going.", "who": "narrator"},
+			{"say": "Knocking isn't the hard part. Knowing what to say in pipe is. Barnaby would know.", "who": "player"}
+		],
+
+		"first": [
+			{"say": "The lane is dark. The pipe-heads stand in a row like people waiting for a tram nobody remembers.", "who": "narrator"},
+			{"say": "You put your knuckles to the cold brass. Three. Two. Three.", "who": "narrator", "do": ["flag:tg_sent=1", "caption:[three knocks, two, three]"]},
+			{"say": "It goes down into the ground and doesn't come back. That's how it works, Barnaby said. Answers take the long way. Tomorrow, at Hush.", "who": "narrator"}
+		],
+
+		"wait": [
+			{"say": "You've knocked tonight already. The pipe hums with Wick's own water and nothing else.", "who": "narrator"},
+			{"say": "Answers take the long way. Tomorrow.", "who": "player"}
+		],
+
+		"reply1": [
+			{"say": "You haven't lifted your hand yet when the pipe knocks first.", "who": "narrator", "do": ["caption:[knocking, from very far below]"]},
+			{"say": "Three. Two. Three. Then two single knocks, close. Then two more.", "who": "narrator"},
+			{"say": "Still here. Yes. Yes.", "who": "player"},
+			{"say": "It sounds like someone who has waited a very long time to say yes to anything.", "who": "narrator", "do": ["flag:tg_heard_1"]},
+			{"choice": [
+				{"text": "Knock 1·2·1. (How many of you?)", "do": ["flag:tg_q=many", "flag:tg_sent=2"], "goto": "sent"},
+				{"text": "Knock 2·1·2. (Who are you?)", "do": ["flag:tg_q=who", "flag:tg_sent=2"], "goto": "sent"}
+			]},
+			{"label": "sent"},
+			{"say": "The question goes down. Somewhere below, someone is going to have to work out how to answer it.", "who": "narrator"}
+		],
+
+		"reply2": [
+			{"if": ["flag:tg_q=who"], "goto": "who"},
+			{"say": "The answer starts before the Hush is properly dark. One knock. A pause. One knock. A pause.", "who": "narrator"},
+			{"say": "You count them on the pipe with chalk. Twelve. Slow and careful, like someone pointing at faces round a table.", "who": "narrator", "do": ["flag:tg_knows_many"]},
+			{"say": "Twelve people. Down there. Eleven years after the valve shut.", "who": "player"},
+			{"choice": [{"text": "Knock 2·1·2. (Who are you?)", "do": ["flag:tg_sent=3"], "goto": "end"}]},
+			{"label": "who"},
+			{"say": "The answer is a pattern you don't know: a tap for the row, a tap for the column. Letters. Nobody uses letters, Barnaby said. Letters are for when you've run out of everything else.", "who": "narrator"},
+			{"say": "You chalk the taps on the pipe-head and work them through twice. P. E. L. L.", "who": "narrator", "do": ["flag:tg_knows_pell"]},
+			{"say": "Pell. A name. Not a crew name anyone has mentioned.", "who": "player"},
+			{"choice": [{"text": "Knock 1·2·1. (How many of you?)", "do": ["flag:tg_sent=3"], "goto": "end"}]}
+		],
+
+		"reply3": [
+			{"if": ["flag:tg_q=who"], "goto": "many"},
+			{"say": "Letters again, tonight. You've got better at the chalk. P. E. L. L.", "who": "narrator", "do": ["flag:tg_knows_pell"]},
+			{"say": "Pell. Whoever that is, they were taught the old code by someone who knew it properly.", "who": "player"},
+			{"goto": "next"},
+			{"label": "many"},
+			{"say": "One knock. A pause. One knock. You count with the chalk. Twelve.", "who": "narrator", "do": ["flag:tg_knows_many"]},
+			{"say": "Twelve people, and one of them is called Pell.", "who": "player"},
+			{"label": "next"},
+			{"say": "You stand in the lane a while with your hand on the brass. It is faintly warm. It wasn't, before.", "who": "narrator"},
+			{"choice": [
+				{"text": "Knock 3·3? (Is your air bad?)", "do": ["flag:tg_sent=4", "flag:tg_q2=air"], "goto": "s"},
+				{"text": "Knock 5? (Do you need help?)", "do": ["flag:tg_sent=4", "flag:tg_q2=help"], "goto": "s"}
+			]},
+			{"label": "s"},
+			{"say": "You knock it twice to be sure. You've stopped feeling silly doing this. That happened sometime around the second night.", "who": "narrator"}
+		],
+
+		"reply4": [
+			{"say": "Tonight it's fast, and rough, like someone knocking with the flat of a fist.", "who": "narrator", "do": ["caption:[urgent knocking from below]"]},
+			{"say": "Three-three. Three-three. Five.", "who": "narrator", "do": ["flag:tg_knows_need"]},
+			{"say": "Bad air. Bad air. Help.", "who": "player"},
+			{"say": "Then a long pause, and, more slowly, as if to make up for it: three. Two. Three.", "who": "narrator"},
+			{"choice": [
+				{"text": "Knock 4? (Come up?)", "do": ["flag:tg_sent=5", "flag:tg_offer=come_up"], "goto": "s"},
+				{"text": "Knock 1·3. (We'll send something.)", "do": ["flag:tg_sent=5", "flag:tg_offer=send"], "goto": "s"}
+			]},
+			{"label": "s"},
+			{"say": "You wonder what they think you are. A town? A ghost? A pipe that learned to be lonely?", "who": "narrator"}
+		],
+
+		"reply5": [
+			{"say": "One answer, and then nothing else all night.", "who": "narrator"},
+			{"say": "Two-two. Four.", "who": "narrator", "do": ["flag:tg_come", "caption:[two knocks, two knocks, four]"]},
+			{"say": "No. Come.", "who": "player"},
+			{"say": "Not 'come up'. Not 'send'. They want someone to come down.", "who": "player"},
+			{"say": "Barnaby needs to hear this, and so does everyone else.", "who": "player"}
+		],
+
+		"after": [
+			{"say": "You knock three-two-three. A moment later, very faintly: three-two-three.", "who": "narrator"},
+			{"say": "Somebody down there is keeping the pipe company.", "who": "player"}
+		],
+
+		"after_met": [
+			{"say": "You knock three-two-three. The answer comes back almost before you've finished: three-two-three, and then a little flourish nobody taught Pell.", "who": "narrator"},
+			{"say": "It's the sound of someone grinning.", "who": "player"}
+		],
+
+		"after_wren": [
+			{"say": "You knock three-two-three.", "who": "narrator", "do": ["flag:tg_dead_heard"]},
+			{"say": "The answer takes a long time. When it comes, it's slow, and it's the same as always, and it's Pell's hand, not hers.", "who": "narrator"},
+			{"say": "Still here.", "who": "player"}
+		]
+	}
+}

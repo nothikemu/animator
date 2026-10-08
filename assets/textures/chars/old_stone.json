@@ -1,0 +1,171 @@
+{
+ "w": 46,
+ "h": 46,
+ "cols": 24,
+ "rows": 10,
+ "emit": true,
+ "anims": {
+  "idle_down": {
+   "start": 0,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "idle_up": {
+   "start": 12,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "idle_side": {
+   "start": 24,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "walk_down": {
+   "start": 36,
+   "frames": 8,
+   "fps": 11,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
+  },
+  "walk_up": {
+   "start": 48,
+   "frames": 8,
+   "fps": 11,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
+  },
+  "walk_side": {
+   "start": 60,
+   "frames": 8,
+   "fps": 11,
+   "loop": true,
+   "events": {
+    "step": [
+     0,
+     4
+    ]
+   }
+  },
+  "look_down": {
+   "start": 72,
+   "frames": 12,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "look_side": {
+   "start": 84,
+   "frames": 12,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "talk_down": {
+   "start": 96,
+   "frames": 8,
+   "fps": 8,
+   "loop": true,
+   "events": {}
+  },
+  "talk_side": {
+   "start": 108,
+   "frames": 8,
+   "fps": 8,
+   "loop": true,
+   "events": {}
+  },
+  "happy_down": {
+   "start": 120,
+   "frames": 8,
+   "fps": 9,
+   "loop": false,
+   "events": {}
+  },
+  "happy_side": {
+   "start": 132,
+   "frames": 8,
+   "fps": 9,
+   "loop": false,
+   "events": {}
+  },
+  "sad_down": {
+   "start": 144,
+   "frames": 8,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "sad_side": {
+   "start": 156,
+   "frames": 8,
+   "fps": 6,
+   "loop": false,
+   "events": {}
+  },
+  "surprised_down": {
+   "start": 168,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "surprised_side": {
+   "start": 180,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "events": {}
+  },
+  "annoyed_down": {
+   "start": 192,
+   "frames": 8,
+   "fps": 6,
+   "loop": true,
+   "events": {}
+  },
+  "annoyed_side": {
+   "start": 204,
+   "frames": 8,
+   "fps": 6,
+   "loop": true,
+   "events": {}
+  },
+  "listen_down": {
+   "start": 216,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  },
+  "listen_side": {
+   "start": 228,
+   "frames": 12,
+   "fps": 5,
+   "loop": true,
+   "events": {}
+  }
+ },
+ "portraits": {
+  "neutral": 0,
+  "happy": 122,
+  "sad": 148,
+  "surprised": 170,
+  "annoyed": 193
+ }
+}

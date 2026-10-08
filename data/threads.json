@@ -103,7 +103,160 @@
 		"start": ["flag:o_trade_talk"],
 		"stages": [
 			{"where": "point:exchange_counter", "note": "Odile wants to sell water and beets down-river for medicine before the damp season. She needs twenty glowbeets in the Exchange's stock.", "advance": ["deed:sold_food>=20"]},
-			{"note": "The first trade crate went down-river. Odile wrote a number in the ledger and underlined it twice.", "done": true, "on_enter": ["trust:odile+6", "affection:odile+4", "money+60"]}
+			{"note": "The first trade crate went down-river. Odile wrote a number in the ledger and underlined it twice.", "on_enter": ["flag:o_trade_sent"], "done": true, "on_enter": ["trust:odile+6", "affection:odile+4", "money+60"]}
+		]
+	},
+	"answering": {
+		"title": "Answering",
+		"priority": 11,
+		"start": ["flag:learned_codes"],
+		"stages": [
+			{"where": "point:pipe_heads", "note": "Knock from the pipe-heads in the lane, at Hush. Three-two-three: still here.", "advance": ["flag:tg_sent"]},
+			{"where": "point:pipe_heads", "note": "Answers take the long way round. Back to the pipe-heads tomorrow, at Hush.", "advance": ["flag:tg_heard_1"]},
+			{"where": "point:pipe_heads", "note": "Someone below answers in crew code. Keep the conversation going: one knock a night, at Hush.", "advance": ["flag:tg_knows_need"]},
+			{"where": "point:pipe_heads", "note": "Bad air. Bad air. Help. Ask them what they want.", "advance": ["flag:tg_come"]},
+			{"note": "Two-two, four. No. Come.", "done": true, "on_enter": ["deed:community_help+1"]}
+		]
+	},
+
+	"meeting": {
+		"title": "The Lantern House Meeting",
+		"priority": 10,
+		"start": ["flag:meeting_1_called"],
+		"stages": [
+			{"where": "npc:mags", "note": "Mags has called everyone to the Lantern House at Dimming. Everyone.", "advance": ["flag:meeting_1_done"]},
+			{"note": "Wick has talked it over. Mags wrote it on the board, in chalk.", "done": true}
+		]
+	},
+
+	"the_lift": {
+		"title": "The Primary Lift",
+		"priority": 12,
+		"start": ["flag:b_lift_talk"],
+		"stages": [
+			{"where": "point:annex_bench", "note": "Plait two lengths of crew cable at a bench: four moss fibre and two brass each.", "advance": ["item:crew_cable>=2"]},
+			{"where": "point:pumphall_door", "note": "Under the pump hall, through the glass: fit the cable and six brass to the winch, then feed it thirty power.", "advance": ["running.lift_winch"]},
+			{"where": "point:pumphall_door", "note": "The Primary Lift runs. The cage waits at the bottom of the shaft. Ride it down from the pump hall.", "on_enter": ["flag:lift_built", "toast:The Primary Lift is running."], "advance": ["discovered:places:d1_0"]},
+			{"note": "Station 8. Down here the air tastes older than the rock.", "done": true}
+		]
+	},
+
+	"down_line": {
+		"title": "Down-Line",
+		"priority": 13,
+		"start": ["flag:lift_built"],
+		"stages": [
+			{"where": "area:sallow", "note": "Follow the Lower Stations down. Somewhere at the bottom, someone is knocking.", "advance": ["flag:met_pell"]},
+			{"where": "area:sallow", "note": "Pell says Wren Askew is alive, and ill, in the last shack by the Heart door.", "advance": ["flag:met_wren"]},
+			{"where": "area:sallow", "note": "Read the archive in Sallow's hall. Find out what the Quiet was.", "advance": ["flag:knows_truth"]},
+			{"where": "npc:barnaby", "note": "Barnaby needs to hear about Wren. From you.", "advance": ["flag:told_barnaby"]},
+			{"note": "Barnaby knows. Whatever he does next is his.", "done": true}
+		]
+	},
+
+	"wren_cough": {
+		"title": "The Damp in Her Chest",
+		"priority": 14,
+		"start": ["flag:met_wren", "!flag:wren_saved"],
+		"stages": [
+			{"where": "npc:hesper", "note": "Wren has the damp cough, and a few days, she says. Moss tincture from Hesper, or Odile's down-river medicine, might help.", "advance": ["flag:wren_saved"], "branch": [{"when": ["flag:wren_died"], "goto": 3}]},
+			{"note": "Wren is breathing all the way down. She's furious about it.", "done": true},
+			{"note": "Wren died in the night, asking for Barnaby. Pell has her journal.", "done": true}
+		]
+	},
+
+	"quiet_table": {
+		"title": "The Quiet Table",
+		"priority": 12,
+		"start": ["flag:barnaby_descends"],
+		"stages": [
+			{"where": "area:sallow", "note": "Barnaby has ridden the lift down. Give him an hour. Then go after him.", "advance": ["flag:reunion_done"], "branch": [{"when": ["flag:grief_done"], "goto": 3}]},
+			{"note": "She told him to stop that face. He hasn't. It's a different face now.", "done": true},
+			{"note": "Barnaby added one mark to the chalk wall. Still here.", "done": true}
+		]
+	},
+
+	"damp_season": {
+		"title": "The Damp Season",
+		"priority": 8,
+		"start": ["flag:damp_season"],
+		"stages": [
+			{"where": "point:exchange_counter", "note": "The lake breathes out and the children cough. Odile has a new column in the ledger.", "advance": ["flag:o_tam_talk"]},
+			{"where": "point:exchange_counter", "note": "Odile's down-river trade could bring medicine before the worst of it: twenty glowbeets through the Exchange.", "advance": ["flag:medicine_here"]},
+			{"note": "Medicine came up the chute. Bark, honey, and a dosing card in a careful hand.", "done": true}
+		]
+	},
+
+	"strain_seven": {
+		"title": "Strain Seven",
+		"priority": 9,
+		"start": ["flag:h_strain_talk"],
+		"stages": [
+			{"where": "npc:hesper", "note": "Hesper's moss was made: Strain Seven, to eat the damp cough. She might steep it into a tincture, if the frames are healthy and the air is clean.", "advance": ["flag:learned_tincture"]},
+			{"note": "Moss tincture: three fibres, one bellcap and a cup of moss tea, at the bench. It tastes of the frames after rain.", "done": true}
+		]
+	},
+
+	"the_count": {
+		"title": "The Count",
+		"priority": 7,
+		"start": ["flag:mags_help"],
+		"stages": [
+			{"where": "point:lantern_door", "note": "Mags is short for the damp season. Six jars of salted beets would let her stop doing sums in her sleep. Salt lies in the deep flats.", "advance": ["flag:mags_stores_ok"]},
+			{"note": "Six jars glowing on the Lantern House shelf.", "done": true}
+		]
+	},
+
+	"the_listening": {
+		"title": "The Listening",
+		"priority": 10,
+		"start": ["flag:grist_guide"],
+		"stages": [
+			{"where": "area:ways", "note": "The Old Stone wants to hear a walker. Grist says the Knapper Ways open off the deepest Blackstone cavern.", "advance": ["flag:old_stone_met"]},
+			{"where": "area:ways", "note": "The Old Stone's terms: quiet rock above the Reach, and three glowglass, so the Knappers know walkers still make light.", "advance": ["flag:ways_open"]},
+			{"note": "The agreement is kept. The Knappers are opening the low ways to the Heart door.", "done": true}
+		]
+	},
+
+	"tolley": {
+		"title": "Down-Line, Doesn't Need It",
+		"priority": 5,
+		"start": ["flag:tolley_met"],
+		"stages": [
+			{"where": "area:sallow", "note": "Tolley Brand, the Lease's old tenant, is at Sallow apologising to fungus. He would like to go home, and is afraid to say so.", "advance": ["flag:tolley_returned"]},
+			{"note": "Tolley is back on the Lease cot and has taken the morning watering.", "done": true}
+		]
+	},
+
+	"the_heart": {
+		"title": "The Bellows",
+		"priority": 15,
+		"start": ["flag:ways_open"],
+		"stages": [
+			{"where": "area:heart", "note": "The Knappers opened the low ways. The Heart door at Sallow stands open.", "advance": ["flag:heart_seen"]},
+			{"where": "npc:mags", "note": "The Heart needs pressure (Barnaby: the Trunk valve open, the Station pump fed), clean air (Hesper: tincture or a scrubber, nothing sour), and Wick's yes (Mags).", "advance": ["pressure_ready", "air_ready", "flag:consent"]},
+			{"where": "area:heart", "note": "Wick says yes. Everyone goes down to the Heart. Meet them at the console.", "advance": ["flag:ending_chosen"]},
+			{"note": "The Heart is decided.", "done": true}
+		]
+	},
+
+	"meeting_2": {
+		"title": "Wick Says",
+		"priority": 14,
+		"start": ["flag:meeting_2_called"],
+		"stages": [
+			{"where": "npc:mags", "note": "Mags has called a second meeting at Dimming: open every Trunk and restart the Heart, or not. Everyone votes.", "advance": ["flag:meeting_2_done"]},
+			{"note": "Wick voted.", "done": true}
+		]
+	},
+
+	"the_unmapped": {
+		"title": "The Unmapped",
+		"priority": 3,
+		"start": ["flag:unmapped_open"],
+		"stages": [
+			{"where": "area:u1", "note": "Below the Heart, a stair goes on into the Unmapped. Nobody has a map. Nobody ever will.", "advance": ["depth>=3"]},
+			{"note": "Three stations below the bottom of everything, and the stair keeps going.", "done": true}
 		]
 	}
 }

@@ -207,7 +207,7 @@ func _draw() -> void:
 	# Place names (full map of Wick only).
 	if full and _area.id == "wick":
 		for k: String in Objectives.PLACE_NAMES:
-			if _area.points.has(k) and k not in ["commons", "board", "well"]:
+			if _area.points.has(k) and k not in ["commons", "board", "well", "exchange_counter", "annex_bench", "lake_view", "pipe_heads"]:
 				var pt: Vector2i = _area.points[k]
 				_label(to_screen.call(Vector2(pt.x + 0.5, pt.y - 0.6)), String(Objectives.PLACE_NAMES[k]), UiTheme.DIM, 13, true)
 	# Objective.

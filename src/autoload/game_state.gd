@@ -7,6 +7,7 @@ const START_MONEY := 20
 
 var seed_value := 0
 var flags: Dictionary = {}
+var flag_days: Dictionary = {}         ## flag -> day it was last set (for "since:" rules)
 var history: Dictionary = {}           ## deed kind -> accumulated amount
 var discovered := {"places": {}, "recipes": {}, "lore": {}, "people": {}, "machines": {}}
 var player := {}
@@ -31,6 +32,7 @@ func _process(delta: float) -> void:
 func new_game(seed_v: int, player_name: String) -> void:
 	seed_value = seed_v
 	flags.clear()
+	flag_days.clear()
 	history.clear()
 	discovered = {"places": {}, "recipes": {}, "lore": {}, "people": {}, "machines": {}}
 	player = {"name": player_name.strip_edges() if not player_name.strip_edges().is_empty() else "Salvager",
@@ -62,7 +64,24 @@ func set_flag(name: String, value: Variant = true) -> void:
 	if flags.get(name) == value:
 		return
 	flags[name] = value
+	if Conditions._truthy(value):
+		flag_days[name] = Clock.day
 	Events.flag_changed.emit(StringName(name), value)
+
+
+## Whole days since `name` was set (null if it never was). "since:wren_met>=3".
+func days_since(name: String) -> Variant:
+	if not flag_days.has(name) or not has_flag(name):
+		return null
+	return Clock.day - int(flag_days[name])
+
+
+## Gear the salvager is carrying (respirator, lens): owning it means wearing it.
+func has_gear(kind: String) -> bool:
+	for id: String in Content.items:
+		if String(Content.items[id].get("gear", "")) == kind and inventory.count(id) > 0:
+			return true
+	return false
 
 
 func add_deed(kind: String, amount: float = 1.0, context: Dictionary = {}) -> void:
@@ -306,13 +325,30 @@ func value(key: String) -> Variant:
 		"seen_places": return discovered.get("places", {}).size()
 		"talked": return Society.talked_today(arg)
 		"gifted": return Society.gifted_today(arg)
+		"since": return days_since(arg)
+		"gear": return has_gear(arg)
+		"depth": return int(flags.get("deepest", 0))
+		"pressure_ready":
+			# The Heart's first need: Wick's Trunk valve open and Station 7 at full power.
+			return has_flag("valve_open") and Conditions._truthy(Sim.fact("running.station_pump"))
+		"air_ready":
+			# Its second: the cough can't ride the first breath up. Moss tincture known, or a
+			# scrubber running; either way, air in Wick that isn't sour.
+			var guard := knows_recipe("moss_tincture") or Conditions._truthy(Sim.fact("running.scrubber"))
+			return guard and float(Sim.fact("pollution") if Sim.fact("pollution") != null else 0.0) < 0.15
+		"votes_yes":
+			var n := 0
+			for who in ["barnaby", "odile", "hesper", "mags", "grist"]:
+				if String(flags.get("vote_" + who, "")) == "yes":
+					n += 1
+			return n
 	return Sim.fact(key)
 
 
 # --- Serialisation -----------------------------------------------------------------------
 
 func to_dict() -> Dictionary:
-	return {"seed": seed_value, "flags": flags.duplicate(true), "history": history.duplicate(),
+	return {"seed": seed_value, "flags": flags.duplicate(true), "flag_days": flag_days.duplicate(), "history": history.duplicate(),
 		"discovered": discovered.duplicate(true), "player": player.duplicate(true),
 		"inventory": inventory.to_array(), "areas": areas.duplicate(true),
 		"current_area": current_area, "playtime": playtime}
@@ -321,6 +357,10 @@ func to_dict() -> Dictionary:
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d.get("seed", 0))
 	flags = d.get("flags", {}) if d.get("flags") is Dictionary else {}
+	flag_days = {}
+	if d.get("flag_days") is Dictionary:
+		for k in d.flag_days:
+			flag_days[k] = int(d.flag_days[k])
 	history = {}
 	var h: Variant = d.get("history", {})
 	if h is Dictionary:

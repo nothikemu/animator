@@ -18,6 +18,9 @@ const CUES := {
 	"reach": ["drone", "glass", "pulse"],
 	"cut": ["bass", "ostinato", "perc", "alarm"],
 	"station": ["pad", "brass", "knock", "melody"],
+	"deep": ["drone", "breath", "glass", "knock"],
+	"sallow": ["pad", "pluck", "melody", "knock"],
+	"heart": ["drone", "breath", "glass", "brass"],
 }
 
 var _sfx: Dictionary = {}                ## name -> Array[AudioStream]

@@ -319,6 +319,44 @@ func caption(text: String, seconds: float) -> void:
 	_caption_t = seconds
 
 
+## A chapter title across the top of the screen: small label, large title, a rule; fades in,
+## holds, fades out, without stopping play.
+func banner(small: String, big: String) -> void:
+	var box := VBoxContainer.new()
+	box.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	box.position = Vector2(-300, 92)
+	box.custom_minimum_size = Vector2(600, 0)
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var a := Label.new()
+	a.text = small.to_upper()
+	a.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	a.add_theme_font_size_override("font_size", UiTheme.size(16))
+	a.add_theme_color_override("font_color", UiTheme.LIVING)
+	var b := Label.new()
+	b.text = big
+	b.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.add_theme_font_size_override("font_size", UiTheme.size(40))
+	b.add_theme_color_override("font_color", UiTheme.ACCENT)
+	b.add_theme_constant_override("outline_size", 8)
+	b.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.07, 0.9))
+	var rule := ColorRect.new()
+	rule.color = UiTheme.BORDER
+	rule.custom_minimum_size = Vector2(0, 2)
+	box.add_child(a)
+	box.add_child(b)
+	box.add_child(rule)
+	root.add_child(box)
+	box.modulate.a = 0.0
+	Audio.ui("chime", -6.0)
+	var tw := create_tween()
+	tw.tween_property(box, "modulate:a", 1.0, 1.2)
+	tw.parallel().tween_property(box, "position:y", 100.0, 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.tween_interval(3.5)
+	tw.tween_property(box, "modulate:a", 0.0, 1.4)
+	tw.tween_callback(box.queue_free)
+
+
 func set_breath(value: float, show: bool) -> void:
 	breath_bar.visible = show
 	breath_bar.value = value * 100.0

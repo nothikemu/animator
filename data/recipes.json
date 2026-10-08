@@ -9,5 +9,8 @@
 	"moss_tea": {"inputs": {"moss_fiber": 2}, "output": {"item": "moss_tea", "n": 1}, "station": "bench"},
 	"glowbeet_stew": {"inputs": {"glowbeet": 2, "bellcap": 1}, "output": {"item": "glowbeet_stew", "n": 1}, "station": "bench", "unlock": "learned_stew"},
 	"respirator": {"inputs": {"filter_pad": 2, "brass_scrap": 2, "glowglass": 1}, "output": {"item": "respirator", "n": 1}, "station": "bench", "unlock": "learned_respirator"},
-	"lamp_lens": {"inputs": {"glowglass": 2, "brass_scrap": 1}, "output": {"item": "lamp_lens", "n": 1}, "station": "bench", "unlock": "learned_lens"}
+	"lamp_lens": {"inputs": {"glowglass": 2, "brass_scrap": 1}, "output": {"item": "lamp_lens", "n": 1}, "station": "bench", "unlock": "learned_lens"},
+	"crew_cable": {"inputs": {"moss_fiber": 4, "brass_scrap": 2}, "output": {"item": "crew_cable", "n": 1}, "station": "bench", "unlock": "learned_cable"},
+	"moss_tincture": {"inputs": {"moss_fiber": 3, "bellcap": 1, "moss_tea": 1}, "output": {"item": "moss_tincture", "n": 1}, "station": "bench", "unlock": "learned_tincture"},
+	"salted_beets": {"inputs": {"glowbeet": 3, "salt": 1}, "output": {"item": "salted_beets", "n": 3}, "station": "bench", "unlock": "learned_salting"}
 }

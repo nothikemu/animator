@@ -125,8 +125,130 @@ def sump():
     return out
 
 
+def drowned():
+    """Flooded galleries: water moving in channels, drips into deep pools, a pipe groaning."""
+    n = int(LOOP * SR)
+    t = np.arange(n) / SR
+    flow = loopify(bandpass(noise(LOOP + 1, 61, "pink"), 180, 1400)[int(0.4 * SR):], n) * (0.7 + 0.3 * np.sin(2 * np.pi * t / LOOP * 3) ** 2) * 0.35
+    buf = np.stack([flow, np.roll(flow, 3100)], axis=1)
+    r = rng(62)
+    ev = [(r.uniform(0, LOOP), drip(70 + i, r.uniform(400, 900)) * 1.3, r.uniform(-0.9, 0.9)) for i in range(20)]
+    for i in range(3):
+        d = 3.0
+        g = resonator(lowpass(noise(d, 320 + i), 300), 70 + i * 11, 30) * env_adsr(int(d * SR), 0.8, 0.5, 0.5, 1.2) * 0.8
+        ev.append((r.uniform(0, LOOP), g, r.uniform(-0.6, 0.6)))
+    place_events(buf, ev)
+    wet = reverb(buf[:, 0], 0.5, 3.5, 1400, 13)
+    out = np.zeros((n, 2))
+    mix_into(out, wet, 0)
+    return out
+
+
+def roots():
+    """The Root Cathedral: warm air, soft creaking, glowroot chirps in clusters, very still."""
+    n = int(LOOP * SR)
+    buf = np.stack([bed(81, 150, 2000, 0.2, 0.12), bed(82, 150, 2000, 0.2, 0.12)], axis=1)
+    hum = (sine(73.4, LOOP) * 0.05 + sine(110.0, LOOP) * 0.03)[:n]
+    buf += np.stack([hum, hum], axis=1)
+    r = rng(83)
+    ev = []
+    for i in range(12):
+        at = r.uniform(0, LOOP)
+        for k in range(4):
+            ev.append((at + k * 0.09, fm(r.uniform(2600, 3600), 2.0, 1.2, 0.07, 30) * env_perc(int(0.07 * SR), 0.001, 0.02) * 0.07, r.uniform(-1, 1)))
+    for i in range(6):  # wood creaks: the roots shifting
+        d = 1.2
+        cr = bandpass(saturate_soft(sine(r.uniform(140, 260), d) * (0.5 + 0.5 * np.sin(2 * np.pi * 11 * t_axis(d)) ** 2)), 200, 1800)
+        ev.append((r.uniform(0, LOOP), cr * env_adsr(int(d * SR), 0.3, 0.2, 0.6, 0.5) * 0.08, r.uniform(-0.8, 0.8)))
+    place_events(buf, ev)
+    return buf
+
+
+def saturate_soft(x):
+    return np.tanh(x * 2.0) * 0.5
+
+
+def ashworks():
+    """The Ashworks: an old foundry cooling for two hundred years. Groans, ticks, far clanks."""
+    n = int(LOOP * SR)
+    rumble = loopify(lowpass(noise(LOOP + 1, 91, "brown"), 110)[int(0.4 * SR):], n) * 0.7
+    buf = np.stack([rumble, rumble * 0.9], axis=1)
+    buf += np.stack([bed(92, 400, 3000, 0.07), bed(93, 400, 3000, 0.07)], axis=1)
+    r = rng(94)
+    ev = []
+    for i in range(40):  # cooling metal ticks
+        c = highpass(noise(0.005, 400 + i), 3000) * env_perc(int(0.005 * SR), 0.0002, 0.002) * r.uniform(0.1, 0.3)
+        ev.append((r.uniform(0, LOOP), c, r.uniform(-1, 1)))
+    for i in range(5):  # far clanks
+        d = 1.5
+        burst = highpass(noise(0.01, 450 + i), 500)
+        burst = np.pad(burst, (0, int(d * SR) - len(burst)))
+        k = resonator(burst, r.uniform(300, 700), 25) * env_perc(int(d * SR), 0.001, 0.4) * 0.3
+        ev.append((r.uniform(0, LOOP), lowpass(k, 1800), r.uniform(-0.9, 0.9)))
+    place_events(buf, ev)
+    return buf
+
+
+def salt():
+    """The Salt Flats: dry wind over white terraces and crystals ticking as they grow."""
+    n = int(LOOP * SR)
+    t = np.arange(n) / SR
+    wind = loopify(bandpass(noise(LOOP + 1, 101, "pink"), 300, 2600)[int(0.4 * SR):], n) * (0.5 + 0.5 * np.sin(2 * np.pi * t / LOOP * 2 + 0.7) ** 2) * 0.3
+    buf = np.stack([wind, np.roll(wind, 4000) * 0.9], axis=1)
+    r = rng(102)
+    ev = []
+    for i in range(30):
+        f = r.uniform(4500, 7000)
+        ev.append((r.uniform(0, LOOP), sine(f, 0.04) * env_perc(int(0.04 * SR), 0.0005, 0.01) * 0.05, r.uniform(-1, 1)))
+    place_events(buf, ev)
+    return buf
+
+
+def station():
+    """Sallow: three deep pumps thumping in a slow, slightly uneven rhythm; a fire; murmurs."""
+    n = int(LOOP * SR)
+    buf = np.stack([bed(111, 120, 1500, 0.14), bed(112, 120, 1500, 0.14)], axis=1)
+    r = rng(113)
+    ev = []
+    beat = 0.0
+    k = 0
+    while beat < LOOP:
+        th = lowpass(noise(0.35, 500 + k, "pink"), 140) * env_perc(int(0.35 * SR), 0.003, 0.12) * 0.8
+        hiss = bandpass(noise(0.5, 600 + k), 800, 3000) * env_adsr(int(0.5 * SR), 0.05, 0.1, 0.3, 0.2) * 0.04
+        ev.append((beat, th, [-0.4, 0.0, 0.4][k % 3]))
+        ev.append((beat + 0.25, hiss, [-0.4, 0.0, 0.4][k % 3]))
+        beat += [1.6, 1.7, 1.75][k % 3]   # the middle pump has a cough in its bearing
+        k += 1
+    for i in range(70):  # the fire
+        c = highpass(noise(0.004, 700 + i), 2000) * env_perc(int(0.004 * SR), 0.0002, 0.002) * r.uniform(0.05, 0.2)
+        ev.append((r.uniform(0, LOOP), c, r.uniform(0.2, 0.6)))
+    place_events(buf, ev)
+    return buf
+
+
+def heart():
+    """The Heart: an enormous slow breath through every Trunk, with the machine's groan in it."""
+    n = int(LOOP * SR)
+    t = np.arange(n) / SR
+    breath = (0.5 - 0.5 * np.cos(2 * np.pi * t / 8.0))         # 8-second breath, 4 per loop
+    air = loopify(lowpass(noise(LOOP + 1, 121, "pink"), 900)[int(0.4 * SR):], n)
+    air = air * (0.15 + 0.6 * breath) * 0.6
+    drone = (sine(36.7, LOOP) * 0.18 + sine(55.0, LOOP) * 0.09)[:n] * (0.6 + 0.4 * breath)
+    buf = np.stack([air + drone, np.roll(air, 2500) + drone], axis=1)
+    r = rng(122)
+    ev = []
+    for i in range(4):
+        d = 2.5
+        g = resonator(lowpass(noise(d, 800 + i), 260), 62 + i * 5, 25) * env_adsr(int(d * SR), 0.6, 0.4, 0.6, 1.0) * 0.6
+        ev.append((i * 8.0 + 3.0, g, r.uniform(-0.4, 0.4)))
+    place_events(buf, ev)
+    return buf
+
+
 def main():
-    for name, fn in [("grove", grove), ("blackstone", blackstone), ("ember", ember), ("sump", sump)]:
+    for name, fn in [("grove", grove), ("blackstone", blackstone), ("ember", ember), ("sump", sump),
+                     ("drowned", drowned), ("roots", roots), ("ashworks", ashworks), ("salt", salt),
+                     ("station", station), ("heart", heart)]:
         x = fn()
         write_ogg(os.path.join(OUT, name + ".ogg"), normalize(x, 0.5), quality=2)
         print("ambience:", name)

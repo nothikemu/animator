@@ -386,6 +386,46 @@ def trunk_valve(c, g, f):
             c.set(x, 12, pal("verdigris"))
 
 
+def lift_winch(c, g, f):
+    """The Primary Lift's winch: a cable drum in a brass frame with a motor and brake."""
+    w, h = 32, 48
+    dead = f == 4
+    idle = f == 0
+    plate(c, 1, 40, 30, 8, IRON)
+    for x in (3, 26):
+        c.rect(x, 6, 3, 34, BRASS[1])
+        c.vline(x, 6, 39, BRASS[3])
+    c.rect(3, 4, 26, 3, BRASS[2])
+    c.hline(3, 28, 4, BRASS[4])
+    # the drum
+    dx, dy = 16, 22
+    for y in range(dy - 8, dy + 9):
+        for x in range(7, 26):
+            t = (y - (dy - 8)) / 16
+            col = IRON[3] if t < 0.25 else (IRON[2] if t < 0.7 else IRON[1])
+            c.set(x, y, col)
+    if not dead:
+        # cable wound on the drum; it creeps as the drum turns
+        rope = ramp(pal("sand"), 3, 0.3)
+        off = 0 if idle else f % 3
+        for y in range(dy - 7, dy + 8, 2):
+            c.hline(8, 24, y + (off % 2), rope[1] if (y // 2) % 2 else rope[2])
+        # the cable leaves the drum, down the shaft
+        c.vline(16, dy + 9, 47, rope[0])
+        c.vline(17, dy + 9, 47, rope[1])
+    else:
+        broken_overlay(c, w, h, 77)
+        c.line(9, dy - 6, 23, dy + 6, shade(pal("charcoal"), 0.1))
+    # motor and brake
+    plate(c, 20, 30, 10, 9, BRASS, rivet=False)
+    c.disc(25, 34, 2.5, COPPER[2])
+    c.rect(2, 30, 4, 8, IRON[2])
+    c.set(3, 31, pal("danger") if not idle else pal("ash"))
+    if not dead and not idle:
+        g.set(25, 34, pal("amber")); c.set(25, 34, pal("amber_light"))
+        g.set(3, 31, pal("danger"))
+
+
 def build():
     strip("old_well", 20, 28, well)
     strip("wick_mains", 16, 16, mains, emit=False)
@@ -407,6 +447,7 @@ def build():
     strip("crew_locker", 16, 24, crew_locker, emit=False)
     strip("gauge", 16, 16, gauge_relic, emit=False)
     strip("trunk_valve", 32, 16, trunk_valve, emit=False)
+    strip("lift_winch", 32, 48, lift_winch)
     with open(os.path.join(OUT, "machines.json"), "w") as f:
         json.dump(manifest, f, indent=1)
     sheet = Canvas(700, 420, (36, 34, 44, 255))

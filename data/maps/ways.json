@@ -1,0 +1,287 @@
+{
+ "id": "ways",
+ "biome": "knapper",
+ "legend": {
+  "s": "stone",
+  ".": "moss_floor",
+  ",": "gravel",
+  ":": "cobble",
+  "r": "rock_floor",
+  "=": "stairs",
+  "#": "plank",
+  "m": "moss_deep",
+  "~": "water",
+  "d": "mud",
+  "b": "basalt",
+  "k": "blackstone",
+  "a": "ash",
+  "n": "sand"
+ },
+ "height": [
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWW00WWWW0W000WW0WW00WWWW0W000WW0W",
+  "WW0000WW00001111111111WW000000000W",
+  "W00000000000111111111100000000000W",
+  "W00000000000111111111100000000000W",
+  "W00000000000111111111100000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "000000000000000000000000000000000W",
+  "000000000000000000000000000000000W",
+  "000000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W",
+  "W00000000000000000000000000000000W"
+ ],
+ "mat": [
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkksssssssssskkkkkkkkkkkk",
+  "kkkkkkkkkkkksssssssssskkkkkkkkkkkk",
+  "kkkkkkkkkkkksssssssssskkkkkkkkkkkk",
+  "kkkkkkkkkkkksssssssssskkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "ksssssssssssssssssssssssssssssssss",
+  "ksssssssssssssssssssssssssssssssss",
+  "ksssssssssssssssssssssssssssssssss",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+ ],
+ "props": [
+  {
+   "type": "stone_seat",
+   "x": 15,
+   "z": 3,
+   "size": [
+    3,
+    2
+   ],
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 6,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 10,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 14,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 19,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 23,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 27,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 6,
+   "z": 17,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 10,
+   "z": 17,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 14,
+   "z": 17,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 19,
+   "z": 17,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 23,
+   "z": 17,
+   "block": true
+  },
+  {
+   "type": "pillar",
+   "x": 27,
+   "z": 17,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 4,
+   "z": 4,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 29,
+   "z": 4,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 4,
+   "z": 21,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 29,
+   "z": 21,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 16,
+   "z": 23,
+   "block": true
+  },
+  {
+   "type": "knock_wall",
+   "x": 24,
+   "z": 2,
+   "size": [
+    5,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "rubble_small",
+   "x": 8,
+   "z": 13,
+   "deco": true
+  },
+  {
+   "type": "rubble_small",
+   "x": 25,
+   "z": 19,
+   "deco": true
+  },
+  {
+   "type": "rubble_small",
+   "x": 12,
+   "z": 22,
+   "deco": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 3,
+   "z": 25,
+   "scale": 1.2,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 15,
+   "z": 25,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 28,
+   "z": 25,
+   "scale": 1.4,
+   "block": true
+  }
+ ],
+ "exits": [
+  {
+   "x": 0,
+   "z": 12,
+   "to": "up",
+   "arrive": [
+    2,
+    12
+   ]
+  }
+ ],
+ "points": {
+  "arrival": [
+   2,
+   12
+  ],
+  "hub": [
+   16,
+   12
+  ],
+  "old_stone": [
+   16,
+   7
+  ],
+  "mural": [
+   26,
+   4
+  ],
+  "commons": [
+   16,
+   12
+  ]
+ },
+ "lights": [
+  {
+   "x": 16.5,
+   "z": 5.0,
+   "y": 2.0,
+   "color": "glow",
+   "energy": 1.0,
+   "range": 8.0,
+   "kind": "glow"
+  }
+ ],
+ "meta": {
+  "name": "The Knapper Ways",
+  "ceiling": 12.0
+ }
+}

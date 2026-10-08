@@ -1,0 +1,35 @@
+{
+	"_comment": "Grist, Chapters Two to Four: the Knappers have heard the knocking too; the Old Stone; the ways.",
+
+	"lines": [
+		{"id": "g_guide", "tier": "story", "once": true, "priority": 30, "when": ["flag:tg_knows_need", "!flag:grist_guide"], "convo": "guide"},
+		{"id": "g_after_stone", "tier": "story", "once": true, "priority": 25, "when": ["flag:ways_open"], "convo": "after_stone"},
+		{"id": "g_refused", "tier": "reactive", "once": true, "when": ["flag:old_stone_refused", "!flag:ways_open"], "text": "...The Old Stone says: loud. ...Grist says sorry. ...Make the rock quiet. ...Then ask again.", "emote": "sad"},
+		{"id": "g_pell", "tier": "reactive", "once": true, "when": ["flag:met_pell"], "text": "...The small walker. ...Who knocks. ...Knappers heard every knock. ...Every one. ...Four years. ...Grist is glad. ...Grist does not know why it is crying. ...Knappers do not cry. ...Grist is leaking.", "emote": "happy"},
+		{"id": "g_amb_ways", "tier": "ambient", "when": ["flag:grist_guide", "!flag:ways_open"], "text": "...The Ways. ...Past the hot rock. ...Walk slow. ...The Old Stone hears the floor.", "open": "shop:grist"},
+		{"id": "g_bark_ways", "tier": "bark", "when": ["flag:ways_open"], "text": "...ways open..."}
+	],
+
+	"convos": {
+		"guide": [
+			{"say": "...Walker. ...Listen.", "do": ["flag:grist_guide"]},
+			{"say": "...Knappers hear the knocking. ...Below. ...Many years. ...We thought it was the rock, talking to itself."},
+			{"say": "...The Old Stone says: it is walkers. ...Walkers below, knocking. ...Walkers above, knocking back. ...Nobody asked the Knappers."},
+			{"say": "...The Old Stone wants to hear a walker. ...You. ...The Ways are past the hot rock. ...Grist will show the passage."},
+			{"choice": [
+				{"text": "I'll come. Slowly.", "do": ["affection:grist+4", "trust:grist+3"], "goto": "slow"},
+				{"text": "Why does it matter what the Knappers think?", "do": ["respect:grist-2", "fear:grist+2"], "goto": "why"}
+			]},
+			{"label": "slow"},
+			{"say": "...Slow walker. ...Good walker.", "emote": "happy", "goto": "end"},
+			{"label": "why"},
+			{"say": "...Knappers made the ways. ...All of them. ...Walkers asked, long ago. ...Knappers said yes. ...Walkers forgot. ...Ask the Old Stone why it matters."}
+		],
+
+		"after_stone": [
+			{"say": "...The Old Stone said yes. ...To a walker. ...First time in two hundred years.", "emote": "happy"},
+			{"say": "...Knappers are opening the low ways. ...To the Heart. ...It will take one night. ...We are slow. ...We are not that slow."},
+			{"say": "...Grist is... proud. ...Is that the word? ...It feels like a warm stone inside."}
+		]
+	}
+}

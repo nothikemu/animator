@@ -14,6 +14,10 @@ const HOUSES := {
 	"pump_hall": {"wall": "wall_brick_dark", "roof": "roof_metal_0", "h": 5.6, "rise": 2.0, "lit": false, "chimney": true},
 	"annex": {"wall": "wall_plank", "roof": "roof_metal_0", "h": 2.6, "rise": 1.0, "lit": true, "chimney": true},
 	"hesper": {"wall": "wall_plaster", "roof": "roof_moss_0", "h": 2.4, "rise": 1.4, "lit": true, "chimney": false},
+	"sallow_hall": {"wall": "wall_brick_dark", "upper": "wall_plank", "roof": "roof_metal_0", "h": 3.4, "rise": 1.4, "lit": true, "chimney": true},
+	"shack_pell": {"wall": "wall_plank", "roof": "roof_metal_0", "h": 2.3, "rise": 0.9, "lit": true, "chimney": false},
+	"shack_wren": {"wall": "wall_plaster", "roof": "roof_slate_dark_0", "h": 2.4, "rise": 1.2, "lit": true, "chimney": true},
+	"shack_tolley": {"wall": "wall_plank", "roof": "roof_moss_0", "h": 2.2, "rise": 1.1, "lit": true, "chimney": false},
 }
 
 const SELF_LIT_LAYER := 2   ## render layer bit for emissive plants/lamps (not lit by their own light)
@@ -27,6 +31,7 @@ const BILLBOARDS := {
 	"pale_fungus_small": ["mushroom_", 2], "glowroot_fringe": ["glowroot_small_", 2],
 	"crate_broken": ["crate_broken", 0], "ash_pile": ["rubble_small", 0], "cinder_rock": ["shore_rock_", 2],
 	"reed": ["moss_tuft_", 3], "drip_rock": ["stalagmite_", 3], "rail": ["gear_pile", 0],
+	"glow_crystal": ["glowglass_node", 0], "salt_crystal": ["salt_node", 0], "cookfire": ["cookfire", 0],
 }
 
 var area: AreaMap
@@ -159,6 +164,49 @@ func _prop(p: Dictionary) -> void:
 			pass
 		"heat_vent":
 			_light(Vector3(x + 0.5, y + 0.6, z + 0.5), "ember", 1.6, 4.0, false)
+		"deep_pump":
+			# One of Sallow's deep pumps: a brass cylinder, a beam, pipes into the ceiling.
+			var pw := float(sz[0])
+			kit.box(Vector3(x + 0.1, y, z + 0.1), Vector3(pw - 0.2, 0.5, float(sz[1]) - 0.2), {"side": "wall_stone_0", "top": "rock_0"})
+			kit.prism(Vector3(x + pw * 0.4, y + 0.5, z + 1.4), 0.8, 2.2, 10, "metal_brass_0", "metal_brass_0")
+			kit.box(Vector3(x + 0.3, y + 2.9, z + 1.2), Vector3(pw - 0.6, 0.25, 0.4), {"side": "beam_0"})
+			kit.prism(Vector3(x + pw - 0.8, y + 0.5, z + 1.0), 0.22, 7.0, 6, "metal_brass_0")
+			kit.prism(Vector3(x + 0.6, y + 0.5, z + 0.6), 0.18, 7.0, 6, "metal_brass_0")
+			var pl := _light(Vector3(x + pw * 0.4, y + 1.6, z + float(sz[1]) + 0.2), "glow", 0.6, 3.5, false)
+			pl.set_meta("kind", "pump")
+		"knock_wall":
+			kit.box(Vector3(x, y, z), Vector3(float(sz[0]), 2.6, 0.5), {"side": "wall_stone_0", "top": "rock_0"})
+			_billboard("chalk_wall", Vector3(x + float(sz[0]) * 0.5, y + 0.4, z + 0.62), 1.0, false, false)
+		"cookfire_pit":
+			_billboard("cookfire", Vector3(x + 0.5, y, z + 0.5), 1.0, false)
+			var cl := _light(Vector3(x + 0.5, y + 0.8, z + 0.6), "amber", 2.2, 7.0, true)
+			cl.set_meta("kind", "fire")
+		"bellows":
+			_bellows(p, y)
+		"console":
+			kit.box(Vector3(x + 0.1, y, z + 0.2), Vector3(float(sz[0]) - 0.2, 1.0, 0.6), {"side": "metal_brass_0", "top": "rock_0"})
+			kit.box(Vector3(x + 0.2, y + 1.0, z + 0.2), Vector3(float(sz[0]) - 0.4, 0.4, 0.15), {"side": "metal_brass_0"})
+			var lc := _light(Vector3(x + float(sz[0]) * 0.5, y + 1.3, z + 0.9), "glow", 0.8, 3.0, false)
+			lc.set_meta("kind", "console")
+		"pillar":
+			var ph := 3.2 + float(absi(x * 5 + z * 3) % 3) * 0.6
+			kit.box(Vector3(x + 0.15, y, z + 0.15), Vector3(0.7, ph, 0.7), {"side": "wall_stone_0", "top": "rock_0"})
+			kit.box(Vector3(x + 0.05, y, z + 0.05), Vector3(0.9, 0.3, 0.9), {"side": "wall_stone_1", "top": "rock_0"})
+			kit.box(Vector3(x + 0.05, y + ph - 0.3, z + 0.05), Vector3(0.9, 0.3, 0.9), {"side": "wall_stone_1", "top": "rock_0"})
+		"stone_seat":
+			kit.box(Vector3(x, y, z), Vector3(float(sz[0]), 0.7, float(sz[1])), {"side": "wall_stone_1", "top": "rock_0"})
+			kit.box(Vector3(x, y + 0.7, z), Vector3(float(sz[0]), 1.6, 0.4), {"side": "wall_stone_0", "top": "rock_0"})
+		"lift_cage":
+			# The Primary Lift's cage at the bottom of its shaft: four brass posts and a roof.
+			for c2 in [Vector2(0.05, 0.05), Vector2(1.75, 0.05), Vector2(0.05, 1.75), Vector2(1.75, 1.75)]:
+				kit.box(Vector3(x + c2.x, y, z + c2.y), Vector3(0.2, 2.6, 0.2), {"side": "metal_brass_0"})
+			kit.box(Vector3(x, y + 2.6, z), Vector3(2.0, 0.15, 2.0), {"side": "metal_brass_0", "top": "metal_brass_0"})
+			kit.prism(Vector3(x + 1.0, y + 2.75, z + 1.0), 0.06, 6.0, 4, "metal_brass_0")
+			kit.box(Vector3(x, y, z), Vector3(2.0, 0.08, 2.0), {"side": "plank_0", "top": "plank_0"})
+			_light(Vector3(x + 1.0, y + 2.3, z + 1.0), "amber", 0.9, 4.0, false)
+		"heart_door":
+			kit.box(Vector3(x, y, z), Vector3(float(sz[0]), 3.4, float(sz[1])), {"side": "metal_brass_0", "top": "rock_0"})
+			kit.prism(Vector3(x + float(sz[0]) * 0.5, y + 1.6, z - 0.05), 0.9, 0.12, 12, "metal_brass_0", "metal_brass_0")
 		_:
 			if BILLBOARDS.has(t):
 				var spec: Array = BILLBOARDS[t]
@@ -231,6 +279,37 @@ func _light(pos: Vector3, color: String, energy: float, range_m: float, shadows:
 	root.add_child(l)
 	lights.append(l)
 	return l
+
+
+# --- The Heart ------------------------------------------------------------------------------
+
+## The Bellows: a machine the size of a house. A stone plinth, two great leather bellows
+## pleated in brass, a crown of pipes into the dark, and gauges in a row along the front.
+func _bellows(p: Dictionary, y: float) -> void:
+	var x := float(p.x)
+	var z := float(p.z)
+	var sz: Array = p.size
+	var w := float(sz[0])
+	var d := float(sz[1])
+	kit.box(Vector3(x, y, z), Vector3(w, 1.0, d), {"side": "wall_stone_0", "top": "rock_0"})
+	for side in [0, 1]:
+		var bx := x + 1.0 + float(side) * (w * 0.5)
+		var bw := w * 0.5 - 2.0
+		for k in 5:
+			var inset := 0.18 if k % 2 == 1 else 0.0
+			kit.box(Vector3(bx + inset, y + 1.0 + float(k) * 0.9, z + 1.0 + inset), Vector3(bw - inset * 2.0, 0.9, d - 2.0 - inset * 2.0),
+				{"side": "rug_0" if k % 2 == 0 else "beam_0", "top": "metal_brass_0"})
+		kit.box(Vector3(bx - 0.1, y + 5.5, z + 0.9), Vector3(bw + 0.2, 0.3, d - 1.8), {"side": "metal_brass_0", "top": "metal_brass_0"})
+	for k in 7:
+		var px := x + 1.5 + float(k) * (w - 3.0) / 6.0
+		kit.prism(Vector3(px, y + 5.8, z + 1.8 + float(k % 2) * 0.8), 0.25 + float(k % 3) * 0.08, 9.0, 8, "metal_brass_0")
+	kit.box(Vector3(x + w * 0.5 - 0.6, y + 1.0, z + 0.4), Vector3(1.2, 6.0, d - 0.8), {"side": "wall_brick_dark_0", "top": "metal_brass_0"})
+	for k in 5:
+		kit.prism(Vector3(x + 2.0 + float(k) * (w - 4.0) / 4.0, y + 0.55, z + d + 0.05), 0.32, 0.12, 10, "metal_brass_0", "metal_brass_0")
+	var heart := _light(Vector3(x + w * 0.5, y + 3.0, z + d + 0.8), "glow", 1.6, 12.0, true)
+	heart.set_meta("kind", "bellows")
+	_light(Vector3(x + 1.0, y + 6.5, z + d), "amber", 1.0, 8.0, false)
+	_light(Vector3(x + w - 1.0, y + 6.5, z + d), "amber", 1.0, 8.0, false)
 
 
 # --- Houses ---------------------------------------------------------------------------------

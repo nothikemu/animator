@@ -1,0 +1,77 @@
+{
+	"_comment": "Odile, Chapters Two to Four: the damp season, Tam, the down-river medicine, Sallow's salt, and page forty.",
+
+	"lines": [
+		{"id": "o_tam", "tier": "story", "once": true, "priority": 30, "when": ["flag:damp_season", "!flag:o_tam_talk"], "convo": "tam"},
+		{"id": "o_medicine", "tier": "story", "once": true, "priority": 35, "when": ["flag:medicine_here", "!flag:o_gave_medicine"], "convo": "medicine"},
+		{"id": "o_medicine2", "tier": "story", "once": true, "priority": 36, "when": ["flag:o_medicine_promised", "flag:met_wren", "!flag:o_gave_medicine", "!flag:wren_saved"], "convo": "medicine2"},
+		{"id": "o_sallow_trade", "tier": "story", "once": true, "priority": 20, "when": ["item:salt>=1", "flag:met_pell"], "convo": "salt_trade"},
+		{"id": "o_page40", "tier": "story", "once": true, "priority": 25, "when": ["flag:consent", "trust:odile>=12", "flag:knows_ledger"], "convo": "page40"},
+
+		{"id": "o_tg", "tier": "reactive", "once": true, "when": ["flag:tg_knows_many"], "text": "Twelve. I've opened a page for them. It's blank. I like a blank page. It means nobody owes anybody anything yet.", "open": "shop:exchange"},
+		{"id": "o_lift", "tier": "reactive", "once": true, "when": ["flag:lift_built"], "text": "A working lift. Do you know what that is? It's a trade route that goes down. Nobody's ever had one of those. I've started a new ledger. It's very thin and very exciting.", "open": "shop:exchange"},
+		{"id": "o_damp", "tier": "reactive", "when": ["flag:damp_season", "!flag:o_gave_medicine"], "text": "Four coughs on the Commons this morning. I counted. I always count. Counting is what you do instead of screaming.", "open": "shop:exchange"},
+		{"id": "o_wren_saved", "tier": "reactive", "once": true, "when": ["flag:wren_saved", "flag:o_gave_medicine"], "text": "The crate went where it was needed. Don't tell me about it. I'll only put it in a column and then I'll have to look at the column.", "open": "shop:exchange"},
+		{"id": "o_sealed", "tier": "reactive", "when": ["flag:ending_sealed"], "text": "Valve sealed, trade sealed, ledger sealed. Neat. I hate neat. Neat is what a town looks like when it's stopped.", "open": "shop:exchange"},
+
+		{"id": "o_amb_salt", "tier": "ambient", "when": ["flag:met_pell"], "text": "Sallow has salt and no beets. We have beets and no salt. This is the closest thing to romance the Exchange has ever seen.", "open": "shop:exchange"},
+		{"id": "o_amb_column", "tier": "ambient", "when": ["flag:damp_season"], "text": "New column in the ledger: 'Coughs'. I'd like it to be the shortest column in the book. I'd like a lot of things.", "open": "shop:exchange"},
+		{"id": "o_bark_cough", "tier": "bark", "when": ["flag:damp_season"], "text": "Cover your mouth. Thank you."},
+		{"id": "o_bark_lift", "tier": "bark", "when": ["flag:lift_built"], "text": "Freight down, freight up. Lovely."}
+	],
+
+	"convos": {
+		"tam": [
+			{"say": "You'll have heard the coughing. The lake breathes out in the damp season and the little ones breathe it in.", "do": ["flag:o_tam_talk"]},
+			{"say": "I had a brother. Tam. Two years younger, all elbows. The damp came the winter I was fourteen and the medicine came from down-river eleven days after we buried him."},
+			{"say": "Eleven days. I counted them. That was when I started counting."},
+			{"say": "So, yes. I'm hard about the trade. I'm hard about the burner and the beets and the price of glowglass. Because the arithmetic of a damp winter is a small box in the ground.", "emote": "sad"},
+			{"choice": [
+				{"text": "I'm sorry about Tam.", "do": ["affection:odile+3", "shared:odile+4"], "goto": "sorry"},
+				{"text": "Then let's get the trade moving.", "do": ["respect:odile+3", "trust:odile+2"], "goto": "trade"}
+			]},
+			{"label": "sorry"},
+			{"say": "So am I. Every year. It doesn't help, and I'd be offended if you stopped. Now buy something.", "goto": "end"},
+			{"label": "trade"},
+			{"say": "Good. Twenty glowbeets through the Exchange and the first crate goes down-river. Medicine comes back up the chute before the worst of it. If we're quick.", "do": ["mem:odile:spoke_of_tam:6:0.4:lasting"]}
+		],
+
+		"medicine": [
+			{"say": "It came. Up the chute this morning, in a crate stamped with a settlement I've never seen. Bark powder. Honey. A dosing card in a careful hand.", "do": ["flag:o_gave_medicine_seen"]},
+			{"say": "Enough for the children on the Commons. And one crate over, because whoever packed it can't count, God love them."},
+			{"if": ["flag:met_wren", "!flag:wren_saved"], "goto": "wren"},
+			{"say": "If you find anyone coughing down that lift of yours, come and tell me. I'll find the arithmetic.", "do": ["flag:o_medicine_promised"], "goto": "end"},
+			{"label": "wren"},
+			{"say": "You've got a face. Somebody's coughing down there. Tell me who."},
+			{"choice": [
+				{"text": "Wren Askew. Barnaby's partner. She's dying of it.", "do": ["give:river_medicine", "flag:o_gave_medicine", "trust:odile+4", "shared:odile+3"], "goto": "give"},
+				{"text": "Keep it for the children.", "do": ["respect:odile+3", "flag:o_medicine_promised"], "goto": "keep"}
+			]},
+			{"label": "give"},
+			{"say": "Barnaby's Wren. Of course it is. Take it. Take it before I do the sums.", "emote": "sad"},
+			{"say": "One crate. Twice a day with honey. And if she's anything like him, sit on her until she takes it.", "goto": "end"},
+			{"label": "keep"},
+			{"say": "...You're an idiot. A principled one. I'll keep it on the shelf. Shelves are patient. People less so."}
+		],
+
+		"medicine2": [
+			{"say": "You came back. With a face. Somebody down there is coughing, and you've decided it's my business.", "do": ["give:river_medicine", "flag:o_gave_medicine", "trust:odile+3"]},
+			{"say": "Of course it's my business. Everything is. Take the crate. Twice a day, with honey."},
+			{"say": "Don't thank me. I've put it under 'Losses'. It's the only column I'm proud of."}
+		],
+
+		"salt_trade": [
+			{"say": "Salt. You brought me salt from the bottom of the world.", "do": ["flag:o_salt_talk", "respect:odile+3"], "emote": "surprised"},
+			{"say": "Salt keeps food. Food keeps people. People keep paying their debts. Do you see? It's arithmetic, all the way down."},
+			{"say": "I'll buy every grain you bring. Tell this Pell that Wick wants salt, and that Wick has beets, and that I am, generally speaking, fair.", "open": "shop:exchange"}
+		],
+
+		"page40": [
+			{"say": "You know about page forty. Everyone who matters knows about page forty. It's still the best-kept secret in Wick.", "do": ["flag:o_page40_done"]},
+			{"say": "If the Heart breathes and the Trunks open, this town gets bigger. Bigger towns need ledgers that aren't held together by one woman's spite."},
+			{"say": "So."},
+			{"say": "She tears page forty out of the ledger, carefully, along the stitching, folds it twice and puts it in the stove.", "who": "narrator"},
+			{"say": "Nobody owes anybody anything. Don't tell them. They'll only start behaving.", "emote": "happy", "do": ["affection:odile+8", "shared:odile+6", "mem:odile:page40:9:0.9:lasting"]}
+		]
+	}
+}

@@ -29,8 +29,11 @@ static func run(game: Node, name: String) -> void:
 			Clock.start(1, 21 * 60)
 			_place(game, Vector2(14.5, 22.5))
 		"reach":
+			# reach:<area id>[:x:z] — loads any area below Wick, optionally standing somewhere.
 			var id: String = parts[1] if parts.size() > 1 else String(GameState.reach_graph.nodes[0].id)
 			game.load_area(id)
+			if parts.size() > 3:
+				_place(game, Vector2(float(parts[2]), float(parts[3])))
 		"pos":
 			_place(game, Vector2(float(parts[1]), float(parts[2])))
 		"cut_demo":

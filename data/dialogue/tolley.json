@@ -1,0 +1,56 @@
+{
+	"_comment": "Tolley Brand. The Lease's old tenant. Apologises for things nobody mentioned. Very good with seeds. Very bad with endings.",
+
+	"lines": [
+		{"id": "t_intro", "tier": "story", "once": true, "priority": 40, "when": ["!flag:tolley_met"], "convo": "intro"},
+		{"id": "t_home", "tier": "story", "once": true, "priority": 30, "when": ["flag:tolley_met", "flag:lift_built", "affection:tolley>=6", "!flag:tolley_returned", "place:sallow"], "convo": "home"},
+		{"id": "t_back", "tier": "story", "once": true, "priority": 30, "when": ["flag:tolley_returned", "place:wick"], "convo": "back"},
+
+		{"id": "t_seeds", "tier": "reactive", "once": true, "when": ["flag:tolley_met", "deed:harvested>=10"], "text": "You've had— you've had HARVESTS? From my plots? Plural? Oh. Oh, I'm so sorry. I mean I'm so proud. I always get those two mixed up.", "emote": "happy"},
+		{"id": "t_fungus", "tier": "ambient", "when": ["place:sallow"], "text": "Pale fungus. Grows in the dark. Doesn't like being looked at. I look at it anyway. Sorry. I say sorry to it as well, which helps nobody."},
+		{"id": "t_wick", "tier": "ambient", "when": ["place:wick"], "text": "The Lease looks better than when I left it. I left it in a bit of a state. I left everything in a bit of a state. Sorry."},
+		{"id": "t_amb_sister", "tier": "ambient", "when": ["affection:tolley>=8"], "text": "My sister used to say I'd apologise to a rock for standing on it. I do, now. Knappers like it. Grist says it's good manners. Grist is the only one who's ever said so."},
+		{"id": "t_bark1", "tier": "bark", "text": "Sorry. Sorry."},
+		{"id": "t_bark2", "tier": "bark", "when": ["place:sallow"], "text": "Come on, little fungus."}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "Oh no. You're from Wick. You've got the look. And a Wick lamp. And that's— is that a Wick tiller on your belt? That's MY tiller. Isn't it.", "do": ["flag:tolley_met", "met:tolley"], "emote": "surprised"},
+			{"say": "Tolley. Tolley Brand. I had the Lease. The plots at the west end. I left. Very suddenly. Without telling anyone. Sorry."},
+			{"say": "Is the seed tin still there? It's a good tin. I labelled everything. Did you find the labels? I'm sorry about the labels. I write very small when I'm sad."},
+			{"choice": [
+				{"text": "I found the tin. Glowbeets grew.", "do": ["affection:tolley+5"], "goto": "grew"},
+				{"text": "Barnaby said you went down-line and didn't need it.", "do": ["trust:tolley+2"], "goto": "barnaby"},
+				{"text": "Why did you leave?", "do": ["shared:tolley+4"], "goto": "why"}
+			]},
+			{"label": "grew"},
+			{"say": "They GREW? In the plots? Oh. Oh, good. Oh, I'm going to have to sit down. I'm sitting. Sorry.", "emote": "happy", "goto": "end"},
+			{"label": "barnaby"},
+			{"say": "He said that? 'Doesn't need it'? That's... that's the kindest thing Barnaby has ever said about me. Usually he says I owe him a spanner. I do owe him a spanner.", "goto": "end"},
+			{"label": "why"},
+			{"say": "My sister. The damp winter. After, the Lease was too quiet, and the plots were too full of things she'd planted.", "emote": "sad"},
+			{"say": "I heard there were stations below that the Breath still reached. I thought I'd find one and not have to explain anything to anybody. I found Sallow. They didn't ask me to explain. I've been explaining ever since. To the fungus."}
+		],
+
+		"home": [
+			{"say": "You've got the lift running. Up and down. Every day if you wanted.", "do": []},
+			{"say": "I've been thinking. Only a bit. Only all the time."},
+			{"choice": [
+				{"text": "Come home, Tolley. The Lease has a cot.", "do": ["flag:tolley_returned", "affection:tolley+8", "mem:tolley:invited_home:8:0.9:lasting", "deed:community_help+1"], "goto": "yes"},
+				{"text": "Sallow needs you more.", "do": ["respect:tolley+3", "affection:pell+2"], "goto": "stay"}
+			]},
+			{"label": "yes"},
+			{"say": "...Home. Yes. I'll come up and sleep on my own cot in my own Lease and apologise to my own plots. You can keep the bed. You've earned the bed.", "emote": "happy"},
+			{"say": "I'll tell Pell. Pell will cry. Pell cries at everything. It's lovely. I'll be up tomorrow.", "goto": "end"},
+			{"label": "stay"},
+			{"say": "...You're right. The fungus would never forgive me. And Pell can't grow anything that isn't a pump. I'll stay. For now. Sorry. I mean thank you."}
+		],
+
+		"back": [
+			{"say": "Look at it. The Lease. The plots. The fence I never fixed. You fixed the fence. Sorry. Thank you. Both.", "emote": "happy"},
+			{"say": "I went to the Lantern House and Mags hit me with a ladle and then hugged me and then hit me again. That's Wick for you. I'd forgotten how much I liked being hit with a ladle."},
+			{"say": "I'll take the cot. And I'll take the morning watering, if you'll have me. I'm good with the morning. It's endings I'm bad at."}
+		]
+	}
+}

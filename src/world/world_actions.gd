@@ -17,8 +17,12 @@ func _init(g: Node) -> void:
 func build_for(area: AreaMap, parent: Node3D) -> void:
 	if area.id == "wick":
 		_wick(area, parent)
-	else:
-		_reach(area, parent)
+		return
+	_reach(area, parent)
+	match area.id:
+		"sallow": _sallow(area, parent)
+		"heart": _heart(area, parent)
+		"ways": _ways(area, parent)
 
 
 func _add(parent: Node3D, cell: Vector2, prompt: Callable, action: Callable, r := 1.3, prio := 0) -> Interactable:
@@ -56,6 +60,16 @@ func _wick(area: AreaMap, parent: Node3D) -> void:
 	_add(parent, Vector2(44.5, 15.5), func() -> String:
 		return "Go down into the Reach" if GameState.has_flag("reach_open") else "The Reach (Barnaby says not yet)",
 		func() -> void: _reach_gate(), 1.5, 3)
+	# The Primary Lift, once it's rebuilt: down to the Lower Stations.
+	_add(parent, Vector2(41.5, 11.6), func() -> String:
+		return "Ride the Primary Lift down" if GameState.has_flag("lift_built") else "",
+		func() -> void: game.travel("d1_0"), 1.3, 6)
+	# The pipe-heads in the lane: after the knock, you can knock back.
+	_add(parent, Vector2(30.5, 19.5), func() -> String:
+		if not GameState.has_flag("knock_heard"):
+			return ""
+		return "Knock on the pipe-heads" if Clock.phase() in ["dimming", "hush", "night"] else "Listen at the pipe-heads",
+		func() -> void: _telegraph(), 1.2, 4)
 	_add(parent, Vector2(10.5, 26.0), func() -> String: return "Study the moss frames",
 		func() -> void: _study_moss(), 1.4)
 	_add(parent, Vector2(4.5, 4.5), func() -> String:
@@ -72,13 +86,58 @@ func _reach(area: AreaMap, parent: Node3D) -> void:
 		var c := Vector2(float(ex.arrive[0]) + 0.5, float(ex.arrive[1]) + 0.5)
 		_add(parent, c, func() -> String:
 			if not ReachGen.passable({"kind": kind}, GameState.flags):
-				return "Collapsed rock" if kind == "collapsible" else "Sealed with rubble"
+				match kind:
+					"collapsible": return "Collapsed rock"
+					"heartway": return "The Heart door (sealed with Knapper rock)"
+					"unmapped": return "A stair into the dark (not yet)"
+					"knapper": return "A carved passage (the Knappers' way)"
+				return "Sealed with rubble"
+			if kind == "lift":
+				return "Ride the lift up to Wick"
 			if to == "wick":
 				return "Climb back to Wick"
 			return "Go on to %s" % String(ReachGen.node_by_id(GameState.reach_graph, to).get("name", to)),
 			func() -> void:
 				if ReachGen.passable({"kind": kind}, GameState.flags):
-					game.travel(to), 1.6, 4)
+					game.travel(to)
+				elif kind == "heartway":
+					game.monologue("The door is brass, and the rock packed in front of it is Knapper work: smooth as poured water. Nobody's opening this without asking them."), 1.6, 4)
+
+
+func _sallow(_area: AreaMap, parent: Node3D) -> void:
+	_add(parent, Vector2(30.5, 18.4), func() -> String: return "The archive",
+		func() -> void: _talk_to_object("_archive"), 1.3, 5)
+	_add(parent, Vector2(19.5, 3.8), func() -> String: return "Read the chalk wall",
+		func() -> void:
+			if not GameState.has_flag("read_chalk_wall"):
+				GameState.set_flag("read_chalk_wall", true)
+				GameState.add_deed("studied_life", 1.0)
+			game.monologue("Row after row of chalk tallies: three, two, three. The oldest are big and fast and crooked. The newest are small and very neat. Eleven years of somebody saying 'still here' to nobody."), 1.4, 3)
+	_add(parent, Vector2(19.5, 17.2), func() -> String: return "Warm your hands at the fire",
+		func() -> void:
+			game.player.react("happy")
+			game.breath = 1.0
+			game.monologue("The fire's built from pump-shed offcuts and dried fungus. It smells of mushrooms and machine oil. It's the best fire you've ever stood at."), 1.2, 1)
+
+
+func _heart(_area: AreaMap, parent: Node3D) -> void:
+	GameState.set_flag("heart_seen", true)
+	_add(parent, Vector2(18.5, 17.4), func() -> String: return "The Bellows console",
+		func() -> void: _talk_to_object("_bellows"), 1.4, 8)
+
+
+func _ways(_area: AreaMap, parent: Node3D) -> void:
+	_add(parent, Vector2(26.5, 3.8), func() -> String: return "The carved wall",
+		func() -> void: _talk_to_object("_mural"), 1.4, 3)
+
+
+## Things you read or operate run through the dialogue system like people do.
+func _talk_to_object(id: String) -> void:
+	if Dialogue.active:
+		return
+	game.player.frozen = true
+	if not Dialogue.start_with(id):
+		game.player.frozen = false
 
 
 # --- Actions ----------------------------------------------------------------------------------
@@ -128,6 +187,15 @@ func _reach_gate() -> void:
 		game.travel(String(GameState.reach_graph.nodes[0].id))
 	else:
 		game.monologue("The tunnel drops away into the dark. Not without a light worth the name, and not before you know where you're sleeping.")
+
+
+func _telegraph() -> void:
+	if not Clock.phase() in ["dimming", "hush", "night"]:
+		game.monologue("Daytime. The pipe-heads tick with Wick's own water. Whoever's down there knocks at Hush.")
+		return
+	game.player.perform("knock")
+	if not Dialogue.start_with("telegraph"):
+		game.monologue("You knock. The pipe swallows it. Nothing comes back tonight. Tomorrow, maybe.")
 
 
 func _study_moss() -> void:

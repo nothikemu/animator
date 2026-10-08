@@ -141,7 +141,80 @@
 				"thread:station7>=1",
 				"!flag:station_running"
 			]
+		},
+		{
+			"from": "18:00",
+			"to": "23:00",
+			"at": "commons_table",
+			"do": "sit",
+			"why": "The meeting at the Lantern House.",
+			"when": [
+				"flag:meeting_1_called",
+				"!flag:meeting_1_done"
+			]
+		},
+		{
+			"from": "18:00",
+			"to": "23:00",
+			"at": "commons_table",
+			"do": "sit",
+			"why": "The second meeting: the vote.",
+			"when": [
+				"flag:meeting_2_called",
+				"!flag:meeting_2_done"
+			]
+		},
+		{
+			"from": "06:00",
+			"to": "22:00",
+			"at": "g_barnaby",
+			"do": "talk",
+			"why": "At the Heart, with everyone.",
+			"when": [
+				"flag:heart_gathering",
+				"!flag:ending_chosen"
+			]
+		},
+		{
+			"from": "00:00",
+			"to": "23:59",
+			"at": "wren_porch",
+			"do": "sit",
+			"why": "At Sallow, on the bench by Wren's door.",
+			"when": [
+				"flag:barnaby_at_sallow",
+				"!flag:barnaby_back",
+				"!flag:wren_died"
+			]
+		},
+		{
+			"from": "00:00",
+			"to": "23:59",
+			"at": "pell",
+			"do": "inspect",
+			"why": "At Sallow, in front of the chalk wall.",
+			"when": [
+				"flag:barnaby_at_sallow",
+				"!flag:barnaby_back",
+				"flag:wren_died"
+			]
 		}
 	],
-	"unknown": "The stranger in the brass helmet"
+	"unknown": "The stranger in the brass helmet",
+	"areas": [
+		{
+			"when": [
+				"flag:barnaby_at_sallow",
+				"!flag:barnaby_back"
+			],
+			"area": "sallow"
+		},
+		{
+			"when": [
+				"flag:heart_gathering",
+				"!flag:ending_chosen"
+			],
+			"area": "heart"
+		}
+	]
 }

@@ -304,6 +304,8 @@ func _on_sprite_event(ev: String) -> void:
 				_footstep()
 		"hit":
 			_squash = Vector2(1.08, 0.92)
+			if _action.begins_with("knock"):
+				Audio.play_at("knock_single", global_position, -4.0, 0.08)
 			_fire_hit()
 		"tap":
 			Audio.play_at("ui_tick", global_position, -18.0, 0.2)
@@ -344,7 +346,11 @@ func _aim_lamp(delta: float) -> void:
 	var side := 0.18 if view == "side" else 0.0
 	lamp.position = Vector3(facing.x * side, 1.75 + (-0.12 if _action.begins_with("plant") or _action.begins_with("harvest") else 0.0), 0.05 + facing.y * 0.1)
 	# The headlamp gutters when tapped, and dims a little when the salvager is worn out.
-	var want_e := _lamp_base * (0.85 if style == "tired" else 1.0)
+	# A glowglass lens throws it further and wider.
+	var lens := GameState.has_gear("lens")
+	lamp.spot_range = 13.0 if lens else 9.0
+	lamp.spot_angle = 36.0 if lens else 30.0
+	var want_e := _lamp_base * (1.25 if lens else 1.0) * (0.85 if style == "tired" else 1.0)
 	if _action.begins_with("lamp") and sprite.frame_in_anim() in [4, 5]:
 		want_e = 0.25
 	lamp.light_energy = move_toward(lamp.light_energy, want_e, delta * 20.0)

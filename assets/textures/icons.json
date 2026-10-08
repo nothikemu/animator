@@ -106,61 +106,89 @@
 1,
 3
 ],
-"tool_hands": [
+"crew_cable": [
 2,
 3
 ],
-"tool_tiller": [
+"moss_tincture": [
 3,
 3
 ],
-"tool_can": [
+"river_medicine": [
 4,
 3
 ],
-"tool_hammer": [
+"salt": [
 5,
 3
 ],
-"tool_wrench": [
+"salted_beets": [
 6,
 3
 ],
-"tool_glass": [
+"wren_journal": [
 7,
 3
 ],
-"st_power": [
+"knock_chalk": [
 0,
 4
 ],
-"st_water": [
+"tool_hands": [
 1,
 4
 ],
-"st_gas": [
+"tool_tiller": [
 2,
 4
 ],
-"st_heat": [
+"tool_can": [
 3,
 4
 ],
-"st_warn": [
+"tool_hammer": [
 4,
 4
 ],
-"st_ok": [
+"tool_wrench": [
 5,
 4
 ],
-"glim": [
+"tool_glass": [
 6,
 4
 ],
-"gear": [
+"st_power": [
 7,
 4
+],
+"st_water": [
+0,
+5
+],
+"st_gas": [
+1,
+5
+],
+"st_heat": [
+2,
+5
+],
+"st_warn": [
+3,
+5
+],
+"st_ok": [
+4,
+5
+],
+"glim": [
+5,
+5
+],
+"gear": [
+6,
+5
 ]
 }
 }

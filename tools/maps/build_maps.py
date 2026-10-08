@@ -280,6 +280,7 @@ def build_undercroft():
         {"def": "station_pump", "x": 36, "y": 12},
         {"def": "intake", "x": 41, "y": 21, "fixed": True},
         {"def": "outlet", "x": 30, "y": 13, "fixed": True},
+        {"def": "lift_winch", "x": 42, "y": 12},
     ]
 
     water = []

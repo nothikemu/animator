@@ -1,0 +1,94 @@
+{
+	"name": "The Old Stone",
+	"short": "Old Stone",
+	"role": "knapper elder",
+	"title": "The eldest Knapper; remembers the agreement",
+	"area": "ways",
+	"home": "old_stone",
+	"sprite": "old_stone",
+	"portrait": "old_stone",
+	"color": "ash",
+	"voice": {
+		"timbre": "stone_marimba",
+		"pitch": 0.42,
+		"rate": 0.55
+	},
+	"motif": "grist",
+	"profile": {
+		"personality": "Very slow. Speaks for all Knappers and apologises to none of them. Listens through the floor.",
+		"history": "Was young when the builders asked the Knappers to make the ways. Remembers the Quiet as the day the walkers stopped answering.",
+		"goals": "Hear the agreement kept. Quiet rock.",
+		"fears": "Noise without meaning. Being asked for something and then forgotten again.",
+		"contradiction": "Patient for two hundred years; will not wait one more day for a lie.",
+		"problem": "The lower ways are collapsed, and only Knappers can open them, and Knappers will not work for walkers who shout."
+	},
+	"values": {
+		"kept_word": {
+			"trust": 6
+		},
+		"broke_word": {
+			"trust": -10,
+			"resentment": 5
+		},
+		"industrial_power": {
+			"respect": -2,
+			"resentment": 2
+		},
+		"clean_power": {
+			"respect": 2
+		},
+		"community_help": {
+			"respect": 2
+		},
+		"gift_liked": {
+			"affection": 3
+		}
+	},
+	"likes": [
+		"glowbeet",
+		"blackstone"
+	],
+	"loves": [
+		"glowglass"
+	],
+	"dislikes": [
+		"sludge",
+		"fertiliser"
+	],
+	"tolerance": {
+		"sour": 1.0,
+		"heat": 60,
+		"noise": 5
+	},
+	"schedule": [
+		{
+			"from": "00:00",
+			"to": "23:59",
+			"at": "old_stone",
+			"do": "sit",
+			"why": "On the seat the builders carved for it, listening."
+		},
+		{
+			"from": "07:00",
+			"to": "20:00",
+			"at": "g_grist",
+			"do": "talk",
+			"why": "At the Heart, which it helped to build.",
+			"when": [
+				"flag:heart_gathering",
+				"flag:old_stone_comes"
+			]
+		}
+	],
+	"areas": [
+		{
+			"when": [
+				"flag:heart_gathering",
+				"flag:old_stone_comes"
+			],
+			"area": "heart"
+		}
+	],
+	"nonhuman": true,
+	"unknown": "The great stone"
+}

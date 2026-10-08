@@ -1,0 +1,94 @@
+{
+	"_comment": "Wren Askew. Trunk crew. Laughs at the wrong moments and is usually right about why. Has the damp cough. Calls everyone 'love'.",
+
+	"lines": [
+		{"id": "w_intro", "tier": "story", "once": true, "priority": 50, "when": ["!flag:met_wren"], "convo": "intro"},
+		{"id": "w_cure", "tier": "story", "once": true, "priority": 60, "when": ["flag:met_wren", "!flag:wren_saved"], "convo": "cure"},
+		{"id": "w_truth", "tier": "story", "once": true, "priority": 30, "when": ["flag:wren_saved", "!flag:w_truth_talk"], "convo": "truth"},
+		{"id": "w_heart", "tier": "story", "once": true, "priority": 25, "when": ["flag:heart_seen", "flag:wren_saved", "!flag:w_heart_talk"], "convo": "heart"},
+
+		{"id": "w_ill", "tier": "reactive", "when": ["flag:met_wren", "!flag:wren_saved"], "text": "Still here, love. Don't look at me like that. I've a few days of this left in me. A week, if I'm rude enough to it.", "emote": "sad"},
+		{"id": "w_better", "tier": "reactive", "once": true, "when": ["flag:wren_saved", "!flag:reunion_done"], "text": "Breathing all the way down for the first time since the season turned. It feels like stealing. I'm going to keep doing it.", "emote": "happy"},
+		{"id": "w_after_reunion", "tier": "reactive", "once": true, "when": ["flag:reunion_done"], "text": "He's still making the face. He'll make it till he dies. I'm going to make sure that's a long time from now, out of spite.", "emote": "happy"},
+		{"id": "w_wick", "tier": "reactive", "once": true, "when": ["place:wick"], "text": "Wick! I can smell the lake from here. And the beets. And somebody's burner, a bit. Who's running a burner? Don't tell me. I'll only like them."},
+
+		{"id": "w_amb_pumps", "tier": "ambient", "when": ["flag:wren_saved"], "text": "Middle pump's bearing wants a new seat. I've wanted it for four years. I'm going to want it till someone brings me seal gum. Hint, love."},
+		{"id": "w_amb_barnaby", "tier": "ambient", "when": ["flag:met_wren"], "text": "Does he still say everything once? He used to say 'once' as if it cost him a glim a word. Cheapest man in the Deep. Best hands in it."},
+		{"id": "w_amb_codes", "tier": "ambient", "text": "We wrote the letter code on a bet. I won. He says he won. Ask him what the bet was. He'll say he doesn't remember. He remembers."},
+		{"id": "w_bark1", "tier": "bark", "text": "Still here."},
+		{"id": "w_bark2", "tier": "bark", "when": ["!flag:wren_saved"], "text": "...hk-hm. Fine. I'm fine."},
+		{"id": "w_bark3", "tier": "bark", "when": ["flag:wren_saved"], "text": "Somebody fix that bearing!"}
+	],
+
+	"convos": {
+		"intro": [
+			{"say": "On the bench by the last shack, under a blanket that has been patched more times than her coat, an old woman is watching the Heart door.", "who": "narrator", "do": ["flag:met_wren", "met:wren"]},
+			{"say": "She hears your boots and laughs before she turns her head, as if she's been waiting for the punchline for a long time.", "who": "narrator"},
+			{"say": "A lamp. A proper crew lamp. Pell's been knocking up the Trunk for four years and the first thing that comes down is somebody with a better lamp than mine.", "emote": "happy"},
+			{"say": "Wren Askew. Trunk crew. Retired by nobody. Sit, love, sit. My neck won't go up that far any more."},
+			{"say": "...hk-hm. Hk. Don't mind that. It's the season. It goes away when the season does, mostly.", "emote": "sad"},
+			{"choice": [
+				{"text": "Barnaby's alive. He's in Wick.", "do": ["affection:wren+6", "shared:wren+6", "flag:wren_knows_barnaby"], "goto": "barnaby"},
+				{"text": "You're Wren Askew. The crew tag. The note.", "when": ["flag:b_wren_talk"], "do": ["trust:wren+4"], "goto": "note"},
+				{"text": "How long have you had the cough?", "do": ["trust:wren+2"], "goto": "cough"}
+			]},
+			{"label": "note"},
+			{"say": "You found the note? In the Trunk chamber? Oh, love. That's eleven years of dust. Did it still say 'stop that face'? I wrote it twice so it'd survive."},
+			{"label": "barnaby"},
+			{"say": "Coil?", "emote": "surprised"},
+			{"say": "Coil's alive. Coil's in Wick. Of course he is. He'd outlive the rock out of stubbornness."},
+			{"say": "Does he— no. Don't tell me. I'll guess. He sits at the quiet table. He fixes other people's lines at night and calls it walking. He says everything once.", "emote": "happy"},
+			{"say": "...Tell him to stop that face. He'll know what it means.", "do": ["flag:wren_message"]},
+			{"goto": "cough"},
+			{"label": "cough"},
+			{"say": "Since the season turned. It's worse this year. The air's worse this year. The Heart's slower, and it breathes us less."},
+			{"say": "Pell thinks I'm dying. Pell's twenty and thinks everything's dying. Pell's right more often than I'd like.", "emote": "sad"},
+			{"say": "If you've got anything for the damp in that kit of yours, I won't be proud about it. I gave up proud somewhere around year six."}
+		],
+
+		"cure": [
+			{"if": ["item:moss_tincture>=1"], "goto": "has_tincture"},
+			{"if": ["item:river_medicine>=1"], "goto": "has_medicine"},
+			{"say": "Still here, love. Still coughing. If you find anything for it up there, I'll take it. If you don't, sit with me a bit anyway. That's medicine too, of a sort.", "emote": "sad"},
+			{"goto": "end"},
+			{"label": "has_tincture"},
+			{"choice": [
+				{"text": "Give her the moss tincture.", "do": ["take:moss_tincture", "flag:wren_saved", "flag:wren_saved_tincture", "affection:wren+8", "trust:wren+6", "mem:wren:saved_her:10:0.9:lasting", "mem:hesper:tincture_worked:6:0.8:lasting", "deed:community_help+2"], "goto": "drink_t"},
+				{"text": "Not yet.", "goto": "end"}
+			]},
+			{"label": "has_medicine"},
+			{"choice": [
+				{"text": "Give her the down-river medicine.", "do": ["take:river_medicine", "flag:wren_saved", "flag:wren_saved_medicine", "affection:wren+8", "trust:wren+6", "mem:wren:saved_her:10:0.9:lasting", "mem:odile:medicine_worked:6:0.7:lasting", "deed:community_help+2"], "goto": "drink_m"},
+				{"text": "Not yet.", "goto": "end"}
+			]},
+			{"label": "drink_t"},
+			{"say": "She sniffs it, and her eyebrows go up.", "who": "narrator"},
+			{"say": "That's moss. That's Strain Seven. Somebody up there knows what their frames are for.", "emote": "surprised"},
+			{"say": "She drinks it all, makes a face, and coughs once, and then— for the first time since you sat down— breathes all the way in.", "who": "narrator"},
+			{"say": "Oh. Oh, that's the bottom of my lungs. I'd forgotten I had a bottom to my lungs.", "emote": "happy"},
+			{"goto": "thanks"},
+			{"label": "drink_m"},
+			{"say": "Bark and honey. Down-river stuff. I haven't tasted honey in eleven years. It tastes like being somewhere else.", "emote": "happy"},
+			{"say": "Twice a day, the card says. She takes the first dose, and then, while you're watching, the second, out of spite for the card.", "who": "narrator"},
+			{"label": "thanks"},
+			{"say": "I'm going to live, aren't I. Annoying. I'd made my peace. I'll have to make it again later. Peace is like that."},
+			{"say": "Thank you, love. Truly. Now go away and let me cough the last of it out where nobody's looking."}
+		],
+
+		"truth": [
+			{"say": "Sit. I'm going to tell you what the archive says in a voice that doesn't sound like a Council notice.", "do": ["flag:w_truth_talk", "flag:knows_truth"]},
+			{"say": "Two hundred years ago, forty stations breathed together. One Heart. The Bellows, at the bottom, pushing air up every Trunk."},
+			{"say": "Then a cough came up with the air. The damp cough. It lives in stale wet air, and the Trunks were all stale wet air, and it went up through all forty stations in a season."},
+			{"say": "So the Council closed the Trunks. Every valve. And it worked. The cough stopped spreading. And every station sat behind its valve and slowly forgot anyone was on the other side."},
+			{"say": "That's the Quiet. Not a war. Not a monster. A door everyone shut for good reasons and nobody remembered to open."},
+			{"say": "And the moss your Hesper tends? Strain Seven. They made it to eat the cough. The frames were the plan to open the doors again. Nobody got round to the second half.", "emote": "sad"},
+			{"say": "Well. Somebody's getting round to it now. Pell thinks it's you. I think it's you and Coil and anybody else stupid enough to listen."}
+		],
+
+		"heart": [
+			{"say": "You've seen it. The Bellows. Isn't it ugly? I love it. It's the ugliest thing that ever kept anybody alive.", "do": ["flag:w_heart_talk"], "emote": "happy"},
+			{"say": "It wants pressure from above, air that won't carry the cough, the low ways open, and a town willing to share its weather. Three of those are engineering. One's Mags."},
+			{"say": "When it's ready, go to the console. Put your hand on the big lever. Don't pull it alone. Nothing this size should be started by one person. That's how you get a Council."}
+		]
+	}
+}

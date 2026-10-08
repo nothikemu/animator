@@ -86,6 +86,17 @@ func update_lights(delta: float, glow: float, dark: float, lamp_quality: float) 
 				l.light_energy = base * (0.75 + 0.35 * dark) * f * (1.0 - _quiet)
 			"ember":
 				l.light_energy = base * (1.0 + 0.15 * sin(_flicker_t * 3.1 + phase))
+			"bellows":
+				# Still, the Heart barely glows; restarted, it breathes in and out over eight seconds.
+				var running := GameState.has_flag("heart_running")
+				var breath := 0.5 + 0.5 * sin(_flicker_t * TAU / 8.0)
+				l.light_energy = base * (lerpf(0.9, 2.4, breath) if running else 0.25 + 0.1 * breath)
+			"pump":
+				l.light_energy = base * (0.7 + 0.3 * absf(sin(_flicker_t * 1.3 + phase)))
+			"fire":
+				l.light_energy = base * (1.0 + 0.12 * sin(_flicker_t * 9.1 + phase) + 0.08 * sin(_flicker_t * 15.7))
+			"console":
+				l.light_energy = base * (0.8 + 0.2 * sin(_flicker_t * 2.0))
 			_:
 				l.light_energy = base
 		l.shadow_enabled = l.shadow_enabled and lamp_quality > 0.0

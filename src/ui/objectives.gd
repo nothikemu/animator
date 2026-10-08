@@ -13,7 +13,8 @@ const PLACE_NAMES := {
 	"pumphall_door": "Pump hall", "annex_door": "Barnaby's annex", "hesper_door": "Hesper's hut",
 	"moss_beds": "Moss beds", "well": "Well", "reach_gate": "Reach gate", "dock": "Dock",
 	"farm": "Your plots", "grotto": "The grotto", "board": "Notice board", "odile_door": "Odile's house",
-	"commons": "Commons",
+	"commons": "Commons", "pipe_heads": "Pipe-heads", "exchange_counter": "The Exchange",
+	"annex_bench": "Barnaby's bench", "lake_view": "The lake",
 }
 
 
@@ -75,6 +76,10 @@ static func _find_node(tag: String) -> Dictionary:
 			for n: Dictionary in nodes:
 				if bool(n.get("trunk", false)):
 					return n
+		"deep":
+			for n: Dictionary in nodes:
+				if String(n.id) == "d1_0":
+					return n
 		"ruin":
 			for n: Dictionary in nodes:
 				if bool(n.get("ruin", false)) and int(n.get("tier", 1)) == 1:
@@ -103,6 +108,9 @@ static func local_target(o: Dictionary, area: AreaMap) -> Dictionary:
 	if next == "":
 		return {}
 	if area.id == "wick":
+		if bool(ReachGen.node_by_id(GameState.reach_graph, next).get("deep", false)):
+			var door: Vector2i = area.points.get("pumphall_door", Vector2i(41, 11))
+			return {"cell": door, "label": "The Primary Lift", "here": false}
 		var gate: Vector2i = area.points.get("reach_gate", Vector2i(44, 15))
 		return {"cell": gate, "label": "Reach gate", "here": false}
 	for ex: Dictionary in area.exits:

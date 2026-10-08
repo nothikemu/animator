@@ -1,0 +1,24 @@
+{
+	"_comment": "The archive in Sallow's hall: two hundred years of crew paper, and the truth about the Quiet in the Council's own words.",
+
+	"lines": [
+		{"id": "ar_first", "tier": "story", "once": true, "when": ["!flag:archive_read"], "convo": "first"},
+		{"id": "ar_again", "tier": "ambient", "when": ["flag:archive_read"], "convo": "again"}
+	],
+
+	"convos": {
+		"first": [
+			{"say": "The hall is a pump station's old office. Shelves to the ceiling. Crew paper in oilcloth bundles, labelled in six different hands across two hundred years, the last two of them Wren's and Pell's.", "who": "narrator", "do": ["flag:archive_read"]},
+			{"say": "On the desk, held flat by a brass gauge face, is a Council notice nobody ever filed away.", "who": "narrator", "do": ["discover:lore:council_minutes"]},
+			{"say": "'The damp cough travels with the Breath. Every Trunk carries it. The Council therefore closes the Trunk Lines until the Strain Seven scrubber moss is established at all forty stations.'", "who": "narrator"},
+			{"say": "'Until.' They meant to open them again. They wrote 'until'.", "who": "player"},
+			{"say": "Underneath, a manual, its spine broken at one page: THE BELLOWS. RESTART PROCEDURE.", "who": "narrator", "do": ["discover:lore:heart_manual", "flag:knows_truth"]},
+			{"say": "'Restart requires: Trunk pressure from no fewer than one upper station. Spore load below threshold in that station's air. The low ways cleared by agreement. The consent of the stations.'", "who": "narrator"},
+			{"say": "In the margin, in a hand you're starting to know: 'Consent of the stations — ha. Good luck, love. — W.'", "who": "narrator"}
+		],
+
+		"again": [
+			{"say": "The shelves smell of oil and old water. The Council notice is still on the desk. 'Until.'", "who": "narrator"}
+		]
+	}
+}

@@ -32,6 +32,7 @@ Dialogue="*res://src/autoload/dialogue.gd"
 Audio="*res://src/autoload/audio.gd"
 Saves="*res://src/autoload/saves.gd"
 Dev="*res://src/autoload/dev.gd"
+Almanac="*res://src/autoload/almanac.gd"
 
 [display]
 

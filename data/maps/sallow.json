@@ -1,0 +1,557 @@
+{
+ "id": "sallow",
+ "biome": "station",
+ "legend": {
+  "s": "stone",
+  ".": "moss_floor",
+  ",": "gravel",
+  ":": "cobble",
+  "r": "rock_floor",
+  "=": "stairs",
+  "#": "plank",
+  "m": "moss_deep",
+  "~": "water",
+  "d": "mud",
+  "b": "basalt",
+  "k": "blackstone",
+  "a": "ash",
+  "n": "sand"
+ },
+ "height": [
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "W002222222222222222222222222222222222WWW",
+  "W002222222222222222222222222222222222W0W",
+  "W00222222222222222222222222222222222200W",
+  "W00222222222222222222222222222222222200W",
+  "W00000000000000000111100000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W000000000000000000000000000000000000000",
+  "W000000000000000000000000000000000000000",
+  "W000000000000000000000000000000000000000",
+  "000000000000000000000000000000000000000W",
+  "000000000000000000000000000000000000000W",
+  "000000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W00000000000000000000000000000000000000W",
+  "W0~~~~~~~~~~~~~~~~~00~~~~~~~~~~~~~~~~~0W",
+  "W0~~~~~~~~~~~~~~~~~00~~~~~~~~~~~~~~~~~0W",
+  "W0~~~~~~~~~~~~~~~~~00~~~~~~~~~~~~~~~~~0W",
+  "W00000000000000000000000000000000000000W"
+ ],
+ "mat": [
+  "ssssssssssssssssssssssssssssssssssssssss",
+  "ssssssssssssssssssssssssssssssssssssssss",
+  "sssrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsss",
+  "sssrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsss",
+  "sssrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsss",
+  "sssrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsss",
+  "ssssssssssssssssss====ssssssssssssssssss",
+  "ssssssssssssssssssssssssssssssssssssssss",
+  "ssssssssss:::::::::::::::::::::sssssssss",
+  "ssssssssss:::::::::::::::::::::sssssssss",
+  "ssssssssss::::::::::::::::::::,,,,,,,,,s",
+  "ssssssssss::::::::::::::::::::,,,,,,,,,s",
+  "ssssssssss::::::::::::::::::::,,,,,,,,,s",
+  "s,,,,,,,,,,:::::::::::::::::::,,,sssssss",
+  "s,,,,,,,,,,:::::::::::::::::::,,,sssssss",
+  "s,,,,,,,,,,:::::::::::::::::::,,,sssssss",
+  "ssssssssss::::::::::::::::::::,,,sssssss",
+  "ssssssddddddddd:::::::::::::::,,,sssssss",
+  "ssssssddddddddd:::::::::::::::,,,sssssss",
+  "ssssssddddddddd:::::::::::::::,,,sssssss",
+  "ssssssddddddddd:::::::::::::::,,,sssssss",
+  "ssssssdddddddddsssssssssssssss,,,sssssss",
+  "ssssssdddddddddsssssssssssssss,,,sssssss",
+  "s......................................s",
+  "ss~~~~~~~~~~~~~~~~~##~~~~~~~~~~~~~~~~~ss",
+  "ss~~~~~~~~~~~~~~~~~##~~~~~~~~~~~~~~~~~ss",
+  "ss~~~~~~~~~~~~~~~~~##~~~~~~~~~~~~~~~~~ss",
+  "s......................................s"
+ ],
+ "props": [
+  {
+   "type": "deep_pump",
+   "x": 4,
+   "z": 2,
+   "size": [
+    4,
+    3
+   ],
+   "block": true
+  },
+  {
+   "type": "deep_pump",
+   "x": 10,
+   "z": 2,
+   "size": [
+    4,
+    3
+   ],
+   "block": true
+  },
+  {
+   "type": "deep_pump",
+   "x": 26,
+   "z": 2,
+   "size": [
+    4,
+    3
+   ],
+   "block": true
+  },
+  {
+   "type": "deep_pump",
+   "x": 32,
+   "z": 2,
+   "size": [
+    4,
+    3
+   ],
+   "block": true
+  },
+  {
+   "type": "knock_wall",
+   "x": 16,
+   "z": 2,
+   "size": [
+    7,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 27,
+   "z": 13,
+   "size": [
+    7,
+    5
+   ],
+   "variant": "sallow_hall",
+   "door": [
+    30,
+    17
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 3,
+   "z": 7,
+   "size": [
+    4,
+    4
+   ],
+   "variant": "shack_pell",
+   "door": [
+    4,
+    10
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 33,
+   "z": 17,
+   "size": [
+    4,
+    4
+   ],
+   "variant": "shack_wren",
+   "door": [
+    34,
+    20
+   ],
+   "block": true
+  },
+  {
+   "type": "house",
+   "x": 2,
+   "z": 17,
+   "size": [
+    4,
+    4
+   ],
+   "variant": "shack_tolley",
+   "door": [
+    3,
+    20
+   ],
+   "block": true
+  },
+  {
+   "type": "table",
+   "x": 16,
+   "z": 12,
+   "size": [
+    6,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "bench_seat",
+   "x": 16,
+   "z": 11,
+   "size": [
+    6,
+    1
+   ]
+  },
+  {
+   "type": "bench_seat",
+   "x": 16,
+   "z": 13,
+   "size": [
+    6,
+    1
+   ]
+  },
+  {
+   "type": "cookfire_pit",
+   "x": 19,
+   "z": 16,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 9,
+   "z": 9,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 25,
+   "z": 9,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 9,
+   "z": 19,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 26,
+   "z": 20,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 35,
+   "z": 13,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 15,
+   "z": 7,
+   "block": true
+  },
+  {
+   "type": "porch_lamp",
+   "x": 24,
+   "z": 7,
+   "block": true
+  },
+  {
+   "type": "pale_fungus",
+   "x": 7,
+   "z": 18,
+   "block": true
+  },
+  {
+   "type": "pale_fungus",
+   "x": 10,
+   "z": 21,
+   "block": true
+  },
+  {
+   "type": "pale_fungus",
+   "x": 13,
+   "z": 18,
+   "block": true
+  },
+  {
+   "type": "pale_fungus_small",
+   "x": 8,
+   "z": 20,
+   "deco": true
+  },
+  {
+   "type": "pale_fungus_small",
+   "x": 11,
+   "z": 18,
+   "deco": true
+  },
+  {
+   "type": "pale_fungus_small",
+   "x": 12,
+   "z": 21,
+   "deco": true
+  },
+  {
+   "type": "pale_fungus_small",
+   "x": 7,
+   "z": 22,
+   "deco": true
+  },
+  {
+   "type": "pale_fungus_small",
+   "x": 14,
+   "z": 20,
+   "deco": true
+  },
+  {
+   "type": "pale_fungus_small",
+   "x": 9,
+   "z": 17,
+   "deco": true
+  },
+  {
+   "type": "crate",
+   "x": 24,
+   "z": 12,
+   "block": true
+  },
+  {
+   "type": "barrel",
+   "x": 25,
+   "z": 12,
+   "block": true
+  },
+  {
+   "type": "crate_stack",
+   "x": 8,
+   "z": 12,
+   "block": true
+  },
+  {
+   "type": "pipe_pile",
+   "x": 36,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "gear_pile",
+   "x": 14,
+   "z": 8
+  },
+  {
+   "type": "heart_door",
+   "x": 38,
+   "z": 10,
+   "size": [
+    1,
+    3
+   ],
+   "block": true
+  },
+  {
+   "type": "signpost",
+   "x": 6,
+   "z": 14,
+   "text": "SALLOW \u00b7 STN 11"
+  },
+  {
+   "type": "bedroll",
+   "x": 36,
+   "z": 21
+  },
+  {
+   "type": "bench_seat",
+   "x": 34,
+   "z": 21,
+   "size": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "stalagmite",
+   "x": 3,
+   "z": 27,
+   "scale": 1.3,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 12,
+   "z": 27,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 27,
+   "z": 27,
+   "scale": 1.4,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 35,
+   "z": 27,
+   "scale": 1.1,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 1,
+   "z": 24,
+   "scale": 0.9,
+   "block": true
+  },
+  {
+   "type": "reed",
+   "x": 5,
+   "z": 23,
+   "deco": true
+  },
+  {
+   "type": "reed",
+   "x": 16,
+   "z": 23,
+   "deco": true
+  },
+  {
+   "type": "reed",
+   "x": 24,
+   "z": 23,
+   "deco": true
+  },
+  {
+   "type": "reed",
+   "x": 31,
+   "z": 23,
+   "deco": true
+  },
+  {
+   "type": "reed",
+   "x": 36,
+   "z": 23,
+   "deco": true
+  }
+ ],
+ "exits": [
+  {
+   "x": 0,
+   "z": 14,
+   "to": "up",
+   "arrive": [
+    2,
+    14
+   ]
+  },
+  {
+   "x": 39,
+   "z": 11,
+   "to": "down",
+   "arrive": [
+    37,
+    11
+   ]
+  }
+ ],
+ "points": {
+  "arrival": [
+   2,
+   14
+  ],
+  "hub": [
+   20,
+   14
+  ],
+  "pell": [
+   20,
+   4
+  ],
+  "pell_home": [
+   4,
+   11
+  ],
+  "wren_porch": [
+   35,
+   21
+  ],
+  "wren_home": [
+   34,
+   20
+  ],
+  "tolley": [
+   10,
+   19
+  ],
+  "tolley_home": [
+   3,
+   21
+  ],
+  "table": [
+   19,
+   13
+  ],
+  "fire": [
+   19,
+   17
+  ],
+  "archive": [
+   30,
+   18
+  ],
+  "heart_door": [
+   37,
+   11
+  ],
+  "gallery": [
+   12,
+   5
+  ],
+  "pumps": [
+   8,
+   5
+  ],
+  "bridge": [
+   19,
+   25
+  ],
+  "commons": [
+   20,
+   14
+  ]
+ },
+ "lights": [
+  {
+   "x": 20.0,
+   "z": 25.0,
+   "y": 0.6,
+   "color": "glow",
+   "energy": 0.8,
+   "range": 12.0,
+   "kind": "glow"
+  },
+  {
+   "x": 30.5,
+   "z": 16.0,
+   "y": 2.0,
+   "color": "amber",
+   "energy": 1.2,
+   "range": 6.0,
+   "kind": "window"
+  }
+ ],
+ "meta": {
+  "name": "Sallow",
+  "ceiling": 13.0,
+  "station": 11
+ }
+}

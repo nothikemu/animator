@@ -4,9 +4,9 @@ extends TestCase
 
 
 func test_schedule_points_exist() -> void:
-	var pts: Dictionary = Content.wick_map.get("points", {})
 	for id: String in Content.npcs:
 		var def: Dictionary = Content.npc(id)
+		var pts: Dictionary = Npc.points_for(id)
 		var home := String(def.get("home", ""))
 		check(pts.has(home), "%s's home '%s' is a point on the map" % [id, home])
 		for b: Dictionary in def.get("schedule", []):

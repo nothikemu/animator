@@ -85,5 +85,20 @@
 		"hook": "knock",
 		"caption": "[knock knock knock — knock knock — knock knock knock]",
 		"effects": ["flag:knock_heard", "discover:lore:the_knock"]
-	}
+	},
+	"damp_season": {"when": ["flag:knock_heard", "day>=12", "phase:wake|bloom"], "once": true, "intensity": 1, "effects": ["flag:damp_season"], "toast": "The damp season. The lake breathes out, and somewhere on the Commons a child starts to cough.", "caption": "[a child coughing, somewhere across the Commons]"},
+	"strain_found": {"when": ["flag:damp_season", "day>=14", "!lore:station_9", "!flag:h_strain_talk"], "once": true, "effects": ["flag:strain_found"], "toast": "Grist left a crate of salvage at Hesper's door. She has not come out since."},
+	"meeting_1": {"when": ["flag:tg_knows_many", "flag:tg_knows_pell", "phase:wake|bloom|dimming"], "once": true, "effects": ["flag:meeting_1_called"], "toast": "Mags is calling everyone to the Lantern House at Dimming. 'Everyone. I mean it. Bring a cup.'"},
+	"medicine_arrives": {"when": ["flag:o_trade_sent", "since:o_trade_sent>=2", "flag:damp_season"], "once": true, "effects": ["flag:medicine_here"], "toast": "A crate came up Odile's down-river chute in the night."},
+	"wren_fades": {"when": ["flag:met_wren", "!flag:wren_saved", "since:met_wren>=4", "!place:sallow"], "once": true, "intensity": 2, "effects": ["flag:wren_died", "mem:pell:wren_died:10:-0.8:lasting"], "caption": "[the pipe-heads knock once in the night, slowly, and then not again]"},
+	"barnaby_returns": {"when": ["flag:reunion_done", "since:reunion_done>=1"], "once": true, "effects": ["flag:barnaby_back"]},
+	"barnaby_returns_grief": {"when": ["flag:grief_done", "flag:barnaby_at_sallow", "since:grief_done>=1"], "once": true, "effects": ["flag:barnaby_back"]},
+	"pell_visits": {"when": ["flag:met_pell", "flag:lift_built", "since:met_pell>=2", "phase:wake|bloom"], "once": true, "effects": ["flag:pell_in_wick"], "toast": "Pell rode the lift up in the night and is standing by the lake with their mouth open."},
+	"wren_visits": {"when": ["flag:wren_saved", "flag:reunion_done", "since:reunion_done>=2", "phase:wake|bloom"], "once": true, "effects": ["flag:wren_in_wick"], "toast": "Wren Askew came up on the morning cage and is sitting at the quiet table. It is no longer quiet."},
+	"ways_rumble": {"when": ["flag:ways_open", "since:ways_open>=1"], "once": true, "shake": 0.35, "caption": "[far below, the sound of rock moving, slowly, all night]"},
+	"meeting_2": {"when": ["flag:heart_seen", "!flag:meeting_2_called", "phase:wake|bloom|dimming"], "once": true, "effects": ["flag:meeting_2_called"], "toast": "Mags is calling the town together again at Dimming. A vote, this time."},
+	"heart_gathering": {"when": ["flag:gather_called", "since:gather_called>=1"], "once": true, "effects": ["flag:heart_gathering"], "toast": "Wick has gone down to the Heart. Everyone. Mags brought soup."},
+	"count_votes": {"manual": true, "hook": "count_votes"},
+	"restart_heart": {"manual": true, "hook": "restart_heart"},
+	"ending": {"manual": true, "hook": "ending"}
 }

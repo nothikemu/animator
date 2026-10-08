@@ -140,11 +140,13 @@ def render_humanoid(c, g, p, S):
             if view == "side":
                 return sx + (0 if i == 0 else 0), sy + A
             return sx, sy + A
-        fwd, up = h
+        fwd = float(h[0])
+        up = float(h[1])
         if view == "side":
             return sx + fwd, sy - up
         s_i = -1 if i == 0 else 1
-        return sx - s_i * fwd * 0.45, sy - up + fwd * 0.3
+        inward = float(h[2]) if len(h) > 2 else fwd * 0.45
+        return sx - s_i * inward, sy - up + fwd * 0.3
 
     hand_pos = [target(0), target(1)]
     ends = list(hand_pos)
@@ -798,14 +800,209 @@ def draw_mags(c, g, p):
     render_humanoid(c, g, p, mags_spec())
 
 
+# --- Pell: grew up at Sallow, learned the codes from Wren ----------------------------------------------
+PELL = {"skin": C("#d8c6c2"), "hair": C("#2c2632"), "eye": pal("charcoal"), "overall": C("#4a5a6c"),
+        "shirt": C("#b8b0a0"), "boot": C("#3a2e28"), "satchel": C("#8a7a5a"), "chalk": C("#ece8de")}
+
+
+def pell_spec():
+    P = PELL
+
+    def costume(c, g, p, ctx):
+        cx, tt, lt = ctx["cx"], ctx["torso_top"], ctx["leg_top"]
+        if p.view == "down":
+            c.rect(cx - 2, tt, 4, 3, P["shirt"])                      # bib over the shirt
+            c.rect(cx - 2, tt + 3, 4, lt - tt - 2, shade(P["overall"], 0.1))
+            c.set(cx - 2, tt + 1, pal("brass_light")); c.set(cx + 1, tt + 1, pal("brass_light"))
+            c.line(cx - 4, tt, cx + 3, lt - 2, P["satchel"])          # satchel strap
+            c.rect(cx + 2, lt - 3, 3, 3, P["satchel"])
+            c.set(cx + 3, lt - 2, P["chalk"])
+        elif p.view == "up":
+            c.line(cx + 3, tt, cx - 3, lt - 2, P["satchel"])
+        else:
+            c.rect(cx - 4, lt - 4, 3, 3, P["satchel"])
+            c.set(cx - 3, lt - 3, P["chalk"])
+
+    def head_front(c, g, p, ctx):
+        cx, hy = ctx["cx"] + p.head_dx, ctx["hy"]
+        head_shape(c, cx, hy + 1, 8, 7, P["skin"])
+        face_front(c, cx, hy + 4, P["skin"], P["eye"], p, eye_gap=3, mouth_y=3)
+        hair = ramp(P["hair"], 3, 0.3)
+        c.hline(cx - 4, cx + 3, hy, hair[1])
+        c.hline(cx - 3, cx + 2, hy - 1, hair[2])
+        c.set(cx - 4, hy + 1, hair[0]); c.set(cx + 3, hy + 1, hair[0])
+        c.set(cx - 1, hy + 1, hair[1]); c.set(cx, hy + 1, hair[1])         # cropped fringe
+        c.set(cx + 2, hy + 6, P["chalk"])                                    # chalk smudge on the cheek
+
+    def head_back(c, g, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx, hy + 1, 8, 7, P["hair"])
+        c.rect(cx - 2, hy + 6, 4, 2, shade(P["skin"], -0.2))
+
+    def head_side(c, g, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx + 1, hy + 1, 7, 7, P["skin"])
+        face_side(c, cx + 3, hy + 4, P["skin"], P["eye"], p)
+        hair = ramp(P["hair"], 3, 0.3)
+        c.rect(cx - 3, hy, 5, 2, hair[1])
+        c.rect(cx - 3, hy + 2, 2, 3, hair[0])
+
+    return {"cx": 12, "feet": 31, "leg_len": 9, "torso_h": 9, "torso_w": 8, "arm": 7, "head_h": 7,
+            "skin": P["skin"], "eye": P["eye"], "cloth": P["overall"], "sleeve": P["shirt"], "forearm": P["skin"],
+            "hand": shade(P["skin"], -0.05), "trouser": P["overall"], "boot": P["boot"], "costume": costume,
+            "head_front": head_front, "head_back": head_back, "head_side": head_side}
+
+
+def draw_pell(c, g, p):
+    render_humanoid(c, g, p, pell_spec())
+
+
+# --- Wren Askew: Trunk crew, sixty, a coat patched forty times ------------------------------------------
+WREN = {"skin": C("#9a6a4e"), "hair": C("#cfcac2"), "eye": pal("charcoal"), "coat": C("#2f4a4c"),
+        "patches": [C("#6a4a3a"), C("#8a6a2a"), C("#4a3a5a"), C("#5a6a3a")], "trouser": C("#3a3440"),
+        "boot": C("#2a2220"), "goggle": pal("brass_light")}
+
+
+def wren_spec():
+    W_ = WREN
+
+    def costume(c, g, p, ctx):
+        cx, tt, lt = ctx["cx"], ctx["torso_top"], ctx["leg_top"]
+        spots = [(-3, 2), (2, 4), (-1, 7), (3, 8), (-4, 9)] if p.view != "side" else [(-2, 2), (0, 6), (-3, 8)]
+        for k, (dx, dy) in enumerate(spots):
+            if tt + dy < lt + 3:
+                c.rect(cx + dx, tt + dy, 2, 2, W_["patches"][k % 4])
+                c.set(cx + dx, tt + dy, shade(W_["patches"][k % 4], 0.25))
+        if p.view == "down":
+            c.vline(cx, tt + 2, lt + 2, shade(W_["coat"], -0.35))
+            c.set(cx + 2, tt + 1, pal("brass")); c.set(cx + 3, tt + 1, pal("brass_light"))   # crew pin
+
+    def goggles(c, x, y):
+        c.rect(x, y, 2, 1, W_["goggle"]); c.rect(x + 3, y, 2, 1, W_["goggle"])
+        c.set(x + 2, y, shade(W_["goggle"], -0.4))
+
+    def head_front(c, g, p, ctx):
+        cx, hy = ctx["cx"] + p.head_dx, ctx["hy"]
+        head_shape(c, cx, hy + 1, 8, 7, W_["skin"])
+        face_front(c, cx, hy + 4, W_["skin"], W_["eye"], p, eye_gap=3, mouth_y=3)
+        # one eye clouded
+        if p.eyes not in ("closed",) and p.emote not in ("happy",):
+            c.set(cx + 2 + p.look, hy + 4, C("#b8c4c8"))
+        hair = ramp(W_["hair"], 3, 0.3)
+        for y in range(hy - 1, hy + 2):
+            c.hline(cx - 4, cx + 3, y, hair[1] if y % 2 else hair[2])
+        c.set(cx - 5, hy + 2, hair[0]); c.set(cx + 4, hy + 1, hair[0]); c.set(cx + 4, hy + 3, hair[0])
+        goggles(c, cx - 3, hy)
+        c.hline(cx - 2, cx + 1, hy + 7, shade(W_["skin"], -0.2))              # lines of a face that laughs
+
+    def head_back(c, g, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx, hy + 1, 8, 7, W_["hair"])
+        c.hline(cx - 4, cx + 3, hy + 1, shade(C("#4a3a2a"), 0.0))             # goggle strap
+
+    def head_side(c, g, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx + 1, hy + 1, 7, 7, W_["skin"])
+        face_side(c, cx + 3, hy + 4, W_["skin"], W_["eye"], p)
+        hair = ramp(W_["hair"], 3, 0.3)
+        c.rect(cx - 3, hy - 1, 5, 3, hair[1])
+        c.rect(cx - 3, hy + 2, 2, 3, hair[0])
+        c.rect(cx + 1, hy, 3, 1, W_["goggle"])
+
+    return {"cx": 12, "feet": 31, "leg_len": 8, "torso_h": 11, "torso_w": 10, "flare": 2, "arm": 8, "head_h": 7,
+            "skin": W_["skin"], "eye": W_["eye"], "cloth": W_["coat"], "sleeve": W_["coat"], "hand": W_["skin"],
+            "trouser": W_["trouser"], "boot": W_["boot"], "skirt": True, "skirt_len": 3, "costume": costume,
+            "head_front": head_front, "head_back": head_back, "head_side": head_side}
+
+
+def draw_wren(c, g, p):
+    render_humanoid(c, g, p, wren_spec())
+
+
+# --- Tolley: the Lease's old tenant, who went down-line -------------------------------------------------
+TOLLEY = {"skin": C("#e0b090"), "beard": C("#b06a3a"), "eye": pal("charcoal"), "cardigan": C("#8a7036"),
+          "shirt": C("#c8c0a8"), "trouser": C("#3a3a4a"), "boot": C("#3a2a22"), "cap": C("#8a3a3a")}
+
+
+def tolley_spec():
+    T = TOLLEY
+
+    def costume(c, g, p, ctx):
+        cx, tt, lt = ctx["cx"], ctx["torso_top"], ctx["leg_top"]
+        if p.view == "down":
+            c.rect(cx - 1, tt, 2, lt - tt, T["shirt"])
+            for y in range(tt + 2, lt, 2):
+                c.set(cx - 2, y, pal("cream"))
+            c.hline(cx - 5, cx + 4, lt - 1, C("#5a4030"))                     # seed-pouch belt
+            for x in (cx - 4, cx - 1, cx + 2):
+                c.rect(x, lt - 1, 2, 2, C("#7a5a3a"))
+
+    def specs_(c, x, y):
+        c.set(x, y, pal("brass_light")); c.set(x + 3, y, pal("brass_light"))
+        c.set(x + 1, y, shade(pal("brass"), -0.2)); c.set(x + 2, y, shade(pal("brass"), -0.2))
+
+    def head_front(c, g, p, ctx):
+        cx, hy = ctx["cx"] + p.head_dx, ctx["hy"]
+        head_shape(c, cx, hy + 1, 9, 7, T["skin"])
+        face_front(c, cx, hy + 4, T["skin"], T["eye"], p, eye_gap=3, mouth_y=3)
+        beard = ramp(T["beard"], 3, 0.3)
+        for y in range(hy + 5, hy + 9):
+            w = 4 if y < hy + 8 else 3
+            c.hline(cx - w, cx + w - 1, y, beard[1] if y % 2 else beard[2])
+        if p.mouth:
+            c.rect(cx - 1, hy + 6, 2, 1, shade(T["skin"], -0.6))
+        specs_(c, cx - 3, hy + 4)
+        cap = ramp(T["cap"], 3, 0.3)
+        for y in range(hy - 2, hy + 2):
+            w = [3, 4, 5, 5][y - (hy - 2)]
+            c.hline(cx - w, cx + w - 1, y, cap[1] if y % 2 else cap[2])
+        c.set(cx, hy - 3, cap[2])
+
+    def head_back(c, g, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx, hy + 1, 9, 7, T["beard"])
+        cap = ramp(T["cap"], 3, 0.3)
+        for y in range(hy - 2, hy + 3):
+            c.hline(cx - 5, cx + 4, y, cap[1])
+
+    def head_side(c, g, p, ctx):
+        cx, hy = ctx["cx"], ctx["hy"]
+        head_shape(c, cx + 1, hy + 1, 8, 7, T["skin"])
+        face_side(c, cx + 3, hy + 4, T["skin"], T["eye"], p)
+        c.rect(cx + 1, hy + 5, 4, 3, T["beard"])
+        c.set(cx + 4, hy + 4, pal("brass_light"))
+        cap = ramp(T["cap"], 3, 0.3)
+        c.rect(cx - 3, hy - 2, 7, 3, cap[1])
+
+    return {"cx": 12, "feet": 31, "leg_len": 8, "torso_h": 10, "torso_w": 12, "flare": 1, "arm": 7, "head_h": 7,
+            "skin": T["skin"], "eye": T["eye"], "cloth": T["cardigan"], "sleeve": T["cardigan"], "hand": T["skin"],
+            "trouser": T["trouser"], "boot": T["boot"], "costume": costume, "head_front": head_front,
+            "head_back": head_back, "head_side": head_side}
+
+
+def draw_tolley(c, g, p):
+    render_humanoid(c, g, p, tolley_spec())
+
+
 # --- Grist (a Knapper) ----------------------------------------------------------------------------------
 GRIST_HAND_ANIMS = {"chew", "coins", "talk", "happy", "surprised", "listen"}
 GRIST = {"stone": C("#6c6a74"), "dark": C("#3e3c46"), "crystal": pal("amber"), "eye": pal("amber_light"), "strap": C("#5a3f2e")}
 
 
-def draw_grist(c, g, p):
+OLD_STONE = {"stone": C("#8a8894"), "dark": C("#4e4c56"), "crystal": pal("glow"), "eye": C("#e8e2d0"), "strap": C("#4a5a3a")}
+
+
+def draw_old_stone(c, g, p):
+    draw_grist(c, g, p, OLD_STONE)
+    # moss in the cracks of an old Knapper
+    for (x, y) in [(14, 24), (17, 30), (29, 22), (26, 33), (20, 27)]:
+        if c.get(x, y)[3] > 0:
+            c.set(x, y, pal("moss")); c.set(x + 1, y, pal("moss_light"))
+
+
+def draw_grist(c, g, p, G=None):
     """A Knapper walks on its knuckles; the skeleton's feet drive the knuckles and the legs."""
-    G = GRIST
+    G = G or GRIST
     st = ramp(G["stone"], 5, 0.4)
     cx = 22
     base = 44 - p.lift_body
@@ -892,6 +1089,13 @@ SPECS = [
     ("mags", draw_mags, 26, 32, False, NPC_BASE + ["cook", "serve", "carry"], {"stride": 0.8, "arm": 7}),
     ("grist", draw_grist, 46, 46, True, ["idle", "walk", "look", "talk", "happy", "sad", "surprised", "annoyed",
                                          "chew", "listen", "coins"], {"stride": 1.0, "arm": 10}),
+    ("old_stone", draw_old_stone, 46, 46, True, ["idle", "walk", "look", "talk", "happy", "sad", "surprised",
+                                                 "annoyed", "listen"], {"stride": 0.8, "arm": 10}),
+    ("pell", draw_pell, 24, 32, False, NPC_BASE + ["knock", "listen", "inspect", "wrench", "carry", "celebrate", "run"],
+     {"stride": 1.1, "arm": 7}),
+    ("wren", draw_wren, 24, 32, False, NPC_BASE + ["knock", "listen", "inspect", "wrench", "tea", "celebrate", "collapse"],
+     {"stride": 0.8, "arm": 8}),
+    ("tolley", draw_tolley, 24, 32, False, NPC_BASE + ["tend", "plant", "pickup", "wave", "observe"], {"stride": 0.9, "arm": 7}),
 ]
 
 

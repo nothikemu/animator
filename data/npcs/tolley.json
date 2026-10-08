@@ -1,0 +1,148 @@
+{
+	"name": "Tolley Brand",
+	"short": "Tolley",
+	"role": "gardener",
+	"title": "The Lease's old tenant",
+	"area": "sallow",
+	"home": "tolley_home",
+	"sprite": "tolley",
+	"portrait": "tolley",
+	"color": "sand",
+	"voice": {
+		"timbre": "pluck_clock",
+		"pitch": 1.05,
+		"rate": 1.05
+	},
+	"motif": "sallow",
+	"profile": {
+		"personality": "Apologises for things nobody mentioned. Very good with seeds. Very bad with endings.",
+		"history": "Leased the plot at the west end of Wick for nine years. Went down-line after a winter that took his sister. Has been growing pale fungus at Sallow and telling it about glowbeets.",
+		"goals": "Go home without anyone making a fuss. Get his seed tin back. No, keep it, really.",
+		"fears": "That Wick didn't notice he'd gone. That Wick did.",
+		"contradiction": "Left without saying goodbye; has said goodbye to everyone at Sallow every night for three years.",
+		"problem": "Homesick for a place he walked out of."
+	},
+	"values": {
+		"community_help": {
+			"affection": 3
+		},
+		"gift_liked": {
+			"affection": 4
+		},
+		"kept_word": {
+			"trust": 4
+		},
+		"curious_about_life": {
+			"affection": 2,
+			"respect": 2
+		},
+		"pollution": {
+			"affection": -1
+		},
+		"ecosystem_restored": {
+			"respect": 3
+		}
+	},
+	"likes": [
+		"glowbeet_seed",
+		"moss_spore",
+		"bellcap"
+	],
+	"loves": [
+		"glowbeet"
+	],
+	"dislikes": [
+		"sludge"
+	],
+	"tolerance": {
+		"sour": 0.5,
+		"heat": 35,
+		"noise": 7
+	},
+	"schedule": [
+		{
+			"from": "07:00",
+			"to": "13:00",
+			"at": "tolley",
+			"do": "tend",
+			"why": "In the fungus garden, apologising to it."
+		},
+		{
+			"from": "13:00",
+			"to": "18:00",
+			"at": "table",
+			"do": "talk",
+			"why": "At the long table, mending something that isn't broken."
+		},
+		{
+			"from": "18:00",
+			"to": "22:00",
+			"at": "fire",
+			"do": "sit",
+			"why": "By the fire."
+		},
+		{
+			"from": "22:00",
+			"to": "07:00",
+			"at": "tolley_home",
+			"do": "sleep",
+			"why": "Asleep."
+		},
+		{
+			"from": "07:00",
+			"to": "20:00",
+			"at": "g_tolley",
+			"do": "talk",
+			"why": "At the Heart.",
+			"when": [
+				"flag:heart_gathering"
+			]
+		},
+		{
+			"from": "07:00",
+			"to": "13:00",
+			"at": "farm",
+			"do": "tend",
+			"why": "Back on the Lease plots, if you'll have him.",
+			"when": [
+				"flag:tolley_returned"
+			]
+		},
+		{
+			"from": "13:00",
+			"to": "22:00",
+			"at": "commons_table",
+			"do": "talk",
+			"why": "At the Lantern House, apologising to Mags.",
+			"when": [
+				"flag:tolley_returned"
+			]
+		},
+		{
+			"from": "22:00",
+			"to": "07:00",
+			"at": "lease_door",
+			"do": "sleep",
+			"why": "Sleeping on a cot in the Lease, very politely.",
+			"when": [
+				"flag:tolley_returned"
+			]
+		}
+	],
+	"areas": [
+		{
+			"when": [
+				"flag:heart_gathering"
+			],
+			"area": "heart"
+		},
+		{
+			"when": [
+				"flag:tolley_returned",
+				"!flag:heart_gathering"
+			],
+			"area": "wick"
+		}
+	],
+	"unknown": "The man in the knitted cap"
+}

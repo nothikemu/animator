@@ -324,7 +324,7 @@ def a_cautious(p, k, o):
     near, far = _gait(p, k, o, WALK_DX, WALK_LIFT, WALK_BOB, stride=0.6, lift_mul=0.7, bob_mul=0.5)
     _arm_swing(p, o, near[0], amount=0.3)
     # hand over nose and mouth
-    p.hands[0] = (3, 2) if p.view == "side" else (3, 3.5)
+    p.hands[0] = (3, 2) if p.view == "side" else (2, 4.5, 5.5)
     p.lean = 1 if p.view == "side" else 0
     p.head_dy = 1
     p.eyes = "half"
@@ -370,7 +370,7 @@ def a_yawn(p, k, o):
     a_idle(p, k % 8, o)
     up = [0, 0.4, 1, 1, 1, 1, 1, 0.6, 0.2, 0][k]
     A = o.get("arm", 7)
-    p.hands = [(2 * up, -A + up * (A + 3)), None] if p.view == "side" else [(3 * up, -A + up * (A + 3.5)), None]
+    p.hands = [(2 * up, -A + up * (A + 3)), None] if p.view == "side" else [(2 * up, -A + up * (A + 4.5), 5.5 * up), None]
     p.mouth = 2 if 2 <= k <= 6 else 0
     p.eyes = "closed" if 2 <= k <= 7 else "half"
     p.head_dy = -1 if 2 <= k <= 5 else 0
@@ -396,7 +396,7 @@ def a_lamp(p, k, o):
     if p.view == "side":
         p.hands = [(2 * up + (1 if tap else 0), -A + up * (A + 6)), None]
     else:
-        p.hands = [None, (2 * up, -A + up * (A + 6) + (1 if tap else 0))]
+        p.hands = [None, (1 * up, -A + up * (A + 7.5) + (1 if tap else 0), 4.5 * up)]
     p.lamp = k not in (4, 5)
     p.eyes = "up" if 2 <= k <= 7 else "open"
 
@@ -616,7 +616,7 @@ def a_sit(p, k, o):
 
 
 def a_cough(p, k, o):
-    p.hands = [(3, 2), None] if p.view == "side" else [(3, 3.5), None]
+    p.hands = [(3, 2), None] if p.view == "side" else [(2, 4.5, 5.5), None]
     p.lean = [0, 1, 1, 0, 1, 1, 0, 0][k] if p.view == "side" else 0
     p.bob = [0, 1, 0, 0, 1, 0, 0, 0][k]
     p.eyes = "closed" if k in (1, 2, 4, 5) else "half"
@@ -668,7 +668,7 @@ def a_tea(p, k, o):
     if p.view == "side":
         p.hands = [(3 + sip, -3 + sip * 6), None]
     else:
-        p.hands = [None, (2 + sip, -3 + sip * 6)]
+        p.hands = [None, (2 + sip, -3 + sip * 7, 2 + sip * 3.5)]
     p.hold = ("cup", 0 if p.view == "side" else 1, 0)
     if sip == 0 and k % 3 == 0:
         p.marks.append(("steam", k // 3, 0, 0))

@@ -10,6 +10,7 @@ var machines: Dictionary = {}
 var recipes: Dictionary = {}
 var npcs: Dictionary = {}
 var dialogue: Dictionary = {}      ## npc_id -> {lines: [], convos: {}}
+var maps: Dictionary = {}          ## authored areas below Wick (Sallow, the Heart, the Ways)
 var threads: Dictionary = {}
 var events: Dictionary = {}
 var biomes: Dictionary = {}
@@ -42,7 +43,8 @@ func load_all() -> void:
 	palette = _load_dict("palette.json")
 	markets = _load_dict("markets.json")
 	npcs = _load_dir("npcs")
-	dialogue = _load_dir("dialogue")
+	dialogue = _merge_parts(_load_dir("dialogue"))
+	maps = _load_dir("maps")
 	validate()
 	loaded = true
 	if errors.is_empty():
@@ -120,6 +122,26 @@ func _load_dict(file: String) -> Dictionary:
 	var d: Dictionary = data
 	d.erase("_comment")
 	return d
+
+
+## Dialogue for one speaker may be split across files: "barnaby@deep.json" adds its lines and
+## conversations to "barnaby". Keeps each chapter's writing in its own file.
+func _merge_parts(d: Dictionary) -> Dictionary:
+	var out := {}
+	var keys := d.keys()
+	keys.sort()
+	for k: String in keys:
+		var base := k.get_slice("@", 0)
+		if not out.has(base):
+			out[base] = {"lines": [], "convos": {}}
+		var part: Dictionary = d[k]
+		(out[base].lines as Array).append_array(part.get("lines", []))
+		var convos: Dictionary = part.get("convos", {})
+		for c: String in convos:
+			if out[base].convos.has(c):
+				errors.append("dialogue %s: conversation '%s' defined twice" % [base, c])
+			out[base].convos[c] = convos[c]
+	return out
 
 
 func _load_dir(sub: String) -> Dictionary:

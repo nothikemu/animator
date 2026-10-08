@@ -117,7 +117,49 @@
 			"when": [
 				"air_sour_hesper>0.12"
 			]
+		},
+		{
+			"from": "18:00",
+			"to": "23:00",
+			"at": "commons",
+			"do": "talk",
+			"why": "The meeting at the Lantern House.",
+			"when": [
+				"flag:meeting_1_called",
+				"!flag:meeting_1_done"
+			]
+		},
+		{
+			"from": "18:00",
+			"to": "23:00",
+			"at": "commons",
+			"do": "talk",
+			"why": "The second meeting: the vote.",
+			"when": [
+				"flag:meeting_2_called",
+				"!flag:meeting_2_done"
+			]
+		},
+		{
+			"from": "06:00",
+			"to": "22:00",
+			"at": "g_hesper",
+			"do": "talk",
+			"why": "At the Heart, with everyone.",
+			"when": [
+				"flag:heart_gathering",
+				"!flag:ending_chosen"
+			]
 		}
 	],
-	"unknown": "The moss-tender"
+	"unknown": "The moss-tender",
+	"areas": [
+		{
+			"when": [
+				"flag:heart_gathering",
+				"!flag:ending_chosen"
+			],
+			"area": "heart"
+		}
+	]
 }

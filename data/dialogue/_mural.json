@@ -1,0 +1,20 @@
+{
+	"_comment": "The mural in the Knapper Ways: the agreement between the builders and the Knappers, carved, not written.",
+
+	"lines": [
+		{"id": "mu_first", "tier": "story", "once": true, "when": ["!flag:mural_read"], "convo": "first"},
+		{"id": "mu_again", "tier": "ambient", "when": ["flag:mural_read"], "convo": "again"}
+	],
+
+	"convos": {
+		"first": [
+			{"say": "The wall is carved, not drawn. Walkers and Knappers, side by side, cutting a long line down through layers of rock. The walkers carry lamps. The Knappers carry nothing; their hands are the tools.", "who": "narrator", "do": ["flag:mural_read", "discover:lore:knapper_agreement"]},
+			{"say": "At the bottom of the line is a shape like a pair of lungs. At the top, forty little houses.", "who": "narrator"},
+			{"say": "And across the middle, cut much later and much rougher, a great stone door, and the Knappers on one side of it with their hands pressed to the rock, listening.", "who": "narrator"}
+		],
+
+		"again": [
+			{"say": "The carved Knappers are still listening at their door.", "who": "narrator"}
+		]
+	}
+}

@@ -32,5 +32,12 @@
 	"lamp_lens": {"name": "Glowglass Lens", "desc": "Fits your headlamp. The dark gets further away.", "category": "gear", "value": 40, "stack": 1, "icon": "lamp_lens", "gear": "lens"},
 
 	"governor_coil": {"name": "Governor Coil", "desc": "A heavy brass coil stamped STN-7 / PRIMARY. It hums when you hold it near iron.", "category": "story", "value": 0, "stack": 1, "icon": "governor_coil"},
-	"wren_token": {"name": "Crew Tag", "desc": "A dented brass tag: W. ASKEW — TRUNK CREW. Warm, like it was held recently.", "category": "story", "value": 0, "stack": 1, "icon": "crew_tag"}
+	"wren_token": {"name": "Crew Tag", "desc": "A dented brass tag: W. ASKEW — TRUNK CREW. Warm, like it was held recently.", "category": "story", "value": 0, "stack": 1, "icon": "crew_tag"},
+	"crew_cable": {"name": "Crew Cable", "desc": "Moss fibre plaited round brass wire. Holds a lift cage, a person, and a promise.", "category": "material", "value": 18, "stack": 20, "icon": "crew_cable"},
+	"moss_tincture": {"name": "Moss Tincture", "desc": "Strain-seven moss steeped in bellcap and tea. Smells like the frames after rain. Eases the damp cough.", "category": "medicine", "value": 45, "stack": 5, "icon": "moss_tincture"},
+	"river_medicine": {"name": "Down-River Medicine", "desc": "A crate stamped with a settlement nobody in Wick has seen. Bark powder, honey, a dosing card in a careful hand.", "category": "medicine", "value": 80, "stack": 3, "icon": "river_medicine"},
+	"salt": {"name": "Salt", "desc": "White crystal from the deep flats. Mags says it's worth more than glim in a lean season.", "category": "material", "value": 9, "stack": 99, "icon": "salt"},
+	"salted_beets": {"name": "Salted Beets", "desc": "Glowbeets packed in salt. They keep for a season and glow faintly in the jar.", "category": "food", "value": 22, "stack": 30, "icon": "salted_beets", "food": true},
+	"wren_journal": {"name": "Wren's Journal", "desc": "Eleven years of entries. Every one begins the same way: 'B —'.", "category": "story", "value": 0, "stack": 1, "icon": "wren_journal"},
+	"knock_chalk": {"name": "Knock Chalk", "desc": "A stub of Sallow chalk, worn to Pell's grip. For marking the wall: 3·2·3.", "category": "story", "value": 0, "stack": 1, "icon": "knock_chalk"}
 }

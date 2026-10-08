@@ -359,9 +359,74 @@ def cue_station():
     return c
 
 
+# --- Below the lift --------------------------------------------------------------------------
+
+DEEP_PROG = [[45, 52, 57, 59, 64], [41, 48, 53, 57, 64], [43, 50, 55, 57, 62], [40, 47, 55, 59, 62]]
+
+
+def cue_deep():
+    """The Lower Stations: low and patient, a pad that breathes, and the knock far away."""
+    c = Cue("deep", 60, 16)
+    c.stem("drone", [(0, 64, 33), (0, 64, 40)], inst_drone, 0.32, 0.0, 0.45, 4.0, seed=71)
+    c.stem("breath", chords(DEEP_PROG * 2, 8), inst_pad, 0.22, (-0.5, 0.5), 0.55, 4.2, seed=73)
+    r = rng(75)
+    aeolian = [69, 71, 72, 74, 76, 77, 79, 81]
+    bells = []
+    b = 2.0
+    while b < 64:
+        bells.append((b, 1, int(r.choice(aeolian))))
+        b += float(r.choice([4.0, 5.0, 6.0, 7.0]))
+    c.stem("glass", bells, inst_bell, 0.2, (-0.8, 0.8), 0.6, 4.4, seed=77)
+    knocks = [(bar * 4 + 1.0 + k, 0.3, 0) for bar in (4, 12) for k in (0.0, 0.5, 1.0, 2.0, 2.5, 3.5, 4.0, 4.5)]
+    c.stem("knock", knocks, inst_knock, 0.7, -0.2, 0.7, 4.5, seed=79)
+    return c
+
+
+C_MAJ = [48, 55, 60, 64, 67]
+SALLOW_PROG = [D_MAJ, C_MAJ, G_D, D_MAJ, BM7, G_D, EM7, A_SUS]
+SALLOW_MELODY = (
+    "D5:2 E5:1 F#5:1 | A5:3 G5:1 | F#5:2 E5:1 D5:1 | C5:4 | "
+    "B4:2 C5:1 D5:1 | E5:2 D5:2 | B4:1 A4:1 G4:1 A4:1 | A4:4 | "
+    "D5:2 E5:1 F#5:1 | A5:2 B5:2 | A5:1 G5:1 F#5:1 E5:1 | D5:3 r:1 | "
+    "C5:2 B4:1 A4:1 | G4:2 A4:2 | B4:1 C5:1 E5:1 D5:1 | D5:4"
+)
+
+
+def cue_sallow():
+    """Sallow: candlelight, twelve people, a tune somebody taught a child. Mixolydian, warm, tired."""
+    c = Cue("sallow", 76, 16)
+    c.stem("pad", chords(SALLOW_PROG, 8), inst_pad, 0.24, (-0.4, 0.4), 0.4, 3.0, seed=81)
+    c.stem("pluck", arpeggio(SALLOW_PROG, 8, 1.0, [0, 2, 3, 1, 4, 2, 3, 1]), inst_pluck, 0.3, (-0.4, 0.4), 0.3, 2.4, seed=83, humanize=0.1)
+    c.stem("melody", parse(SALLOW_MELODY, 64), inst_flute, 0.48, 0.1, 0.35, 3.0, seed=85, humanize=0.08)
+    knocks = [(60 + k, 0.3, 0) for k in (0.0, 0.5, 1.0, 2.0, 2.5)]
+    c.stem("knock", knocks, inst_knock, 0.9, 0.2, 0.5, 3.0, seed=87)
+    return c
+
+
+DMAJ9 = [38, 50, 57, 62, 64, 66]
+BM11 = [35, 47, 54, 57, 64]
+GMAJ7 = [31, 43, 55, 59, 62, 66]
+ASUS4 = [33, 45, 52, 57, 62]
+HEART_PROG = [DMAJ9, BM11, GMAJ7, ASUS4]
+HEART_BRASS = "D4:4 F#4:4 | A4:4 B4:4 | A4:8 | G4:4 F#4:4 | E4:4 F#4:4 | A4:8 | B4:4 A4:4 | D5:8"
+
+
+def cue_heart():
+    """The Heart: one enormous held breath, and, once it breathes again, the brass."""
+    c = Cue("heart", 56, 16)
+    c.stem("drone", [(0, 64, 26), (0, 64, 33)], inst_drone, 0.36, 0.0, 0.5, 5.0, seed=91)
+    c.stem("breath", chords(HEART_PROG * 2, 8), inst_pad, 0.26, (-0.6, 0.6), 0.6, 5.0, seed=93)
+    r = rng(95)
+    penta = [74, 76, 78, 81, 83, 86]
+    bells = [(b, 2, int(r.choice(penta))) for b in np.arange(1.0, 64.0, 4.0) if r.random() < 0.7]
+    c.stem("glass", bells, inst_bell, 0.2, (-0.8, 0.8), 0.6, 5.0, seed=97)
+    c.stem("brass", parse(HEART_BRASS, 64), inst_brass, 0.34, 0.0, 0.5, 4.5, seed=99)
+    return c
+
+
 def main():
     total = 0.0
-    for make in [cue_menu, cue_wick, cue_hush, cue_reach, cue_cut, cue_station]:
+    for make in [cue_menu, cue_wick, cue_hush, cue_reach, cue_cut, cue_station, cue_deep, cue_sallow, cue_heart]:
         c = make()
         secs = c.write()
         total += secs

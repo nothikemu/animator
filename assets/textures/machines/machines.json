@@ -118,5 +118,11 @@
   "h": 16,
   "frames": 5,
   "emit": false
+ },
+ "lift_winch": {
+  "w": 32,
+  "h": 48,
+  "frames": 5,
+  "emit": true
  }
 }

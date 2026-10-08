@@ -1,0 +1,289 @@
+{
+ "id": "heart",
+ "biome": "heart",
+ "legend": {
+  "s": "stone",
+  ".": "moss_floor",
+  ",": "gravel",
+  ":": "cobble",
+  "r": "rock_floor",
+  "=": "stairs",
+  "#": "plank",
+  "m": "moss_deep",
+  "~": "water",
+  "d": "mud",
+  "b": "basalt",
+  "k": "blackstone",
+  "a": "ash",
+  "n": "sand"
+ },
+ "height": [
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWW0W000WW0WW00WWWW0W000WW0WW00WWWWW",
+  "WW000000000W0000WW000000000W0000WW0W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W00000~~~~~~~~~~~00~~~~~~~~~~~00000W",
+  "W00000~~~~~~~~~~~00~~~~~~~~~~~00000W",
+  "W00000~~~~~~~~~~~00~~~~~~~~~~~00000W",
+  "000000000000011111111110000000000000",
+  "000000000000011111111110000000000000",
+  "000000000000011111111110000000000000",
+  "W0000000000001111111111000000000000W",
+  "W0000000000001111111111000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W",
+  "W0000000000000000000000000000000000W"
+ ],
+ "mat": [
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bbrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrbb",
+  "bb################################bb",
+  "bbbbbb~~~~~~~~~~~##~~~~~~~~~~~bbbbbb",
+  "bbbbbb~~~~~~~~~~~##~~~~~~~~~~~bbbbbb",
+  "bbbbbb~~~~~~~~~~~##~~~~~~~~~~~bbbbbb",
+  "bbbbbbbbbbbbbrrrrrrrrrrbbbbbbbbbbbbb",
+  "b,,,,,,,,,,,,rrrrrrrrrr,,,,,,,,,,,,b",
+  "bbbbbbbbbbbbbrrrrrrrrrrbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbrrrrrrrrrrbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbrrrrrrrrrrbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+ ],
+ "props": [
+  {
+   "type": "bellows",
+   "x": 10,
+   "z": 2,
+   "size": [
+    16,
+    9
+   ],
+   "block": true
+  },
+  {
+   "type": "console",
+   "x": 17,
+   "z": 16,
+   "size": [
+    2,
+    1
+   ],
+   "block": true
+  },
+  {
+   "type": "pipe_pile",
+   "x": 5,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "pipe_pile",
+   "x": 30,
+   "z": 8,
+   "block": true
+  },
+  {
+   "type": "work_lamp",
+   "x": 4,
+   "z": 12,
+   "block": true
+  },
+  {
+   "type": "work_lamp",
+   "x": 31,
+   "z": 12,
+   "block": true
+  },
+  {
+   "type": "work_lamp",
+   "x": 8,
+   "z": 22,
+   "block": true
+  },
+  {
+   "type": "work_lamp",
+   "x": 27,
+   "z": 22,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 3,
+   "z": 25,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 32,
+   "z": 25,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 12,
+   "z": 26,
+   "block": true
+  },
+  {
+   "type": "glow_crystal",
+   "x": 24,
+   "z": 26,
+   "block": true
+  },
+  {
+   "type": "gear_pile",
+   "x": 6,
+   "z": 19
+  },
+  {
+   "type": "gear_pile",
+   "x": 29,
+   "z": 20
+  },
+  {
+   "type": "stalagmite",
+   "x": 4,
+   "z": 29,
+   "scale": 1.4,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 14,
+   "z": 29,
+   "scale": 1.0,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 22,
+   "z": 29,
+   "scale": 1.2,
+   "block": true
+  },
+  {
+   "type": "stalagmite",
+   "x": 31,
+   "z": 29,
+   "scale": 1.5,
+   "block": true
+  }
+ ],
+ "exits": [
+  {
+   "x": 0,
+   "z": 16,
+   "to": "up",
+   "arrive": [
+    2,
+    16
+   ]
+  },
+  {
+   "x": 35,
+   "z": 16,
+   "to": "down",
+   "arrive": [
+    33,
+    16
+   ]
+  }
+ ],
+ "points": {
+  "arrival": [
+   2,
+   16
+  ],
+  "hub": [
+   18,
+   23
+  ],
+  "console": [
+   18,
+   17
+  ],
+  "g_barnaby": [
+   15,
+   18
+  ],
+  "g_hesper": [
+   21,
+   18
+  ],
+  "g_odile": [
+   14,
+   20
+  ],
+  "g_mags": [
+   22,
+   20
+  ],
+  "g_grist": [
+   11,
+   22
+  ],
+  "g_pell": [
+   24,
+   22
+  ],
+  "g_wren": [
+   16,
+   20
+  ],
+  "g_tolley": [
+   20,
+   21
+  ],
+  "commons": [
+   18,
+   23
+  ]
+ },
+ "lights": [
+  {
+   "x": 18.0,
+   "z": 13.0,
+   "y": 0.4,
+   "color": "violet",
+   "energy": 1.0,
+   "range": 12.0,
+   "kind": "glow"
+  }
+ ],
+ "meta": {
+  "name": "The Heart",
+  "ceiling": 16.0
+ }
+}

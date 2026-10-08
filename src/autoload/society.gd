@@ -216,8 +216,12 @@ func spread_gossip() -> void:
 	for item in news:
 		var source: String = item[0]
 		var m: Dictionary = item[1]
+		var where := Npc.area_of(source)
 		for npc in socials:
 			if npc == source or Content.npc(npc).get("nonhuman", false):
+				continue
+			# Gossip travels round a table, not down a lift shaft.
+			if Npc.area_of(npc) != where:
 				continue
 			var s: NpcSocial = socials[npc]
 			if not s.has_memory(m.id):

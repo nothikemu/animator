@@ -296,6 +296,45 @@ def cut_close(s):
     return place(2.0, [(0, rumble), (0.1, whoosh), (1.25, settle)])
 
 
+def lift(s):
+    """The Primary Lift: a brake released, the cage taking the cable, a long whirring descent."""
+    d = 3.4
+    t = t_axis(d)
+    brake = lowpass(noise(0.25, s), 900) * env_perc(n_of(0.25), 0.001, 0.08) * 1.2
+    clank = metal_hit(s + 3, 220, 0.6, 0.5) * 0.6
+    f = 70 + 30 * np.exp(-t * 0.8)
+    whir = saturate(sine(f, d) * (0.6 + 0.4 * np.sin(2 * np.pi * 17 * t) ** 2), 2) * 0.25
+    whir = bandpass(whir, 120, 1500) * env_adsr(n_of(d), 0.5, 0.3, 0.8, 0.9)
+    cable = bandpass(noise(d, s + 9), 2000, 5000) * (0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 2.1 * t))) * 0.06
+    return place(3.8, [(0, brake), (0.05, clank), (0.25, whir + cable * env_adsr(n_of(d), 0.5, 0.3, 0.8, 0.9))])
+
+
+def thud(s):
+    """Somebody going down on the rock: a soft body-weight thump and a rattle of kit."""
+    body = lowpass(noise(0.5, s, "pink"), 160) * env_perc(n_of(0.5), 0.004, 0.14) * 1.6
+    kit = place(0.6, [(0.04 + i * 0.05, highpass(noise(0.02, s + 10 + i), 1500) * env_perc(n_of(0.02), 0.0005, 0.006) * 0.25) for i in range(4)])
+    return place(0.9, [(0, body), (0.02, kit)])
+
+
+def knock_single(s):
+    """One knock on a pipe-head, close."""
+    k = metal_hit(s, 330, 0.35, 0.7)
+    tap = lowpass(noise(0.02, s + 40), 500) * env_perc(n_of(0.02), 0.0005, 0.008) * 0.9
+    k[: len(tap)] += tap
+    return k * 0.8
+
+
+def heart_breath(s):
+    """The Bellows' first breath: drawn in through every Trunk for eight seconds, held, let go."""
+    d = 10.0
+    t = t_axis(d)
+    shape = np.clip(np.sin(np.pi * t / d), 0, 1) ** 1.5
+    air = sweep_lowpass(noise(d, s, "pink"), 200, 2400) * shape * 0.7
+    groan = resonator(lowpass(noise(d, s + 5), 300), 55, 30) * shape * 0.9
+    chord = sum(tri(midi_hz(m), d) for m in [38, 45, 50, 54, 57]) * 0.06 * shape
+    return reverb(air + groan + lowpass(chord, 1200), 0.5, 4.0, 1600, 21)
+
+
 # --- Footsteps ---------------------------------------------------------------------------------
 
 def step_soft(s):
@@ -356,6 +395,7 @@ SFX = {
     "winch": (winch, 1), "cable_snap": (cable_snap, 1), "fall": (fall, 1), "travel": (travel, 1),
     "valve_turn": (valve_turn, 1), "knock_323": (knock_323, 1), "reveal": (reveal, 1),
     "cut_open": (cut_open, 1), "cut_close": (cut_close, 1),
+    "lift": (lift, 1), "thud": (thud, 1), "knock_single": (knock_single, 3), "heart_breath": (heart_breath, 1),
     "step_soft": (step_soft, 4), "step_stone": (step_stone, 4), "step_wood": (step_wood, 4), "step_gravel": (step_gravel, 4),
 }
 
