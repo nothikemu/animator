@@ -290,3 +290,77 @@ func test_every_unlock_can_be_learned() -> void:
 		var u := String(Content.recipes[id].get("unlock", ""))
 		if u != "":
 			check(taught.has(u), "recipe %s unlock '%s' is taught somewhere" % [id, u])
+
+
+func test_every_ruin_page_exists() -> void:
+	for n in 12:
+		var id := ReachGen.lore_for({"unmapped": n, "tier": 9})
+		check(Content.lore.has(id), "Unmapped page %s" % id)
+	for st in [8, 9, 10]:
+		check(Content.lore.has(ReachGen.lore_for({"deep": true, "station": st, "tier": 4})), "Station %d page" % st)
+	for node: Dictionary in GameState.reach_graph.get("nodes", []):
+		if bool(node.get("ruin", false)):
+			check(Content.lore.has(ReachGen.lore_for(node)), "ruin page for %s" % String(node.id))
+
+
+func test_requests_post_seeded_and_pay() -> void:
+	Requests.reset()
+	Society.mark_met("mags")
+	GameState.set_flag("well_fixed")
+	Requests.refresh(2)
+	eq(Requests.open.size(), 1, "one request goes up")
+	var first: Dictionary = Requests.open[0].duplicate()
+	Requests.reset()
+	Requests.refresh(2)
+	eq(JSON.stringify(Requests.open[0]), JSON.stringify(first), "the same seed and day post the same request")
+	var r: Dictionary = Requests.open[0]
+	check(not Requests.can_fill(r), "can't hand in without the goods")
+	GameState.give(String(r.item), int(r.n), true)
+	var money := GameState.money()
+	var aff := Society.axis(String(r.npc), "affection")
+	check(Requests.fill(int(r.id)), "hands in")
+	eq(GameState.money(), money + int(r.reward), "paid")
+	check(Society.axis(String(r.npc), "affection") > aff, "%s is pleased" % String(r.npc))
+	eq(Requests.open.size(), 0, "the note comes down")
+	eq(Requests.total_done(), 1, "counted")
+	# Notes expire.
+	Requests.refresh(3)
+	var up := Requests.open.size()
+	Requests.refresh(3 + int(Content.requests.get("days_open", 4)) + 1)
+	check(Requests.open.size() <= up, "stale notes come down")
+	Requests.reset()
+
+
+func test_request_templates_are_sound() -> void:
+	var npcs := Content.npcs.keys()
+	for t: Dictionary in Content.requests.get("templates", []):
+		check(Content.items.has(String(t.item)), "request item %s exists" % String(t.item))
+		check(npcs.has(String(t.npc)), "request asker %s exists" % String(t.npc))
+		for c in t.get("when", []):
+			var err := _clause_ok(String(c))
+			check(err == "", "request %s/%s: %s" % [String(t.npc), String(t.item), err])
+
+
+func test_origins_and_echoes() -> void:
+	var saved_endings := Almanac.endings
+	Almanac.endings = {"sealed": {"first": 0, "count": 1}}
+	for id: String in Content.origins:
+		for e in Content.origins[id].get("effects", []):
+			var err := _effect_ok(String(e))
+			check(err == "", "origin %s: %s" % [id, err])
+		GameFlow.new_game(99, "Tester", id, false)
+		check(GameState.has_flag("origin_" + id), "origin %s flagged" % id)
+		check(not GameState.has_flag("echo"), "no echoes unless asked")
+		check(Ending._you("together").contains(String(Content.origins[id].after)), "origin %s in the epilogue" % id)
+	GameFlow.new_game(99, "Tester", "seedkeeper", true)
+	check(GameState.inventory.count("glowbeet_seed") >= 6, "seed-keeper brought seeds")
+	check(GameState.has_flag("echo") and GameState.has_flag("echo_sealed"), "echoes remember the sealed ending")
+	Society.mark_met("barnaby")
+	Clock.day = 3
+	var echo_line := {}
+	for l: Dictionary in Content.dialogue.barnaby.lines:
+		if String(l.id) == "b_echo_sealed":
+			echo_line = l
+	check(not echo_line.is_empty() and Conditions.check(echo_line.when, GameState), "Barnaby can half-remember the valve")
+	Almanac.endings = saved_endings
+	GameFlow.new_game(4242, "Tester")

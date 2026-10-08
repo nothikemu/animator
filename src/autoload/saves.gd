@@ -22,7 +22,7 @@ func collect_sections() -> Dictionary:
 	return {
 		"world": GameState.to_dict(), "clock": Clock.to_dict(), "sim": Sim.to_dict(),
 		"society": Society.to_dict(), "economy": Economy.to_dict(), "threads": Threads.to_dict(),
-		"director": Director.to_dict(), "dialogue": Dialogue.to_dict(),
+		"director": Director.to_dict(), "dialogue": Dialogue.to_dict(), "requests": Requests.to_dict(),
 	}
 
 
@@ -132,6 +132,7 @@ func apply(sections: Dictionary) -> String:
 	Director.reset(GameState.seed_value)
 	Director.load_dict(sections.get("director", {}))
 	Dialogue.load_dict(sections.get("dialogue", {}))
+	Requests.load_dict(sections.get("requests", {}))
 	return ""
 
 

@@ -10,6 +10,7 @@ static var _terrain_mat: ShaderMaterial
 static var _water_mat: ShaderMaterial
 
 var area: AreaMap
+var _breath_rising := false
 var props: PropBuilder
 var fade_targets: Dictionary = {}        ## group name -> target fade
 var _flicker_t := 0.0
@@ -74,6 +75,18 @@ func update_lights(delta: float, glow: float, dark: float, lamp_quality: float) 
 			Fx.lampmoths(self, area.w, area.d, bloom > 2.0)
 	elif has_node("Lampmoths"):
 		get_node("Lampmoths").queue_free()
+	if not props.breathers.is_empty():
+		# Still, the Heart keeps a shallow half-minute breath; restarted, a deep one every eight seconds.
+		var running := GameState.has_flag("heart_running")
+		var b := 0.5 + 0.5 * sin(_flicker_t * TAU / (8.0 if running else 30.0))
+		var lift := lerpf(0.7, 1.0, b) if running else lerpf(0.86, 0.92, b)
+		for lung in props.breathers:
+			lung.scale.y = lift
+		# Running, each in-breath is heard: once per cycle, as the lids start to rise.
+		var rising := cos(_flicker_t * TAU / 8.0) > 0.0
+		if running and rising and not _breath_rising:
+			Audio.play_at("heart_breath", props.breathers[0].global_position + Vector3(4.0, 3.0, 4.0), -4.0, 0.0)
+		_breath_rising = rising
 	for l in props.lights:
 		var base := float(l.get_meta("base_energy", 1.0))
 		var kind := String(l.get_meta("kind", ""))
@@ -90,7 +103,7 @@ func update_lights(delta: float, glow: float, dark: float, lamp_quality: float) 
 				# Still, the Heart barely glows; restarted, it breathes in and out over eight seconds.
 				var running := GameState.has_flag("heart_running")
 				var breath := 0.5 + 0.5 * sin(_flicker_t * TAU / 8.0)
-				l.light_energy = base * (lerpf(0.9, 2.4, breath) if running else 0.25 + 0.1 * breath)
+				l.light_energy = base * (lerpf(0.9, 2.4, breath) if running else 0.7 + 0.2 * (0.5 + 0.5 * sin(_flicker_t * TAU / 30.0)))
 			"pump":
 				l.light_energy = base * (0.7 + 0.3 * absf(sin(_flicker_t * 1.3 + phase)))
 			"fire":

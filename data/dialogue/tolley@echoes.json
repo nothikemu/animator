@@ -1,0 +1,8 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "t_or_runner", "tier": "ambient", "when": ["met:tolley", "flag:origin_runner"], "text": "Sorry, are you the courier? Sorry. I've never met a courier. Sorry. Is it rude to ask what the fastest you've ever run was? Sorry."},
+		{"id": "t_echo_topside", "tier": "ambient", "when": ["met:tolley", "flag:echo_topside"], "text": "Sorry, this is silly. I dreamt you went up. All the way up. And then came back down to tell us what it was like. Sorry. Is that what happens?"}
+	],
+	"convos": {}
+}

@@ -111,8 +111,16 @@ static func _people(id: String) -> Array:
 static func _you(id: String) -> String:
 	var clean := GameState.deed("clean_power") >= GameState.deed("industrial_power")
 	var who := String(GameState.player.get("name", "The salvager"))
+	var line := ""
 	if id == "sealed":
-		return "%s stayed in Wick, and kept the farm, and sometimes stood in the lane at Hush with a hand on the brass." % who
-	if clean:
-		return "%s fell down a shaft into the dark, and left it brighter, and quieter, than they found it." % who
-	return "%s fell down a shaft into the dark, and left it brighter than they found it, and louder." % who
+		line = "%s stayed in Wick, and kept the farm, and sometimes stood in the lane at Hush with a hand on the brass" % who
+	elif clean:
+		line = "%s fell down a shaft into the dark, and left it brighter, and quieter, than they found it" % who
+	else:
+		line = "%s fell down a shaft into the dark, and left it brighter than they found it, and louder" % who
+	var origin: Dictionary = Content.origins.get(String(GameState.player.get("origin", "")), {})
+	if origin.has("after"):
+		line += ", " + String(origin.after)
+	if Requests.total_done() >= 10:
+		line += ". The notice board still has your handwriting on half the notes"
+	return line + "."

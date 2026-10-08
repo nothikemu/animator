@@ -132,6 +132,12 @@ static func _access() -> Control:
 	v.add_child(_row("Shake strength", _slider(float(a.get("shake_scale", 0.6)), 0.0, 1.0, 0.05, func(x: float) -> void: Settings.set_access("shake_scale", x))))
 	v.add_child(_row("Flashes", _slider(float(a.get("flash", 0.7)), 0.0, 1.0, 0.05, func(x: float) -> void: Settings.set_access("flash", x)),
 		"Brightness of full-screen flashes (tremors, valves). Zero turns them off."))
+	var sizes := ["Hidden", "Small", "Large"]
+	v.add_child(_row("Minimap", _options(sizes, sizes[clampi(int(a.get("minimap", 1)), 0, 2)],
+		func(choice: String) -> void: Settings.set_access("minimap", sizes.find(choice))),
+		"Also cycled in play with %s." % Settings.binding_label("minimap")))
+	v.add_child(_row("Objective marker", _check(bool(a.get("objective_marker", true)), func(on: bool) -> void: Settings.set_access("objective_marker", on)),
+		"The small brass arrow over where your current note points. The map always shows it."))
 	return v
 
 

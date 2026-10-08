@@ -7,7 +7,9 @@ const GAME_SCENE := "res://scenes/game.tscn"
 const MENU_SCENE := "res://scenes/main_menu.tscn"
 
 
-static func new_game(seed_value: int, player_name: String) -> void:
+## `origin` is an id from data/origins.json ("" for none). `echoes` lets a new run remember
+## the endings this player has already seen (the Almanac): a few residents half-recall them.
+static func new_game(seed_value: int, player_name: String, origin := "", echoes := false) -> void:
 	GameState.new_game(seed_value, player_name)
 	Clock.clear_pauses()
 	Clock.start(1, 7 * 60)
@@ -17,6 +19,15 @@ static func new_game(seed_value: int, player_name: String) -> void:
 	Threads.reset()
 	Director.reset(seed_value)
 	Dialogue.reset()
+	Requests.reset()
+	if Content.origins.has(origin):
+		GameState.player["origin"] = origin
+		GameState.set_flag("origin_" + origin)
+		GameState.apply_effects(Content.origins[origin].get("effects", []), "origin")
+	if echoes and not Almanac.endings.is_empty():
+		GameState.set_flag("echo")
+		for id: String in Almanac.endings:
+			GameState.set_flag("echo_" + id)
 
 
 static func random_seed() -> int:

@@ -1,0 +1,33 @@
+{
+	"_comment": "Who the salvager was before the line snapped. Chosen on the new-game page. Each gives a small start (effects use the rule language) and sets flag origin_<id>, which a few residents notice. 'after' finishes the epilogue sentence about you.",
+	"hauler": {
+		"name": "Line hauler",
+		"blurb": "You hauled cable for a salvage crew. You know knots, and how to keep walking.",
+		"effects": ["give:pipe_section*3", "give:wire_coil*2", "affection:barnaby+2"],
+		"after": "and nobody in Wick ever again tied a knot that came undone"
+	},
+	"seedkeeper": {
+		"name": "Seed-keeper",
+		"blurb": "You kept a seed-box on a rooftop farm. You brought some of it down with you, in your coat.",
+		"effects": ["give:glowbeet_seed*6", "give:moss_spore*4", "affection:hesper+3"],
+		"after": "and the seed-box from the roof is still in Hesper's hut, planted"
+	},
+	"runner": {
+		"name": "Scrip-runner",
+		"blurb": "You ran messages and money between market towns. You talk quickly and count quicker.",
+		"effects": ["money+40", "affection:odile+3"],
+		"after": "and Odile still says you were the only honest courier she ever met, and then counts her change"
+	},
+	"medic": {
+		"name": "Field medic",
+		"blurb": "You patched up salvagers on the surface. You notice coughs, and you notice people hiding them.",
+		"effects": ["give:moss_fiber*4", "affection:hesper+2", "affection:mags+2"],
+		"after": "and the children of Wick were checked for coughs every damp season, gently, by someone who'd learned how"
+	},
+	"wanderer": {
+		"name": "Nobody in particular",
+		"blurb": "You were going somewhere else when the ground opened. You've been going somewhere else for years.",
+		"effects": ["money-10", "affection:grist+3"],
+		"after": "and stopped, for once, and stayed stopped"
+	}
+}

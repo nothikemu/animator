@@ -510,6 +510,12 @@ func _board() -> Control:
 		notes.append(["WARNING", "Sour gas west end. Keep children off the low ground. Blackstone at the Exchange."])
 	notes.append(["LOST", "One winch cable, forty metres, last seen falling. Return to sender (up)."])
 	notes.append(["REMINDER", "The Reach gate is NOT a shortcut to anywhere. — B."])
+	v.add_child(_label("REQUESTS", 15, UiTheme.ACCENT))
+	if Requests.open.is_empty():
+		v.add_child(_label("Nobody's asking for anything today. Give it a morning.", 16, UiTheme.DIM))
+	for r: Dictionary in Requests.open:
+		v.add_child(_request_note(r))
+	v.add_child(_label("NOTICES", 15, UiTheme.ACCENT))
 	for n: Array in notes:
 		var p := PanelContainer.new()
 		p.add_theme_stylebox_override("panel", UiTheme.panel_box(Color("2a2520f0"), UiTheme.BORDER_DIM, 1, 12))
@@ -519,6 +525,32 @@ func _board() -> Control:
 		p.add_child(nv)
 		v.add_child(p)
 	return _scroll(v)
+
+
+func _request_note(r: Dictionary) -> Control:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", UiTheme.panel_box(Color("302a22f0"), UiTheme.BORDER, 1, 12))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	row.add_child(_icon(String(Content.item(String(r.item)).get("icon", String(r.item))), 40))
+	var nv := VBoxContainer.new()
+	nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nv.add_child(_label("\"%s\"" % String(r.text), 17))
+	var have := GameState.inventory.count(String(r.item))
+	var left := int(r.expires) - Clock.day
+	nv.add_child(_label("%s wants %d × %s (you have %d) · pays %d glim · %s" % [Society.display_name(String(r.npc)),
+		int(r.n), Content.item_name(String(r.item)), have, int(r.reward),
+		"comes down tonight" if left <= 0 else "up for %d more day%s" % [left, "" if left == 1 else "s"]], 15, UiTheme.DIM))
+	row.add_child(nv)
+	var id := int(r.id)
+	var b := _button("Hand in", func() -> void:
+		if Requests.fill(id):
+			Audio.ui("chime", -6.0)
+			_rebuild(), "", Requests.can_fill(r))
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(b)
+	p.add_child(row)
+	return p
 
 
 static func _days_to_market() -> int:

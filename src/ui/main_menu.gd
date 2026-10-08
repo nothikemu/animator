@@ -1,6 +1,6 @@
 extends Node3D
 ## Title screen. Wick at Hush, seen slowly from above like a model on a table, under a
-## small brass-and-basalt menu. Continue / New / Load / Settings / Credits / Quit.
+## small brass-and-basalt menu. Continue / New / Load / Almanac / Settings / Credits / Quit.
 
 const CAM_PITCH := -38.0
 const CAM_DIST := 30.0
@@ -16,6 +16,8 @@ var sub_box: VBoxContainer
 var _t := 0.0
 var _name_edit: LineEdit
 var _seed_edit: LineEdit
+var _origin := "hauler"
+var _echo_check: CheckBox
 
 
 func _ready() -> void:
@@ -45,6 +47,11 @@ func _ready() -> void:
 	_build_ui()
 	Audio.music("menu", {"pad": 1.0, "melody": 0.7, "glass": 0.6, "drone": 0.8})
 	Audio.ambience("grove")
+	if Dev.has_arg("menu_page"):
+		# Capture path: open a sub-page (new, almanac) for a screenshot.
+		match Dev.arg("menu_page", ""):
+			"new": _show_new_game()
+			"almanac": _show_almanac()
 	if Dev.has_arg("autostart"):
 		# Dev/capture path: press New game -> Begin, exactly as a player would.
 		get_tree().create_timer(0.4).timeout.connect(func() -> void:
@@ -102,7 +109,7 @@ func _build_ui() -> void:
 	title.add_theme_constant_override("shadow_offset_y", 3)
 	col.add_child(title)
 	var tag := Label.new()
-	tag.text = "Build a life inside a living machine."
+	tag.text = "Build a life inside a living machine." if Almanac.endings.is_empty() else "It's been breathing the whole time."
 	tag.add_theme_font_size_override("font_size", UiTheme.size(19))
 	tag.add_theme_color_override("font_color", UiTheme.DIM)
 	col.add_child(tag)
@@ -119,12 +126,14 @@ func _build_ui() -> void:
 	_menu_button("New game", _show_new_game)
 	if Saves.has_any_save():
 		_menu_button("Load", _show_load)
+	if Almanac.runs > 0 or not Almanac.endings.is_empty():
+		_menu_button("Almanac", _show_almanac, "%d/%d endings" % [Almanac.endings.size(), Almanac.ENDINGS.size()])
 	_menu_button("Settings", _show_settings)
 	_menu_button("Credits", _show_credits)
 	if OS.get_name() != "Web":
 		_menu_button("Quit", func() -> void: get_tree().quit())
 	var ver := Label.new()
-	ver.text = "v%s · first chapter" % String(ProjectSettings.get_setting("application/config/version", "0"))
+	ver.text = "v%s" % String(ProjectSettings.get_setting("application/config/version", "0"))
 	ver.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	ver.position = Vector2(72, -40)
 	ver.add_theme_color_override("font_color", Color(UiTheme.DIM, 0.6))
@@ -199,6 +208,40 @@ func _show_new_game() -> void:
 	_seed_edit.text = str(GameFlow.random_seed())
 	_seed_edit.tooltip_text = "The Reach below Wick is drawn from this number. Share it to share a world."
 	sub_box.add_child(SettingsPanel._row("World seed", _seed_edit))
+	var who := Label.new()
+	who.text = "Before the fall, you were…"
+	who.add_theme_color_override("font_color", UiTheme.ACCENT)
+	sub_box.add_child(who)
+	var blurb := Label.new()
+	blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	blurb.add_theme_color_override("font_color", UiTheme.DIM)
+	var row := HFlowContainer.new()
+	row.add_theme_constant_override("h_separation", 6)
+	row.add_theme_constant_override("v_separation", 6)
+	var group := ButtonGroup.new()
+	for id: String in Content.origins:
+		var o: Dictionary = Content.origins[id]
+		var b := Button.new()
+		b.text = String(o.get("name", id))
+		b.toggle_mode = true
+		b.button_group = group
+		b.button_pressed = id == _origin
+		var oid := id
+		b.toggled.connect(func(on: bool) -> void:
+			if on:
+				_origin = oid
+				blurb.text = String(Content.origins[oid].get("blurb", ""))
+				Audio.ui("ui_tick", -10.0))
+		row.add_child(b)
+	sub_box.add_child(row)
+	blurb.text = String(Content.origins.get(_origin, {}).get("blurb", ""))
+	sub_box.add_child(blurb)
+	_echo_check = null
+	if not Almanac.endings.is_empty():
+		_echo_check = CheckBox.new()
+		_echo_check.text = "Remember (people may half-recall what you did last time)"
+		_echo_check.button_pressed = true
+		sub_box.add_child(_echo_check)
 	var go := Button.new()
 	go.text = "Begin"
 	go.add_theme_font_size_override("font_size", UiTheme.size(24))
@@ -215,7 +258,8 @@ func _start_new() -> void:
 	if nm.is_empty():
 		nm = "Salvager"
 	var sv := int(_seed_edit.text) if _seed_edit.text.strip_edges().is_valid_int() else _seed_edit.text.hash()
-	GameFlow.new_game(absi(sv), nm)
+	GameFlow.new_game(absi(sv), nm, _origin, _echo_check != null and _echo_check.button_pressed)
+	Almanac.record_run()
 	GameFlow.start(get_tree())
 
 
@@ -245,6 +289,49 @@ func _show_load() -> void:
 	_focus_first(sub_box)
 
 
+func _show_almanac() -> void:
+	_clear_sub("Almanac")
+	var l := Label.new()
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_color_override("font_color", UiTheme.DIM)
+	l.text = "Kept across every save. Runs begun: %d. Deepest Unmapped reached: %s. Pages found: %d of %d." % [
+		Almanac.runs, str(Almanac.deepest) if Almanac.deepest > 0 else "none yet", Almanac.lore.size(), Content.lore.size() - 1]
+	sub_box.add_child(l)
+	for id: String in Almanac.ENDINGS:
+		var seen := Almanac.seen(id)
+		var e := Label.new()
+		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if seen:
+			var n := int(Almanac.endings[id].get("count", 1))
+			e.text = "◆  %s%s" % [String(Almanac.ENDINGS[id]), "" if n < 2 else "  (×%d)" % n]
+			e.add_theme_color_override("font_color", UiTheme.ACCENT)
+		else:
+			e.text = "◇  ? ? ?"
+			e.add_theme_color_override("font_color", Color(UiTheme.DIM, 0.6))
+		e.add_theme_font_size_override("font_size", UiTheme.size(20))
+		sub_box.add_child(e)
+	var hint := Label.new()
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.add_theme_color_override("font_color", Color(UiTheme.DIM, 0.8))
+	hint.text = _almanac_hint()
+	sub_box.add_child(hint)
+
+
+## One nudge toward an ending not yet seen, in the game's voice, never a walkthrough.
+static func _almanac_hint() -> String:
+	if not Almanac.seen("everything"):
+		if Almanac.seen("together"):
+			return "Somebody you couldn't save could have been saved. Somebody always can."
+		return "A town that comes down together can do almost anything."
+	if not Almanac.seen("watch"):
+		return "There's a kind of love that leaves things exactly as they are."
+	if not Almanac.seen("sealed"):
+		return "Barnaby closed a valve once, for a good reason. You could too."
+	if not Almanac.seen("topside"):
+		return "The way you fell in goes up, once the Heart is breathing."
+	return "You've seen every ending. The Unmapped is still down there, and it doesn't end."
+
+
 func _show_settings() -> void:
 	_clear_sub("Settings")
 	var s := SettingsPanel.build()
@@ -256,5 +343,5 @@ func _show_credits() -> void:
 	_clear_sub("Credits")
 	var t := Label.new()
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	t.text = "Bellows — first chapter.\n\nDesign, code, pixel art, music and sound generated for this project, procedurally, from scratch.\n\nFonts: Pixelify Sans and Atkinson Hyperlegible, under the SIL Open Font License.\n\nBuilt with Godot Engine (MIT).\n\nIn loving memory of every pipe that ever knocked back."
+	t.text = "Bellows.\n\nDesign, code, pixel art, music and sound generated for this project, procedurally, from scratch.\n\nFonts: Pixelify Sans and Atkinson Hyperlegible, under the SIL Open Font License.\n\nBuilt with Godot Engine (MIT).\n\nIn loving memory of every pipe that ever knocked back."
 	sub_box.add_child(t)

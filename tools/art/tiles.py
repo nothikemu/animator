@@ -619,6 +619,46 @@ def build():
     put("metal_brass_0", metal)
     dark = Canvas(T, T, pal("charcoal"))
     put("black_0", dark)
+    # Bellows leather: oxblood hide in two pleats per tile, stitched, oiled highlight on each fold.
+    leather = Canvas(T, T)
+    hide = ramp(shade(mix(pal("clay"), pal("danger"), 0.3), -0.08), 4, 0.3)
+    for y in range(T):
+        fold = y % 8
+        for x in range(T):
+            n = 0.35 + 0.3 * fbm(x, y, T, 380, 2)
+            if fold == 0:
+                n = 0.0
+            elif fold == 1:
+                n = 0.95
+            elif fold >= 6:
+                n *= 0.55
+            leather.set(x, y, dither_pick(hide, max(0.0, min(1.0, n)), x, y))
+        if fold == 3:
+            for x in range(1, T, 4):
+                leather.set(x, y, pal("brass_dark"))
+    put("leather_0", leather)
+    # Gauge: a brass bezel round a cream dial with a needle; the dial glows faintly.
+    gauge = Canvas(T, T)
+    gauge_glow = Canvas(T, T, (0, 0, 0, 0))
+    bez = ramp(pal("brass"), 3, 0.3)
+    for y in range(T):
+        for x in range(T):
+            d = math.hypot(x - 7.5, y - 7.5)
+            if d > 7.2:
+                col = shade(pal("basalt"), -0.2)
+            elif d > 5.6:
+                col = bez[0] if y > x else bez[2]
+            else:
+                col = pal("cream") if d < 5.0 else shade(pal("cream"), -0.25)
+                gauge_glow.set(x, y, (86, 224, 212, 90))
+            gauge.set(x, y, col)
+    for i in range(5):
+        a = math.pi * (0.85 + 0.075 * i * 4)
+        gauge.set(int(round(7.5 + math.cos(a) * 4.2)), int(round(7.5 + math.sin(a) * 4.2)), pal("basalt"))
+    for k in range(5):
+        gauge.set(7 + (k + 1) // 2, 7 - k, pal("danger"))
+    gauge.set(7, 8, pal("basalt"))
+    put("gauge_0", gauge, gauge_glow)
 
     atlas.save(os.path.join(TEX, "terrain.png"))
     emit.save(os.path.join(TEX, "terrain_emit.png"))

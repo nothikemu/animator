@@ -1,0 +1,11 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "m_or_hauler", "tier": "ambient", "when": ["met:mags", "flag:origin_hauler"], "text": "A hauler! I knew it. You walk like you're pulling something. Sit down. You're not pulling anything in here.", "emote": "happy"},
+		{"id": "m_or_seed", "tier": "ambient", "when": ["met:mags", "flag:origin_seedkeeper"], "text": "Hesper says you came down with seeds in your pockets like a squirrel. I said that's lovely. She said squirrels are a pest. We disagree about squirrels.", "emote": "happy"},
+		{"id": "m_or_medic", "tier": "ambient", "when": ["met:mags", "flag:origin_medic"], "text": "A medic! Thank goodness. My knee does a thing. No, the other knee. No. It's stopped now. It knew.", "emote": "surprised"},
+		{"id": "m_or_wander", "tier": "ambient", "when": ["met:mags", "flag:origin_wanderer"], "text": "No family up there? Well. You've got a lot of nosy people down here now. Sorry. It comes with the soup.", "emote": "sad"},
+		{"id": "m_echo_everything", "tier": "ambient", "when": ["met:mags", "flag:echo_everything"], "text": "I keep setting a place at the quiet table. For someone who's coming. Don't ask me who. I don't know who.", "emote": "sad"}
+	],
+	"convos": {}
+}

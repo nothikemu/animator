@@ -133,7 +133,7 @@
 	"heart": {
 		"name": "The Heart",
 		"ambient_light": "#4c4a6c",
-		"ambient_energy": 0.95,
+		"ambient_energy": 1.15,
 		"fog_color": "#100e1c",
 		"fog_density": 0.026,
 		"grade": "violet",
@@ -141,7 +141,7 @@
 		"music": "heart",
 		"temp": 22,
 		"hazard": "",
-		"fill": 0.32
+		"fill": 0.4
 	},
 	"knapper": {
 		"name": "The Knapper Ways",

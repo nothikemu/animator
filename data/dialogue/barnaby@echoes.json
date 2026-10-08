@@ -1,0 +1,9 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "b_or_hauler", "tier": "reactive", "when": ["met:barnaby", "day>=2", "flag:origin_hauler"], "text": "You coil a line right. Over, under, never round the elbow. Somebody taught you properly.", "once": true},
+		{"id": "b_or_wander", "tier": "ambient", "when": ["met:barnaby", "flag:origin_wanderer"], "text": "Most who fall in want out. You don't seem to mind. I don't know what to do with that."},
+		{"id": "b_echo_sealed", "tier": "reactive", "when": ["met:barnaby", "day>=3", "flag:echo_sealed"], "text": "Had a dream. You and me, wiring a valve shut. Woke up with copper on my hands. I don't like dreams.", "once": true}
+	],
+	"convos": {}
+}

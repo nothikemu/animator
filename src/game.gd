@@ -23,6 +23,7 @@ var _busy := false                       ## transitions in progress
 var _talking_npc: Npc
 var marker: Node3D                      ## floating objective marker
 var breath := 1.0                        ## 1 = full lungs; drains in bad air
+var _day_log := {}                       ## what today held, for the card at bedtime
 
 
 func _ready() -> void:
@@ -63,6 +64,15 @@ func _ready() -> void:
 	Clock.hour_changed.connect(func(_h: int) -> void: _update_music())
 	Events.world_event.connect(func(_id: StringName, _d: Dictionary) -> void: _update_music())
 	Events.dialogue_ended.connect(_on_dialogue_ended)
+	_reset_day_log()
+	Clock.day_started.connect(func(_d: int) -> void: _reset_day_log())
+	Events.harvest.connect(func(_c: StringName, n: int) -> void: _day_log["harvested"] = int(_day_log.harvested) + n)
+	Events.dialogue_started.connect(func(who: StringName) -> void:
+		if Content.npcs.has(String(who)) and not (_day_log.people as Array).has(String(who)):
+			(_day_log.people as Array).append(String(who)))
+	Events.discovered.connect(func(kind: StringName, _id: StringName) -> void:
+		if kind == &"places" or kind == &"lore":
+			_day_log["found"] = int(_day_log.found) + 1)
 	Events.flag_changed.connect(_chapter_banner)
 	Events.thread_updated.connect(func(tid: StringName, _s: int) -> void:
 		# A finished thread gets a little fist in the air (only when the salvager is free).
@@ -100,6 +110,7 @@ func load_area(id: String, initial := false) -> void:
 		if node.has("unmapped"):
 			GameState.set_flag("deepest", maxi(int(GameState.flag("deepest") if GameState.flag("deepest") else 0), int(node.unmapped)))
 			ReachGen.ensure_unmapped(GameState.reach_graph, int(node.unmapped))
+			Almanac.record_depth(int(node.unmapped))
 		area = ReachGen.generate_cavern(GameState.seed_value, GameState.reach_graph, id)
 		_apply_area_deltas(id)
 	GameState.current_area = id
@@ -463,6 +474,7 @@ func sleep() -> void:
 	_busy = true
 	player.frozen = true
 	await fade.fade_out(1.0)
+	var summary := day_summary()
 	Clock.sleep_until_morning()
 	Saves.save(0)
 	if area.id == "wick":
@@ -470,6 +482,8 @@ func sleep() -> void:
 			n.place_at_schedule()
 		if farm:
 			farm.refresh_all()
+	if summary != "":
+		await fade.card([summary], 2.4, UiTheme.DIM)
 	fade.title.text = "Day %d" % Clock.day
 	var tw := create_tween()
 	tw.tween_property(fade.title, "modulate:a", 1.0, 0.4)
@@ -478,6 +492,32 @@ func sleep() -> void:
 	player.frozen = false
 	_busy = false
 	_update_music()
+
+
+func _reset_day_log() -> void:
+	_day_log = {"money": GameState.money(), "harvested": 0, "people": [], "found": 0}
+
+
+## One quiet line about the day just gone: what grew, who you talked to, what you earned.
+func day_summary() -> String:
+	var bits := PackedStringArray()
+	if int(_day_log.harvested) > 0:
+		bits.append("%d harvested" % int(_day_log.harvested))
+	var earned := GameState.money() - int(_day_log.money)
+	if earned > 0:
+		bits.append("%d glim earned" % earned)
+	var people: Array = _day_log.people
+	if not people.is_empty():
+		var names := PackedStringArray()
+		for who: String in people:
+			names.append(Society.display_name(who))
+		bits.append("talked with " + (", ".join(names.slice(0, names.size() - 1)) + " and " + names[names.size() - 1] if names.size() > 1 else names[0]))
+	if int(_day_log.found) > 0:
+		bits.append("%d new thing%s found" % [int(_day_log.found), "" if int(_day_log.found) == 1 else "s"])
+	if bits.is_empty():
+		return ""
+	var line := " · ".join(bits)
+	return line.substr(0, 1).to_upper() + line.substr(1) + "."
 
 
 func _on_exhausted() -> void:

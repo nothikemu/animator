@@ -1,0 +1,7 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "os_echo", "tier": "ambient", "when": ["flag:echo"], "text": "Small one. ... Your feet. ... The rock remembers your feet. ... You came down this way. Before."}
+	],
+	"convos": {}
+}

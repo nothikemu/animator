@@ -1,0 +1,9 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "o_or_runner", "tier": "reactive", "when": ["met:odile", "day>=2", "flag:origin_runner"], "text": "You count with your lips moving. Courier habit. I'll be watching that. Fondly. Mostly fondly.", "once": true},
+		{"id": "o_or_runner2", "tier": "ambient", "when": ["met:odile", "flag:origin_runner"], "text": "Forty runs a season on the surface, you said. With nothing to carry it in but a coat. I have nine pockets in this apron and I still lose pencils."},
+		{"id": "o_echo_watch", "tier": "ambient", "when": ["met:odile", "flag:echo_watch"], "text": "Page forty-one of the ledger is in my handwriting, and I haven't written it yet. I am choosing not to think about that.", "emote": "surprised"}
+	],
+	"convos": {}
+}

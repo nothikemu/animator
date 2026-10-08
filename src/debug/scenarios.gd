@@ -83,6 +83,10 @@ static func run(game: Node, name: String) -> void:
 			Sim.repair("pipe", Vector2i(24, 13))
 			for i in 4:
 				Threads.check()
+			GameState.set_flag("well_fixed")
+			Requests.reset()
+			for d in [1, 2, 3]:
+				Requests.refresh(d)
 		"talk":
 			# talk:<npc> — opens that resident's best conversation.
 			Clock.start(1, 8 * 60)

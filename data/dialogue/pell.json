@@ -49,7 +49,7 @@
 		],
 
 		"wren_died": [
-			{"say": "You came back.", "do": ["flag:pe_dead_talk", "give:wren_journal"]},
+			{"say": "You came back.", "do": ["flag:pe_dead_talk", "give:wren_journal", "discover:lore:wren_journal"]},
 			{"say": "She went in the night. Two nights ago. I was sitting with her. She was talking, and then she was asleep, and then she wasn't talking any more.", "emote": "sad"},
 			{"say": "She asked for him. Barnaby. She said 'Coil' like it was a joke she'd been saving."},
 			{"say": "She left this. It's for him. Every page starts with 'B'. I didn't read it. I read one page. I'm sorry. I read three.", "emote": "sad"},

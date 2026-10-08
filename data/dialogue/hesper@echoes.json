@@ -1,0 +1,9 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "h_or_seed", "tier": "reactive", "when": ["met:hesper", "day>=2", "flag:origin_seedkeeper"], "text": "Those seeds in your coat. Glowbeet, but not ours. Older. Could I have one? Not to plant. For the moss to look at.", "once": true},
+		{"id": "h_or_medic", "tier": "reactive", "when": ["met:hesper", "day>=2", "flag:origin_medic"], "text": "You looked at the children's throats when you thought nobody saw. Good. Keep doing it. Tell me what you find, not them.", "once": true},
+		{"id": "h_echo", "tier": "ambient", "when": ["met:hesper", "flag:echo"], "text": "The moss leans toward you. It does that with people it knows. It doesn't know you. ... Does it?"}
+	],
+	"convos": {}
+}

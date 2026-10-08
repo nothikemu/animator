@@ -1,0 +1,9 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "g_or_hauler", "tier": "ambient", "when": ["met:grist", "flag:origin_hauler"], "text": "Rope-person. ... Knappers like rope-people. ... You tie things to other things. ... That's most of being alive."},
+		{"id": "g_or_wander", "tier": "reactive", "when": ["met:grist", "day>=2", "flag:origin_wanderer"], "text": "Going somewhere else. ... Knappers know the feeling. ... Rock is always going somewhere else. Very slowly. ... Stay a while. Rock does.", "once": true},
+		{"id": "g_echo", "tier": "reactive", "when": ["met:grist", "flag:echo"], "text": "... Have we met. ... No. ... Rock says yes. ... Rock is very old. Rock mixes things up.", "once": true, "priority": 5}
+	],
+	"convos": {}
+}

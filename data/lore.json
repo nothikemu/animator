@@ -72,5 +72,65 @@
 	"council_minutes": {"title": "Council Notice: Closure", "where": "The archive, Sallow", "text": "The damp cough travels with the Breath. Every Trunk carries it. The Council therefore closes the Trunk Lines UNTIL the Strain Seven scrubber moss is established at all forty stations. Stations will not answer knocking. Stations will be patient. — Someone has circled 'until' so hard the pen went through."},
 	"heart_manual": {"title": "The Bellows: Restart", "where": "The archive, Sallow", "text": "Restart requires: Trunk pressure from no fewer than one upper station; spore load below threshold in that station's air; the low ways cleared by agreement with the Knappers; the consent of the stations. In the margin: 'Consent of the stations — ha. Good luck, love. — W.'"},
 	"knapper_agreement": {"title": "The Agreement", "where": "The Knapper Ways", "text": "A carving: walkers and Knappers cutting the Trunk together, lamps and hands. At the bottom, a shape like a pair of lungs; at the top, forty little houses. Across the middle, cut much later and much rougher, a stone door, and the Knappers on one side of it with their hands to the rock, listening."},
-	"wren_journal": {"title": "B —", "where": "Wren's journal", "text": "B — The water went down. I found a stair. You'd hate it. I'm going to see where it goes. ... B — Twelve people and three pumps and a Heart like a sick old dog. I'm staying. ... B — Taught Pell the letters today. Nine years old and better at it than you. ... B — Still here."}
+	"wren_journal": {"title": "B —", "where": "Wren's journal", "text": "B — The water went down. I found a stair. You'd hate it. I'm going to see where it goes. ... B — Twelve people and three pumps and a Heart like a sick old dog. I'm staying. ... B — Taught Pell the letters today. Nine years old and better at it than you. ... B — Still here."},
+	"deep_pool_0": {
+		"title": "Ration Card, Station 14",
+		"where": "A ration card, Station 14",
+		"text": "WATER 2L. MEAL 1. AIR: SHARED. Someone has crossed out SHARED and written OURS, and someone else has crossed that out and written SHARED again, harder. The card was never punched."
+	},
+	"deep_pool_1": {
+		"title": "The Choir Roster",
+		"where": "A cloakroom wall, the Unmapped",
+		"text": "Names painted on a wall in two columns, BREATHE IN and BREATHE OUT, and a date for each. Station 19 sang the Bellows' rhythm to its children so they'd sleep in time with it. The last date has only one name under BREATHE IN."
+	},
+	"deep_pool_2": {
+		"title": "A Letter Never Sent",
+		"where": "Under a bunk, the Unmapped",
+		"text": "To whoever is in 23. They've closed the Trunk. They say it's for a month. I'll knock on the pipe every night at nine so you know we're still here. Three, two, three. If you hear it, knock back. — R."
+	},
+	"deep_pool_3": {
+		"title": "Notice: The Quiet",
+		"where": "A notice board, the Unmapped",
+		"text": "BY ORDER OF THE STATION COUNCIL: Trunk Lines CLOSED until further notice. Do not knock. Do not signal. Do not travel. It is kinder this way. The word 'kinder' has been underlined by somebody with a lot of time."
+	},
+	"deep_pool_4": {
+		"title": "A Child's Map",
+		"where": "Pinned above a cot, the Unmapped",
+		"text": "Forty circles in crayon, joined by a fat brown line down the middle, and a red heart drawn at the bottom with a smile on it. Every circle has a little face. Somebody has added glasses to the one labelled 'GRANDAD (STATION 31)'."
+	},
+	"deep_pool_5": {
+		"title": "Engineer's Log, Station 27",
+		"where": "A brass locker, the Unmapped",
+		"text": "Day 40 of the Quiet. Pressure holding. Day 140. Pressure holding. Day 900. Pressure holding. Day 3,000. Pressure holding, which means somebody down there is still doing their job. Thank you, whoever you are."
+	},
+	"deep_pool_6": {
+		"title": "The Seed Ledger",
+		"where": "A garden vault, the Unmapped",
+		"text": "Strain 1: ate the spores, and the leaves. Strain 3: ate the spores, and the lichen we eat. Strain 5: ate nothing, sulked. Strain 6: did well; ate the gardener's gloves. Strain 7: — the page is torn out. Someone took it up the Trunk."
+	},
+	"deep_pool_7": {
+		"title": "Wedding Ribbon",
+		"where": "Tied to a valve wheel, the Unmapped",
+		"text": "A ribbon, still faintly blue, tied round a valve wheel in a double knot. A tag reads: STATION 33 + STATION 34. MARRIED ACROSS THE TRUNK. The valve is closed. The knot was never undone."
+	},
+	"deep_pool_8": {
+		"title": "Count, Station 38",
+		"where": "Chalk on a cavern wall, the Unmapped",
+		"text": "Tally marks in groups of five, eleven rows of them, the chalk getting fainter each row. Under the last row, in a different and steadier hand: 'We went down to the Heart. If you're reading this, so can you.'"
+	},
+	"deep_pool_9": {
+		"title": "The Builders' Plate",
+		"where": "Set in the rock, the Unmapped",
+		"text": "A brass plate, older than the stations, set into bare rock by hands that didn't need a Council. It says only: WE DUG THIS SO YOU COULD BREATHE. And under that, in Knapper scratches, an older line Grist could read for you: 'We helped.'"
+	},
+	"deep_pool_10": {
+		"title": "A Recipe Card",
+		"where": "In a dry tin, the Unmapped",
+		"text": "Salt-beet stew, Station 16 style. Beets, salt, whatever's moving. Simmer until the pump changes note. Serve to everyone, including the ones you're cross with, especially them. — Gran Ivy, who was usually cross."
+	},
+	"deep_pool_11": {
+		"title": "Last Page of the Manifest",
+		"where": "A clipboard, the very bottom of the Unmapped",
+		"text": "A list of every station, one to forty, and beside each a column headed ANSWERED. Most are blank. Station 11 has a tick in Wren's hand. Beside Station 7, someone has drawn a tick in fresh chalk, and two more stations under it are ticked in handwriting you don't know. Somebody else is reading this list."
+	}
 }

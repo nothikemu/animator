@@ -1,0 +1,8 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "pe_or_seed", "tier": "ambient", "when": ["met:pell", "flag:origin_seedkeeper"], "text": "Is it true you had a garden on a roof. What's a roof for if it's outside. Is the sky heavy. Does it leak.", "emote": "surprised"},
+		{"id": "pe_echo", "tier": "ambient", "when": ["met:pell", "flag:echo"], "text": "Have you been here before. You knew where the loose step was. Nobody knows where the loose step is. I put it there.", "emote": "surprised"}
+	],
+	"convos": {}
+}

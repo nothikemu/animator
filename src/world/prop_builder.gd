@@ -39,6 +39,7 @@ var kit := MeshKit.new()               ## static geometry
 var root: Node3D
 var fade_groups: Dictionary = {}       ## name -> Node3D (e.g. the Lease roof)
 var lights: Array[Light3D] = []
+var breathers: Array[Node3D] = []      ## parts that rise and fall with the Heart (own meshes)
 var interactables: Array = []          ## [{node, type, data}]
 var glowroot_lights := 0
 
@@ -62,6 +63,12 @@ func build_all(material: Material) -> void:
 		fm.mesh = fk.commit()
 		fm.material_override = material
 		fade_groups[name].add_child(fm)
+	for b in breathers:
+		var bk: MeshKit = b.get_meta("kit")
+		var bm := MeshInstance3D.new()
+		bm.mesh = bk.commit()
+		bm.material_override = material
+		b.add_child(bm)
 	for l in area.lights:
 		_light(Vector3(float(l.x), float(l.y), float(l.z)), String(l.color), float(l.energy), float(l.range), false)
 
@@ -283,8 +290,9 @@ func _light(pos: Vector3, color: String, energy: float, range_m: float, shadows:
 
 # --- The Heart ------------------------------------------------------------------------------
 
-## The Bellows: a machine the size of a house. A stone plinth, two great leather bellows
-## pleated in brass, a crown of pipes into the dark, and gauges in a row along the front.
+## The Bellows: a machine the size of a house. A stone plinth faced with gauges, two great
+## leather bellows under brass lids either side of a brick spine, and a crown of pipes going up
+## into the dark. The two bellows are their own meshes so the area view can make them breathe.
 func _bellows(p: Dictionary, y: float) -> void:
 	var x := float(p.x)
 	var z := float(p.z)
@@ -292,20 +300,33 @@ func _bellows(p: Dictionary, y: float) -> void:
 	var w := float(sz[0])
 	var d := float(sz[1])
 	kit.box(Vector3(x, y, z), Vector3(w, 1.0, d), {"side": "wall_stone_0", "top": "rock_0"})
-	for side in [0, 1]:
-		var bx := x + 1.0 + float(side) * (w * 0.5)
-		var bw := w * 0.5 - 2.0
-		for k in 5:
-			var inset := 0.18 if k % 2 == 1 else 0.0
-			kit.box(Vector3(bx + inset, y + 1.0 + float(k) * 0.9, z + 1.0 + inset), Vector3(bw - inset * 2.0, 0.9, d - 2.0 - inset * 2.0),
-				{"side": "rug_0" if k % 2 == 0 else "beam_0", "top": "metal_brass_0"})
-		kit.box(Vector3(bx - 0.1, y + 5.5, z + 0.9), Vector3(bw + 0.2, 0.3, d - 1.8), {"side": "metal_brass_0", "top": "metal_brass_0"})
-	for k in 7:
-		var px := x + 1.5 + float(k) * (w - 3.0) / 6.0
-		kit.prism(Vector3(px, y + 5.8, z + 1.8 + float(k % 2) * 0.8), 0.25 + float(k % 3) * 0.08, 9.0, 8, "metal_brass_0")
-	kit.box(Vector3(x + w * 0.5 - 0.6, y + 1.0, z + 0.4), Vector3(1.2, 6.0, d - 0.8), {"side": "wall_brick_dark_0", "top": "metal_brass_0"})
+	kit.box(Vector3(x - 0.2, y + 0.92, z - 0.2), Vector3(w + 0.4, 0.16, d + 0.4), {"side": "metal_brass_0"})
 	for k in 5:
-		kit.prism(Vector3(x + 2.0 + float(k) * (w - 4.0) / 4.0, y + 0.55, z + d + 0.05), 0.32, 0.12, 10, "metal_brass_0", "metal_brass_0")
+		kit.box(Vector3(x + 2.0 + float(k) * (w - 4.0) / 4.0 - 0.3, y + 0.2, z + d), Vector3(0.6, 0.6, 0.06), {"side": "gauge_0", "front": "gauge_0"})
+	var bw := w * 0.5 - 1.8
+	for side in [0, 1]:
+		var bx := x + 0.6 + float(side) * (w * 0.5 + 0.6)
+		var lung := Node3D.new()
+		lung.name = "Bellows%d" % side
+		lung.position = Vector3(bx, y + 1.0, z + 0.8)
+		var lk := MeshKit.new()
+		var dd := d - 1.6
+		for k in 6:
+			var inset := 0.22 if k % 2 == 1 else 0.0
+			lk.box(Vector3(inset, float(k) * 0.75, inset), Vector3(bw - inset * 2.0, 0.75, dd - inset * 2.0), {"side": "leather_0", "top": "leather_0"})
+		lk.box(Vector3(-0.15, 4.5, -0.15), Vector3(bw + 0.3, 0.35, dd + 0.3), {"side": "metal_brass_0", "top": "metal_brass_0"})
+		lk.prism(Vector3(bw * 0.5, 4.85, dd * 0.5), 0.35, 0.5, 8, "metal_brass_0")
+		lung.set_meta("kit", lk)
+		root.add_child(lung)
+		breathers.append(lung)
+	# The spine between them, and the pipes it feeds.
+	kit.box(Vector3(x + w * 0.5 - 0.7, y + 1.0, z + 0.4), Vector3(1.4, 6.5, d - 0.8), {"side": "wall_brick_dark_0", "top": "metal_brass_0"})
+	kit.box(Vector3(x + w * 0.5 - 0.5, y + 2.6, z + d - 0.42), Vector3(1.0, 1.0, 0.06), {"side": "gauge_0", "front": "gauge_0"})
+	for k in 9:
+		var px := x + 1.2 + float(k) * (w - 2.4) / 8.0
+		var tall := 7.0 + float((k * 5) % 4) * 1.5
+		kit.prism(Vector3(px, y + 7.0, z + 1.0 + float(k % 3) * 0.7), 0.22 + float(k % 3) * 0.07, tall, 8, "metal_brass_0")
+	kit.box(Vector3(x + 0.6, y + 7.2, z + 0.6), Vector3(w - 1.2, 0.35, d - 1.2), {"side": "metal_brass_0", "top": "metal_brass_0"})
 	var heart := _light(Vector3(x + w * 0.5, y + 3.0, z + d + 0.8), "glow", 1.6, 12.0, true)
 	heart.set_meta("kind", "bellows")
 	_light(Vector3(x + 1.0, y + 6.5, z + d), "amber", 1.0, 8.0, false)

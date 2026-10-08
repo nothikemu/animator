@@ -19,6 +19,8 @@ var wick_map: Dictionary = {}
 var undercroft: Dictionary = {}
 var palette: Dictionary = {}
 var markets: Dictionary = {}
+var requests: Dictionary = {}     ## notice-board request templates
+var origins: Dictionary = {}      ## who the salvager was before the fall
 
 var errors: PackedStringArray = []
 var loaded := false
@@ -42,6 +44,9 @@ func load_all() -> void:
 	undercroft = _load_dict("undercroft_wick.json")
 	palette = _load_dict("palette.json")
 	markets = _load_dict("markets.json")
+	requests = _load_dict("requests.json")
+	origins = _load_dict("origins.json")
+	origins.erase("_comment")
 	npcs = _load_dir("npcs")
 	dialogue = _merge_parts(_load_dir("dialogue"))
 	maps = _load_dir("maps")

@@ -1,0 +1,8 @@
+{
+	"_comment": "Lines for who you were before the fall (flag origin_<id>) and for a run that remembers an earlier ending (flag echo, echo_<ending>).",
+	"lines": [
+		{"id": "w_or_medic", "tier": "ambient", "when": ["met:wren", "!flag:wren_died", "flag:origin_medic"], "text": "A medic! Ha! Don't look at me like that. I've been coughing for eleven years. It's a hobby. I'm very good at it.", "emote": "happy"},
+		{"id": "w_echo", "tier": "ambient", "when": ["met:wren", "!flag:wren_died", "flag:echo"], "text": "You look at me like you already know how this ends. Ha! Don't tell me. I hate knowing the end.", "emote": "happy"}
+	],
+	"convos": {}
+}

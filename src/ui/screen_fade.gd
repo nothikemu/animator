@@ -4,6 +4,9 @@ extends CanvasLayer
 
 var rect: ColorRect
 var title: Label
+var hint: Label
+var _in_card := false
+var _skip := false
 
 
 func _ready() -> void:
@@ -25,6 +28,15 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size", UiTheme.size(26))
 	title.modulate.a = 0.0
 	add_child(title)
+	hint = Label.new()
+	hint.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	hint.position = Vector2(-220, -56)
+	hint.theme = UiTheme.get_theme()
+	hint.add_theme_font_size_override("font_size", UiTheme.size(15))
+	hint.add_theme_color_override("font_color", Color(UiTheme.DIM, 0.55))
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hint.visible = false
+	add_child(hint)
 	Events.flash.connect(flash)
 
 
@@ -51,18 +63,34 @@ func black() -> void:
 
 
 ## Shows lines of text one after another on black. Assumes the screen is already black.
+## Interact or accept moves on to the next line once it has faded in.
 func card(lines: Array, hold := 3.2, color := UiTheme.TEXT) -> void:
 	title.add_theme_color_override("font_color", color)
+	_in_card = true
+	hint.text = "[%s] continue" % Settings.binding_label("interact")
+	hint.visible = true
 	for line in lines:
 		title.text = String(line)
 		var tw := create_tween()
 		tw.tween_property(title, "modulate:a", 1.0, 0.9)
 		await tw.finished
-		await get_tree().create_timer(hold).timeout
+		_skip = false
+		var t := 0.0
+		while t < hold and not _skip:
+			await get_tree().process_frame
+			t += get_process_delta_time()
 		var tw2 := create_tween()
-		tw2.tween_property(title, "modulate:a", 0.0, 0.8)
+		tw2.tween_property(title, "modulate:a", 0.0, 0.5 if _skip else 0.8)
 		await tw2.finished
+	_in_card = false
+	hint.visible = false
 	title.remove_theme_color_override("font_color")
+
+
+func _input(event: InputEvent) -> void:
+	if _in_card and (event.is_action_pressed("interact") or event.is_action_pressed("ui_accept")):
+		_skip = true
+		get_viewport().set_input_as_handled()
 
 
 func flash(color: Color, strength: float) -> void:
