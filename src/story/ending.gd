@@ -30,7 +30,7 @@ static func resolve() -> String:
 	var clean := GameState.deed("clean_power") >= GameState.deed("industrial_power")
 	var arcs := _f("o_trade_sent") and _f("learned_tincture") and _f("mags_stores_ok") \
 		and (_f("reunion_done") or _f("grief_done") or _f("journal_given")) and _f("ways_open")
-	if _f("heart_running") and not _f("wren_died") and clean and arcs:
+	if _f("heart_running") and _f("wren_saved") and clean and arcs:
 		return "everything"
 	return "together"
 
@@ -62,7 +62,9 @@ static func cards(id: String) -> Array:
 static func _people(id: String) -> Array:
 	var lines: Array = []
 	# Barnaby.
-	if _f("reunion_done"):
+	if _f("reunion_done") and _f("wren_died"):
+		lines.append("Barnaby Coil was there at the end. Afterwards he kept the gauge, and knocked on its glass at Hush, three-two-three, and never once hurried it.")
+	elif _f("reunion_done"):
 		lines.append("Barnaby Coil took his tea at Sallow on Tuesdays and in Wick on Wednesdays. The quiet table got a second cup.")
 	elif _f("grief_done") or _f("journal_given"):
 		lines.append("Barnaby kept Wren's journal by the gauge, and wrote in it every night. Every entry began 'W —'.")
@@ -73,6 +75,10 @@ static func _people(id: String) -> Array:
 		lines.append("Wren Askew taught the letter code to the children of every station she could reach, and lost every argument about it on purpose.")
 	elif _f("wren_died"):
 		lines.append("Pell kept knocking. Every night, three-two-three, for anyone below who hadn't heard yet.")
+	elif _f("met_wren") and _f("heart_running"):
+		lines.append("The Bellows breathed clean, and by the end of the season the damp had gone out of Wren Askew's chest. She told everyone she'd been fine all along.")
+	elif _f("met_wren"):
+		lines.append("Wren Askew was still coughing when the season turned. Pell sent word of her up the pipe every night, three-two-three, until one night the knock didn't come.")
 	if _f("pell_in_wick"):
 		lines.append("Pell went to look at the lake every week, and never got used to it, which was the point.")
 	# Odile.

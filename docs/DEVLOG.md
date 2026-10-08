@@ -139,3 +139,29 @@ The game now runs in a browser tab, so it can be played without installing anyth
   the grotto's first line, including under a strict CSP that allows only `wasm-unsafe-eval`.
 * **Not checked yet:** Firefox and Safari, a real GPU, and save persistence in a sandboxed
   frame (Godot falls back to memory-only saves when IndexedDB is unavailable).
+
+## 2026-10-08 — The whole story, and playing it to the end
+* **Chapters Two to Four** are written (see STORY.md): the pipe telegraph, two town meetings,
+  the Primary Lift, Sallow and the Lower Stations, Wren, Pell and Tolley, the Knappers' ways,
+  and the Heart. Four endings and a Topside coda, an epilogue card per person, and the endless
+  Unmapped after.
+* **Replay.** A notice board of seeded daily requests in each resident's voice; five origins;
+  echoes (residents half-remember endings from earlier runs); the Almanac on the title screen.
+* **The Bellows** was a striped red box. It is now pleated leather under brass lids, a brick
+  spine with a gauge, a crown of pipes and a row of dials, and its bellows rise and fall: a
+  shallow half-minute breath while it idles, a deep one every eight seconds once restarted.
+* **An autopilot found four real bugs.** `test_story_arc` plays from the knock to each ending
+  by talking to whoever has something to say and doing what the notes ask. It found:
+  - a thread stage with two `on_enter` keys. JSON keeps the last, so `o_trade_sent` was never
+    set: no down-river medicine, and Everything Breathing could not be reached. A new test now
+    scans every data file for repeated keys;
+  - the lift winch hint said "thirty power", but one wire carries sixty and the Station pump
+    already takes fifty-five. The note and Barnaby now say it needs a wire of its own;
+  - Everything Breathing only needed Wren not dead yet, so pulling the lever fast beat her
+    clock. It now needs her cured, and the epilogue covers her still being ill;
+  - if Wren died after Barnaby reached her, he had no scene and the epilogue gave the quiet
+    table a second cup. He has one now ("I was there. At the end."), and the card is right.
+* **Pacing, honestly.** Handed the goods, the autopilot gets from the knock to the lever in
+  seven to nine in-game days. The design's eight hours assumes the gathering, crafting, farming
+  and travel the autopilot skips. That figure is still an estimate until someone plays it.
+

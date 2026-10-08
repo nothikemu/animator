@@ -8,14 +8,26 @@ settlement built on top of a dead pumping station. You grow crops in the dark, l
 under the town through a surveyor's **plumb-glass** at the pipes, wires, water, gas and heat
 that keep it alive, and get to know five residents who remember what you do.
 
-This repository holds the first chapter as a playable vertical slice. It runs from
-the dry well on your first morning to the moment the Trunk valve opens and something knocks
-back.
+The whole story is here, in four chapters (see [docs/STORY.md](docs/STORY.md)), planned at
+about eight hours:
+
+1. **The Dry Well.** The well, power, the Reach below Wick, the Tremor, Station 7, and the
+   moment the Trunk valve opens and something knocks back.
+2. **Answering.** Learning the crew codes, the pipe telegraph, a town meeting, and building the
+   Primary Lift.
+3. **The Lower Stations.** Down the lift to drowned Station 8, the roots and the ashworks, and
+   Sallow, where three people have kept the Heart breathing for eleven years. Wren is ill.
+4. **The Bellows.** The Knappers open the low ways, the town votes, and everyone comes down to
+   the Heart.
+
+There are four endings (Everything Breathing, Breathe Together, The Long Watch, Sealed) and
+a Topside coda. After the ending, the Unmapped below the Heart goes on for ever.
 
 | | |
 |---|---|
 | **Life** | Glowbeets, moss, sulfur ferns, emberroot and bellcaps, each with its own light, water, heat and air needs. You sell at the Exchange, cook at the Lantern House, and give gifts to people who remember them. |
 | **Engineering** | The cut view: a live cross-section with water you can watch fall, gases that sink or rise by weight, heat that conducts through rock, pipes that leak, wires that burn out, and machines that tell you in plain words why they're unhappy. |
+| **Replay** | A world seed, five origins with their own start and lines, a notice board of seeded daily requests, echoes (residents half-remember endings you've seen), an endless generated Unmapped with its own ruin pages, and an Almanac on the title screen that remembers every ending across saves. |
 | **Consequence** | No karma bar. Residents hold six relationship axes and individual memories. Gossip spreads at dusk, deeds are noticed by the people who care about them, and the Quietlight bloom is as bright as the air you've left the town. |
 
 ## Running it
@@ -48,12 +60,14 @@ hosts that add their own.
 | Action | Keyboard / mouse | Gamepad |
 |---|---|---|
 | Move | WASD / arrows | Left stick |
+| Run | Shift (hold) | B (hold) |
 | Interact, talk | E | A |
 | Use tool | F / left click | X / RT |
 | Cycle tool | Q | LB / RB |
 | Cycle seed | Right click | LT |
 | Plumb-glass (cut view) | C | Back |
 | Pack · Journal · Map | Tab · J · M | Y · D-up · D-down |
+| Minimap size | N | D-right |
 | Pause | Esc | Start |
 | **In the cut view:** tools | 1–7, Q | LB / RB |
 | Place / drag pipe and wire | Left click (hold) | A (hold) |
@@ -85,7 +99,7 @@ godot --headless --path . res://tests/test_runner.tscn               # everythin
 godot --headless --path . res://tests/test_runner.tscn -- --only=story
 ```
 
-The 96 tests cover:
+The 107 tests cover:
 - simulation conservation and behaviour
 - networks, machines, crops and the economy
 - saves (round trip, migration, corruption fallback)
@@ -95,6 +109,9 @@ The 96 tests cover:
 - a smoke test that boots the real game and drives every interactable, tool, cavern,
   conversation and cut-view inspection
 - a full-arc playthrough from the dry well to the knock
+- an autopilot that plays Chapters Two to Four through the real dialogue, threads and events
+  to every ending (and through Wren's death), so no ending can quietly become unreachable
+- a check that no data file repeats a key (Godot's parser would silently keep the last one)
 
 ## Regenerating assets
 
@@ -104,7 +121,7 @@ taken from other games.
 ```sh
 python3 tools/art/tiles.py && python3 tools/art/props.py && python3 tools/art/chars.py \
   && python3 tools/art/icons.py && python3 tools/art/machines.py
-python3 tools/maps/build_maps.py
+python3 tools/maps/build_maps.py && python3 tools/maps/build_deep.py
 python3 tools/audio/make_sfx.py && python3 tools/audio/make_music.py && python3 tools/audio/make_ambience.py
 godot --headless --path . --import
 ```
@@ -116,6 +133,9 @@ The art tools need Python 3 with Pillow, and the audio tools need numpy, scipy a
 
 ```sh
 tools/capture.sh menu out.png                    # title screen
+tools/capture.sh menu out.png --menu_page=new    # the new-game page (or =almanac)
+tools/capture.sh midgame out.png --ui=board      # the notice board with requests
+tools/capture.sh reach:heart:18.5:16.5 out.png   # any area, standing anywhere
 tools/capture.sh cut_demo:power out.png          # the cut view with a powered circuit
 tools/capture.sh midgame out.png --ui=journal    # any panel over a day-3 world
 godot --path . -- --scene=res://scenes/test/audio_test.tscn    # audition every sound
@@ -126,7 +146,7 @@ The scenarios live in `src/debug/scenarios.gd`:
 - `wick_day`, `wick_night`, `commons`, `lake`, `opening`
 - `cut[:overlay[:tool[:machine]]]`, `cut_demo`, `cut_exit`
 - `midgame`, `talk:<npc>`, `quietlight`, `tremor`, `harvest`, `trunk`
-- `reach:<id>`, `pos:x:z`
+- `reach:<id>[:x:z]` (Reach caverns, Lower Stations, `sallow`, `ways`, `heart`, `u1`…), `pos:x:z`
 
 ## Documentation
 

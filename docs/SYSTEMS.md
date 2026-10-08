@@ -250,6 +250,30 @@ Accessibility options:
 - captions for story sounds;
 - text speed;
 - screen shake on/off and strength;
-- flash strength (0 disables).
+- flash strength (0 disables);
+- minimap hidden, small or large, and the objective marker on or off.
+
+Story cards (chapter ends, the epilogue, the day summary at bedtime) can be moved on with
+interact or accept once each line has faded in.
 
 Status is always stated in words as well as colour, and overlays carry legends.
+
+## 13. Replay (`src/autoload/requests.gd`, `src/autoload/almanac.gd`, `src/game_flow.gd`)
+
+- **World seed.** The Reach, the Lower Stations' caverns, the Unmapped and the daily requests
+  are all drawn from it. Two players with one seed get one world.
+- **Origins** (`data/origins.json`). Chosen on the new-game page. Each applies a few effects
+  (a small kit, some goodwill), sets `origin_<id>` for residents' lines
+  (`data/dialogue/*@echoes.json`), and adds a clause to the player's epilogue card.
+- **Requests** (`data/requests.json`). Each morning, while fewer than `max_open` are up, one
+  template whose `when` holds is drawn with an RNG seeded by the world seed and the day. A note
+  stays up `days_open` days. Handing it in at the notice board pays 1.6 times the goods' worth
+  plus five, +1.5 affection and +0.5 trust with the asker; a third request for the same person
+  becomes a lasting memory. Ten or more show up in the epilogue. Saved in the `requests` section.
+- **Echoes.** A run begun with *Remember* ticked (offered once the Almanac holds an ending) sets
+  `echo` and `echo_<ending>` for every ending seen. A few residents half-recall them.
+- **The Almanac** (`user://almanac.cfg`). Lives outside the save slots: endings seen (and how
+  often), the union of lore pages found, the deepest Unmapped level and runs begun. The title
+  screen shows it with one nudge toward an ending not yet seen.
+- **The Unmapped.** Generated without end below the Heart (`ReachGen.ensure_unmapped`), with
+  twelve ruin pages (`deep_pool_0..11`) in rotation.

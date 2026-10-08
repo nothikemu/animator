@@ -176,6 +176,26 @@ ASCII pixel maps in `tools/art/chars.py`.
 - **Voice**: one opinion per line, concrete nouns, no exposition dumps. Barnaby says it once.
   Odile counts. Hesper talks to the moss. Mags gets it slightly wrong. Grist… pauses.
 
+- **Split files**: `npc@part.json` is merged into `npc` (lines appended, conversations must not
+  share ids). Files starting with `_` are objects that talk (`_telegraph`, `_archive`,
+  `_bellows`, `_mural`); they have no NPC sheet.
+
+## Requests (`data/requests.json`)
+
+```json
+{"npc": "mags", "item": "glowbeet", "n": [3, 6], "when": ["met:mags", "flag:well_fixed"],
+ "text": "Beets for the pot. Proper ones. The ones with opinions."}
+```
+
+Gate each template on what the player could plausibly have by then (a known recipe, a place
+seen). Write the note in the asker's voice. One asker and item pair is on the board at a time.
+
+## Origins (`data/origins.json`)
+
+`{"name", "blurb", "effects": [...], "after": "…finishes the epilogue sentence"}`. Keep the
+start small: a few items or a little goodwill. Then give two or three residents a line gated
+on `flag:origin_<id>` in `data/dialogue/<npc>@echoes.json`.
+
 ## Quest threads (`data/threads.json`)
 
 ```json

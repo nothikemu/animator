@@ -103,7 +103,7 @@
 		"start": ["flag:o_trade_talk"],
 		"stages": [
 			{"where": "point:exchange_counter", "note": "Odile wants to sell water and beets down-river for medicine before the damp season. She needs twenty glowbeets in the Exchange's stock.", "advance": ["deed:sold_food>=20"]},
-			{"note": "The first trade crate went down-river. Odile wrote a number in the ledger and underlined it twice.", "on_enter": ["flag:o_trade_sent"], "done": true, "on_enter": ["trust:odile+6", "affection:odile+4", "money+60"]}
+			{"note": "The first trade crate went down-river. Odile wrote a number in the ledger and underlined it twice.", "on_enter": ["flag:o_trade_sent", "trust:odile+6", "affection:odile+4", "money+60"], "done": true}
 		]
 	},
 	"answering": {
@@ -135,7 +135,7 @@
 		"start": ["flag:b_lift_talk"],
 		"stages": [
 			{"where": "point:annex_bench", "note": "Plait two lengths of crew cable at a bench: four moss fibre and two brass each.", "advance": ["item:crew_cable>=2"]},
-			{"where": "point:pumphall_door", "note": "Under the pump hall, through the glass: fit the cable and six brass to the winch, then feed it thirty power.", "advance": ["running.lift_winch"]},
+			{"where": "point:pumphall_door", "note": "Under the pump hall, through the glass: fit the cable and six brass to the winch, then feed it thirty power on a wire of its own (one wire carries sixty, and the pump already takes fifty-five).", "advance": ["running.lift_winch"]},
 			{"where": "point:pumphall_door", "note": "The Primary Lift runs. The cage waits at the bottom of the shaft. Ride it down from the pump hall.", "on_enter": ["flag:lift_built", "toast:The Primary Lift is running."], "advance": ["discovered:places:d1_0"]},
 			{"note": "Station 8. Down here the air tastes older than the rock.", "done": true}
 		]

@@ -11,6 +11,7 @@
 		{"id": "b_wren_dead", "tier": "story", "once": true, "priority": 40, "when": ["flag:wren_died", "!flag:told_barnaby", "!flag:barnaby_at_sallow", "place:wick"], "convo": "wren_dead"},
 		{"id": "b_ready", "tier": "story", "once": true, "priority": 30, "when": ["flag:barnaby_refuses", "trust:barnaby>=20", "!flag:barnaby_descends", "!flag:journal_given", "place:wick"], "convo": "ready"},
 		{"id": "b_reunion", "tier": "story", "once": true, "priority": 60, "when": ["place:sallow", "flag:barnaby_at_sallow", "!flag:wren_died", "!flag:reunion_done"], "convo": "reunion"},
+		{"id": "b_loss", "tier": "story", "once": true, "priority": 60, "when": ["flag:reunion_done", "flag:wren_died", "!flag:grief_done"], "convo": "loss"},
 		{"id": "b_grief", "tier": "story", "once": true, "priority": 60, "when": ["place:sallow", "flag:barnaby_at_sallow", "flag:wren_died", "!flag:grief_done"], "convo": "grief"},
 		{"id": "b_journal", "tier": "story", "once": true, "priority": 35, "when": ["item:wren_journal>=1", "!flag:barnaby_at_sallow", "!flag:journal_given", "place:wick"], "convo": "journal"},
 		{"id": "b_heart", "tier": "story", "once": true, "priority": 30, "when": ["flag:heart_seen", "!flag:b_heart_talk"], "convo": "heart"},
@@ -26,7 +27,7 @@
 
 		{"id": "b_amb_codes", "tier": "ambient", "when": ["flag:learned_codes", "!flag:tg_come"], "text": "Knock at Hush, from the pipe-heads in the lane. If the answer comes, write it down before you decide what it means."},
 		{"id": "b_amb_gauge", "tier": "ambient", "when": ["flag:knock_heard"], "text": "The gauge reads two-point-eight now. Somebody below is pushing back. I stare at it so you don't have to."},
-		{"id": "b_amb_cable", "tier": "ambient", "when": ["flag:b_lift_talk", "!flag:lift_built"], "text": "Crew cable: four moss fibre, two brass, plaited tight. Two lengths for the drum. Fit them through the glass, under the pump hall. Then feed it thirty power. Then don't look down."},
+		{"id": "b_amb_cable", "tier": "ambient", "when": ["flag:b_lift_talk", "!flag:lift_built"], "text": "Crew cable: four moss fibre, two brass, plaited tight. Two lengths for the drum. Fit them through the glass, under the pump hall. Then feed it thirty power, on its own wire. One wire carries sixty and the pump eats fifty-five of it. Then don't look down."},
 		{"id": "b_amb_deep", "tier": "ambient", "when": ["flag:lift_built"], "text": "Take a respirator. Take a lens. Take somebody's word that you'll come back, and keep it."},
 		{"id": "b_amb_hands", "tier": "ambient", "when": ["flag:reunion_done"], "text": "Hands are steadier in the mornings now. I'm blaming the tea. I'm told that's cowardly."},
 		{"id": "b_bark_tg", "tier": "bark", "when": ["flag:learned_codes"], "text": "Three. Two. Three."},
@@ -186,6 +187,18 @@
 			{"say": "When you come back they're arguing about whether it's 'on three' or 'after three'. They've been arguing for eleven years. They've only just started again.", "who": "narrator", "do": ["shared:barnaby+12", "affection:barnaby+8", "mem:barnaby:reunion:10:0.9:lasting", "mem:wren:reunion:10:0.9:lasting", "affection:wren+10", "trust:wren+8"]}
 		],
 
+		"loss": [
+			{"say": "Barnaby is standing very still, the way he stands at the gauge in Wick. He isn't looking at anything.", "who": "narrator", "do": ["flag:grief_done"]},
+			{"say": "I was there. At the end. She made me promise not to be quick about it.", "who": "barnaby"},
+			{"say": "I wasn't.", "who": "barnaby", "emote": "sad"},
+			{"if": ["item:wren_journal>=1"], "goto": "journal"},
+			{"goto": "days"},
+			{"label": "journal"},
+			{"say": "You hold out the journal Pell gave you. He takes it the way you'd take a cup that's too full.", "who": "narrator", "do": ["take:wren_journal", "flag:journal_given"]},
+			{"label": "days"},
+			{"say": "Eleven years she knocked, and I sat on the other side of a valve. Then I got a few days. A few days is not nothing. Don't let anyone tell you it's nothing.", "who": "barnaby"},
+			{"say": "He knocks on the gauge glass with one knuckle, softly. Three. Two. Three.", "who": "narrator", "do": ["shared:barnaby+10", "affection:barnaby+6", "mem:barnaby:was_there:10:0.3:lasting"]}
+		],
 		"grief": [
 			{"say": "He's standing in front of the chalk wall with his helmet off. Eleven years of three-two-three, in Wren's hand and then in Pell's.", "who": "narrator", "do": ["flag:grief_done"]},
 			{"say": "She did all these. Look at the lines. Every night.", "who": "barnaby"},
