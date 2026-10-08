@@ -1,5 +1,5 @@
 <title>Bellows</title>
-<meta name="description" content="Bellows, chapter one: a cozy engineering-life game that plays in your browser.">
+<meta name="description" content="Bellows: a cozy engineering-life game in four chapters that plays in your browser.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pixelify+Sans:wght@500;700&display=swap">
@@ -153,13 +153,14 @@ kbd {
 	</figure>
 
 	<section class="launch__panel">
-		<p class="eyebrow">Chapter one &middot; plays in your browser</p>
+		<p class="eyebrow">Four chapters &middot; plays in your browser</p>
 		<h1>Bellows</h1>
 		<p class="lede">
 			Your line snaps at the bottom of a shaft and you land in <em>Wick</em>, a lamp-lit town built
 			on a dead pumping station. Grow crops in the dark, look under the streets through the
 			surveyor's <em>plumb-glass</em> at the pipes, wires, water and air that keep it breathing,
-			and get to know five people who remember what you do.
+			and get to know the people who remember what you do. Then open the old valve, and find out
+			who has been knocking back from below all these years.
 		</p>
 
 		<div id="start">
@@ -177,18 +178,18 @@ kbd {
 		<p class="error" id="error" hidden></p>
 
 		<p class="note" id="note">
-			About <strong>25&nbsp;MB</strong> loads the first time. Best in Chrome, Edge or Firefox on a
+			About <strong>40&nbsp;MB</strong> loads the first time. Best in Chrome, Edge or Firefox on a
 			computer, with a <strong>keyboard</strong> or a <strong>gamepad</strong>. Sound starts when you press Play.
 		</p>
 
 		<div class="legend">
 			<h2>Controls</h2>
 			<dl>
-				<dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Walk (arrows work too)</dd>
+				<dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Walk (arrows work too) &middot; hold <kbd>Shift</kbd> to run</dd>
 				<dt><kbd>E</kbd></dt><dd>Talk, open, pick up</dd>
 				<dt><kbd>F</kbd><kbd>Click</kbd></dt><dd>Use the tool in hand &middot; <kbd>Q</kbd> swaps tools</dd>
 				<dt><kbd>C</kbd></dt><dd>Plumb-glass: see the machinery under the town</dd>
-				<dt><kbd>Tab</kbd><kbd>J</kbd><kbd>M</kbd></dt><dd>Pack &middot; Journal &middot; Map</dd>
+				<dt><kbd>Tab</kbd><kbd>J</kbd><kbd>M</kbd></dt><dd>Pack &middot; Journal &middot; Map &middot; <kbd>N</kbd> resizes the minimap</dd>
 				<dt><kbd>Esc</kbd></dt><dd>Pause, settings and save (in full screen, Esc first leaves full screen)</dd>
 			</dl>
 		</div>
@@ -197,8 +198,8 @@ kbd {
 
 <script>
 // Hosts that cap file sizes or types (15 MB, standard web types only) can't serve the 40 MB
-// engine or the .pck as they are. The packager ships each as base64 text of its gzip
-// (index.wasm.txt, index.pck.txt). Godot still asks for "index.wasm" and "index.pck";
+// engine or the .pck as they are. The packager ships each as base64 text of its gzip, cut into
+// parts under the limit (index.wasm.txt, index.pck.0.txt, ...). Godot still asks for "index.wasm" and "index.pck";
 // this hands back the decoded, inflated bytes and reports download progress on the way.
 (function () {
 	var PACKED = /*PACKED*/{}/*END*/;
@@ -224,18 +225,21 @@ kbd {
 		var name = nameOf(input);
 		var entry = Object.prototype.hasOwnProperty.call(PACKED, name) ? PACKED[name] : null;
 		if (!entry) return realFetch(input, init);
-		var res = await realFetch(entry.src, init);
-		if (!res.ok || !res.body) return res;
-		var reader = res.body.getReader(), dec = new TextDecoder(), parts = [];
+		var parts = [];
 		got[name] = 0;
-		for (;;) {
-			var r = await reader.read();
-			if (r.done) break;
-			got[name] += r.value.length;
-			parts.push(dec.decode(r.value, { stream: true }));
-			report();
+		for (var p = 0; p < entry.parts.length; p++) {
+			var res = await realFetch(entry.parts[p], init);
+			if (!res.ok || !res.body) return res;
+			var reader = res.body.getReader(), dec = new TextDecoder();
+			for (;;) {
+				var r = await reader.read();
+				if (r.done) break;
+				got[name] += r.value.length;
+				parts.push(dec.decode(r.value, { stream: true }));
+				report();
+			}
+			parts.push(dec.decode());
 		}
-		parts.push(dec.decode());
 		var bytes = decode(parts.join(""));
 		parts = null;
 		var body = new Blob([bytes]).stream();

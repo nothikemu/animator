@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Turn Godot's Web export (build/web) into a folder (build/webpub) that a static host with
 strict limits can serve: our own launch page, and the engine and game pack shipped as base64
-text of their gzip (no file over 16 MB, only standard web types). The page's fetch shim turns
+text of their gzip, split into parts where needed (no file over 16 MB, only standard web types). The page's fetch shim turns
 them back into index.wasm and index.pck. The build is single-threaded, so no special server
 headers (COOP/COEP) are needed."""
 
@@ -23,14 +23,23 @@ TEXT_LIMIT = 16_000_000
 
 
 def pack(name: str) -> dict:
-	"""Write <name>.txt (base64 of gzip, 76-char lines) and describe it for the page."""
+	"""Write <name>.txt (base64 of gzip, 76-char lines) and describe it for the page. Text over
+	the limit is cut at line boundaries into <name>.0.txt, <name>.1.txt, ... (each line is a
+	whole number of base64 groups, so the page can simply join the parts before decoding)."""
 	raw = (SRC / name).read_bytes()
 	text = base64.encodebytes(gzip.compress(raw, compresslevel=9, mtime=0))
-	dest = OUT / f"{name}.txt"
-	dest.write_bytes(text)
-	if len(text) > TEXT_LIMIT:
-		raise SystemExit(f"{dest.name} is {len(text):,} bytes, over the {TEXT_LIMIT:,} limit")
-	return {"src": dest.name, "type": PACK[name], "size": len(text)}
+	if len(text) <= TEXT_LIMIT:
+		dest = OUT / f"{name}.txt"
+		dest.write_bytes(text)
+		return {"parts": [dest.name], "type": PACK[name], "size": len(text)}
+	line = 77  # 76 base64 characters and a newline
+	per = (TEXT_LIMIT // line) * line
+	parts = []
+	for i, at in enumerate(range(0, len(text), per)):
+		dest = OUT / f"{name}.{i}.txt"
+		dest.write_bytes(text[at:at + per])
+		parts.append(dest.name)
+	return {"parts": parts, "type": PACK[name], "size": len(text)}
 
 
 def main() -> int:
