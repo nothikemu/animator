@@ -118,6 +118,13 @@ static func ambient(parent: Node3D, biome: String, w: float, d: float) -> Node3D
 		"blackstone": {"color": Color("a89e86"), "n": 70, "glow": 0.0, "rise": -0.02, "size": 0.04},
 		"ember": {"color": Color("ff7a2f"), "n": 70, "glow": 2.6, "rise": 0.5, "size": 0.04},
 		"sump": {"color": Color("a58bd6"), "n": 50, "glow": 1.0, "rise": 0.03, "size": 0.05},
+		"drowned": {"color": Color("7fc3d9"), "n": 80, "glow": 0.8, "rise": -0.9, "size": 0.035},
+		"roots": {"color": Color("8fd06a"), "n": 80, "glow": 1.4, "rise": 0.05, "size": 0.05},
+		"ashworks": {"color": Color("8c8690"), "n": 90, "glow": 0.0, "rise": -0.06, "size": 0.05},
+		"salt": {"color": Color("efe3c2"), "n": 70, "glow": 1.8, "rise": 0.01, "size": 0.03},
+		"station": {"color": Color("c9b48a"), "n": 50, "glow": 0.0, "rise": -0.01, "size": 0.035},
+		"knapper": {"color": Color("a89e86"), "n": 60, "glow": 0.0, "rise": -0.03, "size": 0.04},
+		"heart": {"color": Color("56e0d4"), "n": 110, "glow": 2.2, "rise": 0.12, "size": 0.05},
 	}.get(biome, {})
 	var root := Node3D.new()
 	root.name = "Ambient"

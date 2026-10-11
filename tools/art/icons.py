@@ -433,6 +433,153 @@ def gear():
     return finish(c)
 
 
+# --- interface glyphs ----------------------------------------------------------------------------
+def ui_pack():
+    c = icon()
+    body = ramp(pal("clay"), 3, 0.3)
+    c.rect(3, 5, 10, 9, body[1])
+    c.hline(3, 12, 5, body[2])
+    c.rect(4, 8, 8, 3, body[0])
+    c.rect(6, 2, 4, 3, body[0])
+    c.hline(6, 9, 2, body[2])
+    c.rect(7, 8, 2, 2, pal("brass_light"))
+    return finish(c)
+
+
+def ui_bench():
+    c = icon()
+    wood = ramp(pal("clay"), 3, 0.3)
+    c.rect(1, 8, 14, 2, wood[2])
+    c.rect(2, 10, 2, 5, wood[0])
+    c.rect(12, 10, 2, 5, wood[0])
+    c.line(5, 7, 10, 2, pal("ash"))
+    c.rect(9, 1, 4, 3, pal("stone"))
+    c.set(9, 1, shade(pal("ash"), 0.3))
+    return finish(c)
+
+
+def ui_book():
+    c = icon()
+    c.rect(3, 2, 10, 12, shade(pal("danger"), -0.35))
+    c.rect(4, 3, 8, 10, shade(pal("danger"), -0.15))
+    c.vline(3, 2, 13, shade(pal("danger"), -0.55))
+    c.rect(5, 12, 8, 2, pal("cream"))
+    c.hline(6, 10, 5, pal("amber"))
+    c.hline(6, 9, 7, pal("amber"))
+    return finish(c)
+
+
+def ui_map():
+    c = icon()
+    paper = ramp(pal("sand"), 3, 0.3)
+    for i, x0 in enumerate([2, 6, 10]):
+        c.rect(x0, 3 + (i % 2), 4, 11, paper[1 + (i % 2)])
+    c.line(3, 11, 7, 7, shade(pal("danger"), -0.1))
+    c.line(7, 7, 12, 9, shade(pal("danger"), -0.1))
+    c.set(12, 9, pal("danger"))
+    c.set(12, 8, pal("danger"))
+    return finish(c)
+
+
+def ui_pin():
+    c = icon()
+    c.disc(8, 6, 4, pal("danger"))
+    c.disc(7, 5, 1.5, shade(pal("danger"), 0.4))
+    c.vline(8, 10, 14, pal("ash"))
+    return finish(c)
+
+
+def ui_heart(full=True):
+    c = icon()
+    col = pal("danger") if full else shade(pal("slate"), 0.1)
+    for y, (a, b) in enumerate([(3, 6), (2, 7), (2, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7)]):
+        c.hline(a, b, y + 4, col)
+        c.hline(15 - b, 15 - a, y + 4, col)
+    if full:
+        c.set(4, 5, shade(col, 0.5))
+        c.set(5, 5, shade(col, 0.3))
+    return finish(c)
+
+
+def ui_arrow(up=True):
+    c = icon()
+    col = pal("glow") if up else pal("danger")
+    for k in range(5):
+        y = 4 + k if up else 11 - k
+        c.hline(8 - k, 7 + k, y, col)
+    c.rect(6, 9 if up else 3, 4, 4, col)
+    return finish(c)
+
+
+def ui_save():
+    c = icon()
+    c.rect(2, 2, 12, 12, pal("slate"))
+    c.rect(4, 2, 7, 4, pal("ash"))
+    c.rect(9, 3, 1, 2, pal("basalt"))
+    c.rect(4, 8, 8, 6, pal("cream"))
+    c.hline(5, 10, 10, pal("ash"))
+    c.hline(5, 10, 12, pal("ash"))
+    return finish(c)
+
+
+def ui_door():
+    c = icon()
+    c.rect(4, 1, 8, 14, shade(pal("clay"), -0.25))
+    c.rect(5, 2, 6, 12, pal("clay"))
+    c.set(9, 8, pal("brass_light"))
+    c.line(1, 8, 3, 8, pal("amber"))
+    return finish(c)
+
+
+def ui_phase(kind):
+    """Small sky glyphs for the clock: wake (a lamp catching), bloom (bright moss),
+    dimming (half-lit), hush (a lamp), night (a crescent of moss-light)."""
+    c = icon()
+    if kind == "wake":
+        c.disc(8, 9, 4, pal("amber"))
+        c.disc(8, 9, 2, pal("amber_light"))
+        for (x, y) in [(8, 2), (3, 5), (13, 5)]:
+            c.set(x, y, pal("amber_light"))
+    elif kind == "bloom":
+        c.disc(8, 8, 5, pal("glow_dark"))
+        c.disc(8, 8, 3, pal("glow"))
+        c.set(7, 6, pal("cream"))
+    elif kind == "dimming":
+        c.disc(8, 8, 5, pal("glow_dark"))
+        for y in range(16):
+            for x in range(8, 16):
+                if c.get(x, y)[3]:
+                    c.set(x, y, shade(pal("slate"), 0.15))
+    elif kind == "hush":
+        c.rect(7, 3, 2, 2, pal("brass"))
+        c.rect(5, 5, 6, 6, pal("brass_dark"))
+        c.rect(6, 6, 4, 4, pal("amber_light"))
+        c.rect(7, 11, 2, 3, pal("brass_dark"))
+    else:
+        c.disc(8, 8, 5, pal("violet"))
+        c.disc(10, 7, 4, (0, 0, 0, 0))
+        c.set(5, 7, shade(pal("violet"), 0.4))
+    return finish(c)
+
+
+def ui_breath():
+    c = icon()
+    for (x, y, r) in [(6, 10, 3.5), (10, 6, 2.5), (12, 11, 1.5)]:
+        c.disc(x, y, r, pal("water_light"))
+        c.set(int(x - r / 2), int(y - r / 2), pal("cream"))
+    return finish(c)
+
+
+def ui_people():
+    c = icon()
+    for (x, skin, coat) in [(5, pal("sand"), pal("verdigris")), (11, shade(pal("sand"), -0.2), shade(pal("danger"), -0.25))]:
+        c.disc(x, 4, 2, skin)
+        c.rect(x - 3, 9, 6, 5, coat)
+        c.hline(x - 2, x + 1, 8, coat)
+        c.set(x - 1, 3, shade(skin, 0.3))
+    return finish(c)
+
+
 def build():
     spec = [
         ("glowbeet_seed", seed_icon(pal("violet"))), ("moss_spore", seed_icon(pal("moss_light"))),
@@ -453,6 +600,12 @@ def build():
         ("tool_hammer", tool_hammer()), ("tool_wrench", tool_wrench()), ("tool_glass", tool_glass()),
         ("st_power", st_power()), ("st_water", st_water()), ("st_gas", st_gas()), ("st_heat", st_heat()),
         ("st_warn", st_warn()), ("st_ok", st_ok()), ("glim", glim()), ("gear", gear()),
+        ("ui_pack", ui_pack()), ("ui_bench", ui_bench()), ("ui_book", ui_book()), ("ui_map", ui_map()),
+        ("ui_pin", ui_pin()), ("ui_heart", ui_heart(True)), ("ui_heart_empty", ui_heart(False)),
+        ("ui_up", ui_arrow(True)), ("ui_down", ui_arrow(False)), ("ui_save", ui_save()), ("ui_door", ui_door()),
+        ("ph_wake", ui_phase("wake")), ("ph_bloom", ui_phase("bloom")), ("ph_dimming", ui_phase("dimming")),
+        ("ph_hush", ui_phase("hush")), ("ph_night", ui_phase("night")), ("ui_breath", ui_breath()),
+        ("ui_people", ui_people()),
     ]
     rows = (len(spec) + COLS - 1) // COLS
     atlas = Canvas(COLS * S, rows * S)

@@ -70,6 +70,14 @@ func item_name(id: StringName) -> String:
 	return String(item(id).get("name", String(id)))
 
 
+## The item whose display name is `name` ("Glowbeet" -> "glowbeet"), or "".
+func item_id_by_name(name: String) -> String:
+	for id: String in items:
+		if String(items[id].get("name", "")) == name:
+			return id
+	return ""
+
+
 func crop(id: StringName) -> Dictionary:
 	return crops.get(String(id), {})
 

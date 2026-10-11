@@ -189,6 +189,78 @@
 "gear": [
 6,
 5
+],
+"ui_pack": [
+7,
+5
+],
+"ui_bench": [
+0,
+6
+],
+"ui_book": [
+1,
+6
+],
+"ui_map": [
+2,
+6
+],
+"ui_pin": [
+3,
+6
+],
+"ui_heart": [
+4,
+6
+],
+"ui_heart_empty": [
+5,
+6
+],
+"ui_up": [
+6,
+6
+],
+"ui_down": [
+7,
+6
+],
+"ui_save": [
+0,
+7
+],
+"ui_door": [
+1,
+7
+],
+"ph_wake": [
+2,
+7
+],
+"ph_bloom": [
+3,
+7
+],
+"ph_dimming": [
+4,
+7
+],
+"ph_hush": [
+5,
+7
+],
+"ph_night": [
+6,
+7
+],
+"ui_breath": [
+7,
+7
+],
+"ui_people": [
+0,
+8
 ]
 }
 }

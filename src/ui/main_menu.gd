@@ -113,6 +113,10 @@ func _build_ui() -> void:
 	tag.add_theme_font_size_override("font_size", UiTheme.size(19))
 	tag.add_theme_color_override("font_color", UiTheme.DIM)
 	col.add_child(tag)
+	var rule := BrassRule.new()
+	rule.custom_minimum_size = Vector2(360, 14)
+	rule.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	col.add_child(rule)
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 36)
 	col.add_child(gap)
@@ -152,6 +156,17 @@ func _build_ui() -> void:
 	sub.visible = false
 	ui.add_child(sub)
 	_focus_first.call_deferred(menu_box)
+	# The menu settles in: title first, then each button a beat after the last.
+	var i := 0
+	for c in col.get_children() + menu_box.get_children():
+		if c == menu_box or not c is Control:
+			continue
+		var ctl := c as Control
+		ctl.modulate.a = 0.0
+		var tw := create_tween()
+		tw.tween_interval(0.25 + 0.07 * i)
+		tw.tween_property(ctl, "modulate:a", 1.0, 0.45)
+		i += 1
 
 
 func _menu_button(text: String, cb: Callable, detail := "") -> void:
@@ -244,6 +259,8 @@ func _show_new_game() -> void:
 		sub_box.add_child(_echo_check)
 	var go := Button.new()
 	go.text = "Begin"
+	go.add_theme_stylebox_override("normal", UiTheme.frame("button_hover", 4))
+	go.add_theme_color_override("font_color", UiTheme.ACCENT)
 	go.add_theme_font_size_override("font_size", UiTheme.size(24))
 	go.pressed.connect(_start_new)
 	sub_box.add_child(go)

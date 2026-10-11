@@ -49,6 +49,7 @@ func _ready() -> void:
 	fill.light_energy = 0.32
 	fill.shadow_enabled = true
 	fill.shadow_blur = 2.0
+	fill.shadow_opacity = 0.62   # depth under every ledge, never a black hole
 	fill.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	fill.directional_shadow_max_distance = 60.0
 	add_child(fill)
@@ -71,6 +72,11 @@ func set_biome(b: String) -> void:
 	}
 	if _current.is_empty():
 		_current = _target.duplicate()
+
+
+## Jump straight to the target look (area changes happen behind a fade).
+func snap() -> void:
+	_current = _target.duplicate()
 
 
 func apply_quality() -> void:
@@ -103,14 +109,19 @@ func _process(delta: float) -> void:
 	var amb: Color = _current.ambient
 	var sour := Color("b5b84a")
 	# Time of day: the grove's glow lifts the ambient light a little at Bloom.
-	var energy: float = float(_current.ambient_energy) * (0.6 + 0.65 * glow)
+	# Below Wick the grove's day matters less: the caverns keep their own dim, even light.
+	var below := biome != "grove"
+	var energy: float = float(_current.ambient_energy) * ((0.82 + 0.4 * glow) if below else (0.6 + 0.65 * glow))
 	# Waking hours read clearly; the Hush is for lamps.
-	e.tonemap_exposure = lerpf(1.28, 0.98, Clock.darkness())
+	# Below, your eyes have adjusted: a steady, slightly opened exposure keeps rock readable.
+	e.tonemap_exposure = 1.62 if below else lerpf(1.28, 0.98, Clock.darkness())
 	e.ambient_light_color = amb.lerp(sour.darkened(0.3), pollution * 0.6)
 	e.ambient_light_energy = energy
 	e.fog_light_color = (_current.fog as Color).lerp(sour.darkened(0.45), pollution * 0.85)
+	# Past the edge of the map there is only the cavern's own murk, never a black void.
+	e.background_color = (e.fog_light_color as Color).darkened(0.35)
 	if fill:
-		fill.light_energy = float(_current.get("fill", 0.3)) * (0.55 + 0.75 * glow)
+		fill.light_energy = float(_current.get("fill", 0.3)) * ((0.85 + 0.45 * glow) if below else (0.55 + 0.75 * glow))
 		fill.light_color = Color("8c9cc8").lerp(Color("c8c47a"), pollution * 0.5)
 	e.fog_density = float(_current.fog_density) * (1.0 + pollution * 2.4)
 	e.adjustment_saturation = lerpf(1.06, 0.62, pollution)

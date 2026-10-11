@@ -19,9 +19,12 @@ const ACCENT := Color("e8a33d")
 const LIVING := Color("56e0d4")
 const DANGER := Color("e2552c")
 
+const UI_DIR := "res://assets/textures/ui/"
+
 static var _cache: Theme
 static var _icons: Texture2D
 static var _icon_map: Dictionary = {}
+static var _ui_meta: Dictionary = {}
 
 
 static func get_theme() -> Theme:
@@ -75,6 +78,59 @@ static func panel_box(fill := PANEL, border := BORDER, width := 2, pad := 10) ->
 	return s
 
 
+## A nine-slice frame from assets/textures/ui (tools/art/ui.py), with `pad` pixels of room
+## inside its border. High contrast swaps every frame for a flat, stark box.
+static func frame(name: String, pad := 0.0) -> StyleBox:
+	if bool(Settings.access.get("high_contrast", false)):
+		var flat := panel_box(PANEL_DARK if name in ["panel", "well", "slot"] else Color("1b1a21"),
+			ACCENT if name in ["slot_selected", "button_hover", "button_pressed", "focus"] else Color.WHITE, 2, 8 + int(pad))
+		flat.draw_center = name != "focus"
+		return flat
+	if _ui_meta.is_empty():
+		var meta: Variant = Content.read_json(UI_DIR + "ui.json")
+		_ui_meta = meta if meta is Dictionary else {}
+	var m: Dictionary = _ui_meta.get(name, {})
+	var s := StyleBoxTexture.new()
+	s.texture = load(UI_DIR + name + ".png")
+	var mg := float(m.get("margin", 8))
+	s.texture_margin_left = mg
+	s.texture_margin_right = mg
+	s.texture_margin_top = mg
+	s.texture_margin_bottom = mg
+	s.content_margin_left = mg + pad
+	s.content_margin_right = mg + pad
+	s.content_margin_top = mg + pad * 0.6
+	s.content_margin_bottom = mg + pad * 0.6
+	return s
+
+
+## A recessed well for sections inside a window.
+static func well(pad := 6.0) -> StyleBox:
+	return frame("well", pad)
+
+
+## A small key cap ("Esc", "E") for hints.
+static func keycap(text: String, label := "") -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 6)
+	var cap := PanelContainer.new()
+	var st := frame("button", -2.0)
+	cap.add_theme_stylebox_override("panel", st)
+	var k := Label.new()
+	k.text = text
+	k.add_theme_font_size_override("font_size", size(14))
+	k.add_theme_color_override("font_color", TEXT)
+	cap.add_child(k)
+	h.add_child(cap)
+	if label != "":
+		var l := Label.new()
+		l.text = label
+		l.add_theme_font_size_override("font_size", size(15))
+		l.add_theme_color_override("font_color", DIM)
+		h.add_child(l)
+	return h
+
+
 static func build() -> Theme:
 	var t := Theme.new()
 	var hc := bool(Settings.access.get("high_contrast", false))
@@ -82,11 +138,9 @@ static func build() -> Theme:
 	var panel := PANEL_DARK if hc else PANEL
 	t.default_font = font()
 	t.default_font_size = size(18)
-	# Panels
-	var pb := panel_box(panel)
-	pb.shadow_size = 4
-	t.set_stylebox("panel", "PanelContainer", pb)
-	t.set_stylebox("panel", "Panel", pb)
+	# Panels: the riveted brass window.
+	t.set_stylebox("panel", "PanelContainer", frame("panel", 6))
+	t.set_stylebox("panel", "Panel", frame("panel", 6))
 	# Labels
 	t.set_color("font_color", "Label", text)
 	t.set_color("font_shadow_color", "Label", Color(0, 0, 0, 0.6))
@@ -98,18 +152,18 @@ static func build() -> Theme:
 	t.set_font_size("normal_font_size", "RichTextLabel", size(20))
 	t.set_font_size("bold_font_size", "RichTextLabel", size(20))
 	# Buttons: quiet until hovered/focused; focus is unmistakable for pad/keyboard players.
-	var normal := panel_box(Color("1b1a21e8"), BORDER_DIM, 2, 8)
-	var hover := panel_box(Color("2a2733f0"), BORDER, 2, 8)
-	var pressed := panel_box(Color("100f14f0"), ACCENT, 2, 8)
-	var focus := panel_box(Color(0, 0, 0, 0), ACCENT, 2, 8)
-	focus.draw_center = false
-	var disabled := panel_box(Color("16151af0"), Color("2c2a33"), 2, 8)
+	var normal := frame("button", 4)
+	var hover := frame("button_hover", 4)
+	var pressed := frame("button_pressed", 4)
+	var focus := frame("focus", 4)
+	var disabled := frame("button_disabled", 4)
 	for cls in ["Button", "OptionButton", "CheckBox", "CheckButton"]:
 		t.set_stylebox("normal", cls, normal)
 		t.set_stylebox("hover", cls, hover)
 		t.set_stylebox("pressed", cls, pressed)
 		t.set_stylebox("focus", cls, focus)
 		t.set_stylebox("disabled", cls, disabled)
+		t.set_stylebox("hover_pressed", cls, pressed)
 		t.set_color("font_color", cls, text)
 		t.set_color("font_hover_color", cls, Color.WHITE)
 		t.set_color("font_focus_color", cls, Color.WHITE)
@@ -141,25 +195,49 @@ static func build() -> Theme:
 	t.set_icon("grabber", "HSlider", _square_icon(ACCENT, 12))
 	t.set_icon("grabber_highlight", "HSlider", _square_icon(Color.WHITE, 12))
 	# Tabs
-	t.set_stylebox("tab_selected", "TabContainer", panel_box(panel, ACCENT, 2, 8))
-	t.set_stylebox("tab_unselected", "TabContainer", panel_box(Color("1b1a21"), BORDER_DIM, 2, 8))
-	t.set_stylebox("tab_hovered", "TabContainer", panel_box(Color("2a2733"), BORDER, 2, 8))
-	t.set_stylebox("panel", "TabContainer", panel_box(panel, BORDER, 2, 12))
+	t.set_stylebox("tab_selected", "TabContainer", frame("tab_selected", 6))
+	t.set_stylebox("tab_unselected", "TabContainer", frame("tab", 6))
+	t.set_stylebox("tab_hovered", "TabContainer", frame("button_hover", 4))
+	t.set_stylebox("tab_focus", "TabContainer", frame("focus", 4))
+	t.set_stylebox("panel", "TabContainer", frame("well", 10))
+	t.set_color("font_hovered_color", "TabContainer", Color.WHITE)
 	t.set_color("font_selected_color", "TabContainer", Color.WHITE)
 	t.set_color("font_unselected_color", "TabContainer", DIM)
 	t.set_font_size("font_size", "TabContainer", size(18))
 	# Line edit
-	t.set_stylebox("normal", "LineEdit", panel_box(Color("121116"), BORDER_DIM, 2, 8))
-	t.set_stylebox("focus", "LineEdit", panel_box(Color("121116"), ACCENT, 2, 8))
+	t.set_stylebox("normal", "LineEdit", frame("well", 4))
+	t.set_stylebox("focus", "LineEdit", frame("slot_selected", 2))
+	# Option popups and dividers
+	t.set_stylebox("panel", "PopupMenu", frame("panel", 0))
+	t.set_stylebox("hover", "PopupMenu", frame("button_hover", 0))
+	t.set_color("font_color", "PopupMenu", text)
+	t.set_color("font_hover_color", "PopupMenu", Color.WHITE)
+	var line := StyleBoxLine.new()
+	line.color = BORDER_DIM
+	line.thickness = 2
+	t.set_stylebox("separator", "HSeparator", line)
+	t.set_constant("separation", "HSeparator", 12)
 	t.set_color("font_color", "LineEdit", text)
 	t.set_color("caret_color", "LineEdit", ACCENT)
 	# Scroll
 	var grab := StyleBoxFlat.new()
 	grab.bg_color = BORDER_DIM
+	grab.border_color = BORDER
+	grab.border_width_left = 1
+	grab.content_margin_left = 3
+	grab.content_margin_right = 3
+	var grab_hi := grab.duplicate()
+	grab_hi.bg_color = BORDER
+	var track_v := StyleBoxFlat.new()
+	track_v.bg_color = Color("121116c0")
+	track_v.content_margin_left = 3
+	track_v.content_margin_right = 3
 	t.set_stylebox("grabber", "VScrollBar", grab)
-	t.set_stylebox("scroll", "VScrollBar", StyleBoxEmpty.new())
+	t.set_stylebox("grabber_highlight", "VScrollBar", grab_hi)
+	t.set_stylebox("grabber_pressed", "VScrollBar", grab_hi)
+	t.set_stylebox("scroll", "VScrollBar", track_v)
 	# Tooltips
-	t.set_stylebox("panel", "TooltipPanel", panel_box(PANEL_DARK, BORDER, 1, 6))
+	t.set_stylebox("panel", "TooltipPanel", frame("toast", 2))
 	t.set_color("font_color", "TooltipLabel", text)
 	return t
 

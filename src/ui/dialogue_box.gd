@@ -12,6 +12,8 @@ var name_label: Label
 var text: RichTextLabel
 var choices: VBoxContainer
 var more: Label
+var name_tab: PanelContainer
+var _more_t := 0.0
 var _visible_chars := 0.0
 var _speaker := ""
 var _blip_acc := 0.0
@@ -34,7 +36,7 @@ func _ready() -> void:
 	h.add_theme_constant_override("separation", 14)
 	panel.add_child(h)
 	var pframe := PanelContainer.new()
-	pframe.add_theme_stylebox_override("panel", UiTheme.panel_box(Color("0c0b10"), UiTheme.BORDER, 2, 4))
+	pframe.add_theme_stylebox_override("panel", UiTheme.frame("slot", -4))
 	portrait = TextureRect.new()
 	portrait.custom_minimum_size = Vector2(132, 132)
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -45,10 +47,19 @@ func _ready() -> void:
 	var v := VBoxContainer.new()
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(v)
+	# The speaker's name sits on a brass tab over the top edge of the box.
+	name_tab = PanelContainer.new()
+	name_tab.add_theme_stylebox_override("panel", UiTheme.frame("hud", 0))
+	name_tab.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	name_tab.position = Vector2(-410 + 160, -218)
 	name_label = Label.new()
 	name_label.add_theme_font_size_override("font_size", UiTheme.size(20))
 	name_label.add_theme_color_override("font_color", UiTheme.ACCENT)
-	v.add_child(name_label)
+	name_tab.add_child(name_label)
+	root.add_child(name_tab)
+	var top_pad := Control.new()
+	top_pad.custom_minimum_size = Vector2(0, 12)
+	v.add_child(top_pad)
 	text = RichTextLabel.new()
 	text.bbcode_enabled = true
 	text.fit_content = true
@@ -65,6 +76,7 @@ func _ready() -> void:
 	more.add_theme_color_override("font_color", UiTheme.ACCENT)
 	v.add_child(more)
 	panel.visible = false
+	name_tab.visible = false
 	Events.dialogue_line.connect(_on_line)
 	Events.dialogue_choices.connect(_on_choices)
 	Events.dialogue_ended.connect(_on_end)
@@ -81,6 +93,7 @@ func _on_line(speaker: StringName, line: String, emote: StringName) -> void:
 	_speaker = String(speaker)
 	var who := _speaker
 	portrait.visible = who != "narrator"
+	name_tab.visible = who != "narrator"
 	if who == "narrator":
 		# Stage directions and sounds: no name, no face, dimmer text.
 		name_label.text = ""
@@ -95,6 +108,11 @@ func _on_line(speaker: StringName, line: String, emote: StringName) -> void:
 		name_label.add_theme_color_override("font_color", Content.color(String(Content.npc(who).get("color", "amber")), UiTheme.ACCENT))
 	if who != "narrator":
 		portrait.texture = portrait_for(who if who != "player" else "player", String(emote))
+		if name_tab.get_meta("who", "") != who:
+			name_tab.set_meta("who", who)
+			name_tab.pivot_offset = name_tab.size * 0.5
+			name_tab.scale = Vector2(0.9, 0.9)
+			create_tween().tween_property(name_tab, "scale", Vector2.ONE, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	text.text = line
 	text.visible_characters = 0
 	_visible_chars = 0.0
@@ -131,10 +149,17 @@ func _on_end(_npc: StringName) -> void:
 	_open = false
 	var tw := create_tween()
 	tw.tween_property(panel, "modulate:a", 0.0, 0.15)
-	tw.tween_callback(func() -> void: panel.visible = false)
+	tw.parallel().tween_property(name_tab, "modulate:a", 0.0, 0.15)
+	tw.tween_callback(func() -> void:
+		panel.visible = false
+		name_tab.visible = false
+		name_tab.modulate.a = 1.0)
 
 
 func _process(delta: float) -> void:
+	if more.visible:
+		_more_t += delta
+		more.modulate.a = 0.5 + 0.5 * absf(sin(_more_t * 3.5))
 	if not _open or text.visible_characters < 0:
 		return
 	var total := text.get_total_character_count()

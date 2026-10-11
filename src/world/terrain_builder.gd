@@ -95,7 +95,14 @@ static func _cell(st: SurfaceTool, area: AreaMap, x: int, z: int) -> void:
 	var tint := _tint(area, x, z)
 	var top_tint := tint
 	if wall and area.id != "wick":
-		top_tint = tint.darkened(0.78)   # the cut top of the rock mass reads as depth, not floor
+		# The cut top of the rock mass reads as depth, not floor: dark inside, with a lighter
+		# lip where it meets open ground so every cave reads as a shape, not a hole.
+		var lip := false
+		for d: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			if area.inside(x + d.x, z + d.y) and area.h_at(x + d.x, z + d.y) < AreaMap.WALL_LEVEL:
+				lip = true
+				break
+		top_tint = tint.darkened(0.42 if lip else 0.62)
 	_quad(st, [p0, p1, p2, p3], [uv.position, uv.position + Vector2(uv.size.x, 0), uv.end,
 		uv.position + Vector2(0, uv.size.y)], [top_tint * a0, top_tint * a1, top_tint * a2, top_tint * a3])
 	# Sides where the neighbour is lower.

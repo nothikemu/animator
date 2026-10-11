@@ -1,0 +1,115 @@
+{
+ "panel": {
+  "margin": 18,
+  "size": [
+   64,
+   64
+  ]
+ },
+ "button": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "button_hover": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "button_pressed": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "button_disabled": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "focus": {
+  "margin": 12,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "well": {
+  "margin": 8,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "slot": {
+  "margin": 10,
+  "size": [
+   40,
+   40
+  ]
+ },
+ "slot_selected": {
+  "margin": 10,
+  "size": [
+   40,
+   40
+  ]
+ },
+ "tab": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "tab_selected": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "rule": {
+  "margin": 0,
+  "size": [
+   80,
+   14
+  ],
+  "center": 40
+ },
+ "toast": {
+  "margin": 10,
+  "size": [
+   32,
+   32
+  ]
+ },
+ "hud": {
+  "margin": 12,
+  "size": [
+   40,
+   40
+  ]
+ },
+ "gauge_track": {
+  "margin": 6,
+  "size": [
+   48,
+   16
+  ]
+ },
+ "gauge_fill": {
+  "margin": 6,
+  "size": [
+   48,
+   16
+  ]
+ }
+}

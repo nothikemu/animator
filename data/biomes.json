@@ -16,7 +16,7 @@
 	"fringe": {
 		"name": "Glowroot Fringe",
 		"ambient_light": "#465c7c",
-		"ambient_energy": 0.875,
+		"ambient_energy": 1.067,
 		"fog_color": "#12202a",
 		"fog_density": 0.024,
 		"grade": "cool",
@@ -24,12 +24,12 @@
 		"music": "reach",
 		"temp": 17,
 		"hazard": "",
-		"fill": 0.338
+		"fill": 0.399
 	},
 	"blackstone": {
 		"name": "Blackstone Cuts",
 		"ambient_light": "#5a5260",
-		"ambient_energy": 0.775,
+		"ambient_energy": 0.946,
 		"fog_color": "#1a1716",
 		"fog_density": 0.022,
 		"grade": "rust",
@@ -37,12 +37,12 @@
 		"music": "reach",
 		"temp": 15,
 		"hazard": "dark",
-		"fill": 0.286
+		"fill": 0.337
 	},
 	"ember": {
 		"name": "Ember Vents",
 		"ambient_light": "#6a4038",
-		"ambient_energy": 0.75,
+		"ambient_energy": 0.915,
 		"fog_color": "#2a1410",
 		"fog_density": 0.03,
 		"grade": "ember",
@@ -50,12 +50,12 @@
 		"music": "reach",
 		"temp": 38,
 		"hazard": "heat",
-		"fill": 0.234
+		"fill": 0.276
 	},
 	"sump": {
 		"name": "The Sump",
 		"ambient_light": "#463e6c",
-		"ambient_energy": 0.95,
+		"ambient_energy": 1.159,
 		"fog_color": "#120f22",
 		"fog_density": 0.034,
 		"grade": "violet",
@@ -63,12 +63,12 @@
 		"music": "reach",
 		"temp": 9,
 		"hazard": "sour",
-		"fill": 0.3
+		"fill": 0.354
 	},
 	"drowned": {
 		"name": "Drowned Gallery",
 		"ambient_light": "#3e4c6c",
-		"ambient_energy": 0.9,
+		"ambient_energy": 1.098,
 		"fog_color": "#0e1622",
 		"fog_density": 0.032,
 		"grade": "violet",
@@ -76,12 +76,12 @@
 		"music": "deep",
 		"temp": 11,
 		"hazard": "damp",
-		"fill": 0.3
+		"fill": 0.354
 	},
 	"roots": {
 		"name": "Root Cathedral",
 		"ambient_light": "#3c6a6c",
-		"ambient_energy": 1.0,
+		"ambient_energy": 1.22,
 		"fog_color": "#0c1e20",
 		"fog_density": 0.022,
 		"grade": "cool",
@@ -89,12 +89,12 @@
 		"music": "deep",
 		"temp": 19,
 		"hazard": "",
-		"fill": 0.36
+		"fill": 0.425
 	},
 	"ashworks": {
 		"name": "The Ashworks",
 		"ambient_light": "#5c4a44",
-		"ambient_energy": 0.8,
+		"ambient_energy": 0.976,
 		"fog_color": "#1c1412",
 		"fog_density": 0.028,
 		"grade": "rust",
@@ -102,12 +102,12 @@
 		"music": "deep",
 		"temp": 27,
 		"hazard": "",
-		"fill": 0.27
+		"fill": 0.319
 	},
 	"salt": {
 		"name": "Salt Flats",
 		"ambient_light": "#6c6a7a",
-		"ambient_energy": 1.05,
+		"ambient_energy": 1.281,
 		"fog_color": "#1c1c24",
 		"fog_density": 0.018,
 		"grade": "cool",
@@ -115,12 +115,12 @@
 		"music": "deep",
 		"temp": 14,
 		"hazard": "stale",
-		"fill": 0.34
+		"fill": 0.401
 	},
 	"station": {
 		"name": "Sallow",
 		"ambient_light": "#5a4c5c",
-		"ambient_energy": 0.95,
+		"ambient_energy": 1.159,
 		"fog_color": "#16101a",
 		"fog_density": 0.02,
 		"grade": "warm",
@@ -128,7 +128,7 @@
 		"music": "sallow",
 		"temp": 18,
 		"hazard": "",
-		"fill": 0.36
+		"fill": 0.425
 	},
 	"heart": {
 		"name": "The Heart",
@@ -146,7 +146,7 @@
 	"knapper": {
 		"name": "The Knapper Ways",
 		"ambient_light": "#5a5664",
-		"ambient_energy": 0.85,
+		"ambient_energy": 1.037,
 		"fog_color": "#18161a",
 		"fog_density": 0.02,
 		"grade": "rust",
@@ -154,6 +154,6 @@
 		"music": "reach",
 		"temp": 16,
 		"hazard": "",
-		"fill": 0.3
+		"fill": 0.354
 	}
 }

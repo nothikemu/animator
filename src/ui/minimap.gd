@@ -16,8 +16,12 @@ const COLORS := {
 	"blackstone": Color("2f2d36"), "mud": Color("3c3128"), "stone": Color("413f4a"),
 	"dirt": Color("4a3a2e"), "water": Color("1f3c5a"), "rock": Color("2a2830"),
 }
+## Places you know without walking them: home, and the towns below.
+const KNOWN := ["wick", "sallow", "heart"]
+const FOG := 0.84               ## unwalked ground shows faintly through the fog
 const NPC_COLORS := {"barnaby": Color("c9a25a"), "odile": Color("d98a4a"), "hesper": Color("8fd06a"),
-	"mags": Color("e07a6a"), "grist": Color("b0aab8")}
+	"mags": Color("e07a6a"), "grist": Color("b0aab8"), "pell": Color("7fc3d9"), "wren": Color("a58bd6"),
+	"tolley": Color("b5b84a"), "old_stone": Color("8e8a96")}
 
 var full := false
 var zoom := 1.0
@@ -46,7 +50,7 @@ func _process(delta: float) -> void:
 	if _area != game.area:
 		_rebuild(game.area)
 	_fog_t -= delta
-	if _fog_t <= 0.0 and _area.id != "wick" and game.player:
+	if _fog_t <= 0.0 and not KNOWN.has(_area.id) and game.player:
 		_fog_t = 0.2
 		_reveal(game.player.position)
 	queue_redraw()
@@ -116,8 +120,8 @@ func _rebuild(a: AreaMap) -> void:
 	# Fog of war: Wick is home and fully known; caverns fill in as they're walked.
 	_seen = PackedByteArray()
 	_seen.resize(a.w * a.d)
-	_seen.fill(1 if a.id == "wick" else 0)
-	if a.id != "wick":
+	_seen.fill(1 if KNOWN.has(a.id) else 0)
+	if not KNOWN.has(a.id):
 		var stored := String(GameState.areas.get(a.id, {}).get("seen", ""))
 		if stored != "":
 			var raw := Marshalls.base64_to_raw(stored)
@@ -126,24 +130,33 @@ func _rebuild(a: AreaMap) -> void:
 	_fog_img = Image.create(a.w, a.d, false, Image.FORMAT_RGBA8)
 	for z in a.d:
 		for x in a.w:
-			_fog_img.set_pixel(x, z, Color(0.07, 0.066, 0.086, 0.0 if _seen[z * a.w + x] else 1.0))
+			_fog_img.set_pixel(x, z, Color(0.07, 0.066, 0.086, 0.0 if _seen[z * a.w + x] else FOG))
 	_fog = ImageTexture.create_from_image(_fog_img)
 
 
 func _reveal(pos: Vector3) -> void:
 	var cx := int(floor(pos.x))
 	var cz := int(floor(pos.z))
-	var r := 6
+	var r := 7
 	var changed := false
-	for z in range(cz - r, cz + r + 1):
-		for x in range(cx - r, cx + r + 1):
-			if not _area.inside(x, z) or Vector2(x - cx, z - cz).length() > r + 0.5:
+	for z in range(cz - r - 2, cz + r + 3):
+		for x in range(cx - r - 2, cx + r + 3):
+			if not _area.inside(x, z):
 				continue
+			var d := Vector2(x - cx, z - cz).length()
 			var i := z * _area.w + x
-			if _seen[i] == 0:
-				_seen[i] = 1
-				_fog_img.set_pixel(x, z, Color(0, 0, 0, 0))
-				changed = true
+			if d <= r + 0.5:
+				if _seen[i] == 0:
+					_seen[i] = 1
+					_fog_img.set_pixel(x, z, Color(0, 0, 0, 0))
+					changed = true
+			elif d <= r + 2.5 and _seen[i] == 0:
+				# A soft rim: the fog thins where you've nearly been.
+				var a := FOG * clampf((d - r - 0.5) / 2.0, 0.35, 1.0)
+				var cur := _fog_img.get_pixel(x, z)
+				if a < cur.a - 0.01:
+					_fog_img.set_pixel(x, z, Color(cur.r, cur.g, cur.b, a))
+					changed = true
 	if changed:
 		_fog.update(_fog_img)
 		if not GameState.areas.has(_area.id):
@@ -180,7 +193,7 @@ func _draw() -> void:
 		origin = sz * 0.5 - pp * scale
 	var map_rect := Rect2(origin, Vector2(_area.w, _area.d) * scale)
 	draw_texture_rect(_base, map_rect, false)
-	if _area.id != "wick":
+	if not KNOWN.has(_area.id):
 		draw_texture_rect(_fog, map_rect, false)
 	var to_screen := func(cell: Vector2) -> Vector2: return origin + cell * scale
 	# Exits.
@@ -237,7 +250,7 @@ func _draw() -> void:
 	draw_colored_polygon(tri, Color(0.05, 0.04, 0.07))
 	var tri2 := PackedVector2Array([me + f * 4.5, me - f * 3.0 + side * 2.8, me - f * 1.4, me - f * 3.0 - side * 2.8])
 	draw_colored_polygon(tri2, UiTheme.TEXT)
-	draw_rect(Rect2(Vector2.ZERO, sz), UiTheme.BORDER, false, 2.0)
+	draw_rect(Rect2(Vector2.ZERO, sz), Color(0.03, 0.025, 0.04), false, 2.0)
 
 
 func _is_seen(c: Vector2i) -> bool:

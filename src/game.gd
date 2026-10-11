@@ -19,6 +19,8 @@ var resources_root: Node3D
 var engineering: Node                    ## EngineeringView (cut mode), created on demand
 var panels: Node                         ## UI panel host (inventory, craft, journal...)
 var _target: Interactable
+var _pip: Sprite3D                       ## the small brass diamond over what E will act on
+var _pip_t := 0.0
 var _busy := false                       ## transitions in progress
 var _talking_npc: Npc
 var marker: Node3D                      ## floating objective marker
@@ -136,6 +138,7 @@ func load_area(id: String, initial := false) -> void:
 		GameState.discover("places", id)
 	_spawn_npcs()
 	env.set_biome(area.biome)
+	env.snap()   # the screen is black during a change of area; arrive in the new air at once
 	rig.bounds = Rect2(0, 0, area.w, area.d)
 	var pos: Array = GameState.player.get("pos", [4.5, 5.5])
 	if not initial or GameState.player.get("area", "wick") != id:
@@ -248,6 +251,7 @@ func travel(to: String) -> void:
 	Audio.play("lift" if lift and ResourceLoader.exists("res://assets/audio/sfx/lift.ogg") else "travel", -6.0)
 	if lift:
 		Events.caption.emit("[the lift cage shudders, and the cable takes the weight]", 2.5)
+	var first_visit: bool = to != "wick" and not (GameState.discovered.get("places", {}) as Dictionary).has(to)
 	await fade.fade_out(0.5, label)
 	load_area(to)
 	# Arrive at the exit that leads back where we came from.
@@ -268,6 +272,21 @@ func travel(to: String) -> void:
 	await fade.fade_in(0.7)
 	player.frozen = false
 	_busy = false
+	hud.place_card(_region_of(to), label, first_visit)
+
+
+## What part of the world a place belongs to, for the arrival card.
+func _region_of(id: String) -> String:
+	if id == "wick":
+		return "Home"
+	var n := ReachGen.node_by_id(GameState.reach_graph, id)
+	if n.has("unmapped"):
+		return "The Unmapped · depth %d" % int(n.unmapped)
+	if id in ["sallow", "heart", "ways"]:
+		return {"sallow": "Station 11", "heart": "The bottom of the Trunk", "ways": "The Knappers' country"}[id]
+	if bool(n.get("deep", false)):
+		return "The Lower Stations"
+	return "The Reach · tier %d" % int(n.get("tier", 1))
 
 
 # --- Input --------------------------------------------------------------------------------------
@@ -397,6 +416,47 @@ func _blackout() -> void:
 		monologue("You wake in the Lease with a headache and a blanket you don't own. Barnaby's handwriting on a note: 'Respirator. Bench. Hesper knows how.'")
 
 
+## A small brass diamond bobs over the thing the prompt is about, so it's never a guess.
+func _update_pip() -> void:
+	if _pip == null:
+		_pip = Sprite3D.new()
+		_pip.texture = _pip_texture()
+		_pip.pixel_size = 0.03
+		_pip.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		_pip.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		_pip.no_depth_test = true
+		_pip.render_priority = 4
+		_pip.shaded = false
+		add_child(_pip)
+	var show := _target != null and GameState.view_mode != "cut" and not Dialogue.active
+	if not show:
+		_pip.visible = false
+		return
+	_pip_t += get_process_delta_time()
+	if not _pip.visible:
+		_pip.visible = true
+		_pip.modulate.a = 0.0
+	_pip.modulate.a = minf(1.0, _pip.modulate.a + get_process_delta_time() * 6.0)
+	_pip.global_position = _target.global_position + Vector3(0, 1.75 + 0.07 * sin(_pip_t * 4.0), 0)
+
+
+static func _pip_texture() -> ImageTexture:
+	var img := Image.create(9, 11, false, Image.FORMAT_RGBA8)
+	var outline := Color("1a1410")
+	var fill := Color("e8a33d")
+	var light := Color("f5c875")
+	for y in 11:
+		for x in 9:
+			# A downward-pointing lozenge: wide at the top, a point at the bottom.
+			var half := 4 - absi(y - 4) if y <= 4 else 4 - (y - 4) * 4 / 6
+			var dx := absi(x - 4)
+			if dx <= half:
+				img.set_pixel(x, y, light if (y < 3 and x < 5) else fill)
+			elif dx == half + 1:
+				img.set_pixel(x, y, outline)
+	return ImageTexture.create_from_image(img)
+
+
 func _update_target() -> void:
 	var best: Interactable = null
 	var best_score := INF
@@ -416,6 +476,7 @@ func _update_target() -> void:
 				best_score = score
 				best = it
 	_target = best
+	_update_pip()
 	var text := ""
 	if best:
 		text = "[%s] %s" % [Settings.binding_label("interact"), best.prompt()]
