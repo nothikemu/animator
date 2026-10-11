@@ -437,7 +437,11 @@ func _update_pip() -> void:
 		_pip.visible = true
 		_pip.modulate.a = 0.0
 	_pip.modulate.a = minf(1.0, _pip.modulate.a + get_process_delta_time() * 6.0)
-	_pip.global_position = _target.global_position + Vector3(0, 1.75 + 0.07 * sin(_pip_t * 4.0), 0)
+	var lift := 2.25
+	var owner_npc := _target.get_parent() as Npc
+	if owner_npc:
+		lift = 3.05 if owner_npc.id == "grist" else 2.3   # over their heads, under any bark
+	_pip.global_position = _target.global_position + Vector3(0, lift + 0.07 * sin(_pip_t * 4.0), 0)
 
 
 static func _pip_texture() -> ImageTexture:

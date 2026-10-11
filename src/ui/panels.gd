@@ -289,6 +289,9 @@ func _button(text: String, cb: Callable, icon := "", enabled := true) -> Button:
 	b.pressed.connect(func() -> void:
 		Audio.ui("ui_select", -6.0)
 		cb.call())
+	b.mouse_entered.connect(func() -> void:
+		if not b.disabled:
+			Audio.ui("ui_move", -18.0))
 	return b
 
 
@@ -1036,7 +1039,9 @@ func _journal() -> Control:
 	tabs.add_child(_scroll(lore))
 	tabs.set_tab_title(2, "Found (%d)" % shown)
 	tabs.set_tab_icon(2, UiTheme.icon("ui_book"))
-	tabs.tab_changed.connect(func(t: int) -> void: data["tab"] = t)
+	tabs.tab_changed.connect(func(t: int) -> void:
+		data["tab"] = t
+		Audio.ui("ui_tick", -10.0))
 	return tabs
 
 
@@ -1071,7 +1076,9 @@ func _map() -> Control:
 	tabs.add_child(v)
 	tabs.set_tab_title(1, "The Reach")
 	tabs.current_tab = clampi(int(data.get("tab", 0)), 0, 1)
-	tabs.tab_changed.connect(func(t: int) -> void: data["tab"] = t)
+	tabs.tab_changed.connect(func(t: int) -> void:
+		data["tab"] = t
+		Audio.ui("ui_tick", -10.0))
 	return tabs
 
 
@@ -1125,7 +1132,7 @@ class MapView:
 # --- Lore page --------------------------------------------------------------------------------
 
 func _lore() -> Control:
-	var id := String(data.get("id", ""))
+	var id := String(data.get("id", data.get("arg", "")))
 	var e: Dictionary = Content.lore.get(id, {})
 	title_label.text = "Something written"
 	GameState.discover("lore", id)

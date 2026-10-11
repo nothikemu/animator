@@ -32,6 +32,7 @@ const LEGENDS := {
 var root: Control
 var title_label: Label
 var keys_label: Label
+var keys_box: HBoxContainer
 var tool_bar: HBoxContainer
 var tool_buttons: Dictionary = {}
 var hover_panel: PanelContainer
@@ -76,8 +77,16 @@ func _build() -> void:
 	keys_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	keys_label.add_theme_font_size_override("font_size", UiTheme.size(15))
 	keys_label.add_theme_color_override("font_color", UiTheme.DIM)
+	keys_label.visible = false
+	keys_box = HBoxContainer.new()
+	keys_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	keys_box.add_theme_constant_override("separation", 14)
+	keys_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_label.add_theme_constant_override("outline_size", 8)
+	title_label.add_theme_color_override("font_outline_color", Color(0.05, 0.04, 0.07, 0.9))
 	top.add_child(title_label)
 	top.add_child(keys_label)
+	top.add_child(keys_box)
 	root.add_child(top)
 	# Tool strip (bottom centre).
 	var strip := PanelContainer.new()
@@ -178,6 +187,13 @@ func refresh_keys() -> void:
 	keys_label.text = "[%s] overlay   [%s] build   [%s/%s] tool   [%s] pause   [%s] speed   [%s] back to the lane" % [
 		k.call("overlay_next"), k.call("build_menu"), k.call("tool_prev") if Settings.last_device == "pad" else "1-7",
 		k.call("tool_next"), k.call("time_pause"), k.call("time_speed"), k.call("cut_view")]
+	for c in keys_box.get_children():
+		keys_box.remove_child(c)
+		c.queue_free()
+	var tools := "%s/%s" % [k.call("tool_prev"), k.call("tool_next")] if Settings.last_device == "pad" else "1-7"
+	for pair: Array in [[k.call("overlay_next"), "overlay"], [k.call("build_menu"), "build"], [tools, "tool"],
+			[k.call("time_pause"), "pause"], [k.call("time_speed"), "speed"], [k.call("cut_view"), "back"]]:
+		keys_box.add_child(UiTheme.keycap(String(pair[0]), String(pair[1])))
 
 
 func set_hover(text: String, hint: String) -> void:

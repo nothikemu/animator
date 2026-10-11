@@ -170,6 +170,16 @@ static func build() -> Theme:
 		t.set_color("font_pressed_color", cls, ACCENT)
 		t.set_color("font_disabled_color", cls, Color("6a6458"))
 		t.set_font_size("font_size", cls, size(20))
+	# Brass switches and tick boxes.
+	if not hc:
+		var on: Texture2D = load(UI_DIR + "switch_on.png")
+		var off: Texture2D = load(UI_DIR + "switch_off.png")
+		for st in ["checked", "checked_disabled", "checked_mirrored", "checked_disabled_mirrored"]:
+			t.set_icon(st, "CheckButton", on)
+		for st in ["unchecked", "unchecked_disabled", "unchecked_mirrored", "unchecked_disabled_mirrored"]:
+			t.set_icon(st, "CheckButton", off)
+		t.set_icon("checked", "CheckBox", load(UI_DIR + "tick_on.png"))
+		t.set_icon("unchecked", "CheckBox", load(UI_DIR + "tick_off.png"))
 	# Toggles: no box of their own; the switch/tick is the control. Focus still shows.
 	for cls in ["CheckBox", "CheckButton"]:
 		var flat := StyleBoxEmpty.new()

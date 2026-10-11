@@ -57,6 +57,10 @@ static func run(game: Node, name: String) -> void:
 				game.get_tree().create_timer(0.1).timeout.connect(func() -> void:
 					if game.engineering:
 						game.engineering.overlay = parts[1])
+		"card":
+			# A story card on black, as at a chapter's end or in the epilogue.
+			game.fade.black()
+			game.fade.card(["Barnaby Coil took his tea at Sallow on Tuesdays and in Wick on Wednesdays. The quiet table got a second cup."], 30.0)
 		"midgame":
 			# A plausible day-3 state for UI and dialogue checks.
 			Clock.start(3, 13 * 60)

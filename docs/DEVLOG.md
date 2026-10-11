@@ -165,3 +165,27 @@ The game now runs in a browser tab, so it can be played without installing anyth
   seven to nine in-game days. The design's eight hours assumes the gathering, crafting, farming
   and travel the autopilot skips. That figure is still an estimate until someone plays it.
 
+
+## 2026-10-11 — Polish pass
+An audit of twenty screens found the same few problems everywhere: flat panels with empty
+space, toasts stacking down the screen edge, a grey blob for a minimap below ground, a bare
+cyan bar for air, and caverns too dark to read. What changed:
+* **One interface language.** `tools/art/ui.py` draws nine-slice frames in the game's own
+  brass and basalt: a riveted window, bevelled buttons, amber focus brackets, slots, wells, tabs,
+  toasts, HUD plaques, switches and tick boxes. The theme uses them everywhere; high contrast
+  still swaps in flat, stark boxes. Eighteen glyphs joined the icon atlas (panels, hearts, trend
+  arrows, phases, breath).
+* **Panels** ease in and out. The Pack shows all 24 slots, a tool belt and a detail card; the
+  workbench shows recipe cards with each ingredient's have/need in colour; the shop has two
+  framed columns with price trends; the notice board is paper pinned to cork; the journal has
+  note cards that say where they point, people with hearts, and found pages on paper; pause has a
+  summary card.
+* **HUD**: plaques with a phase glyph, a glim counter that runs to its new value, the current
+  note on its own plaque, key-cap prompts, a framed minimap, toasts with item icons that merge
+  repeats and never pile up, a real air gauge, and a place card on arrival.
+* **Below ground**: wall tops lit with a lip where they meet floor, softer fill shadows, a steady
+  exposure (mean brightness of a cavern capture went from about 14 to about 25 out of 255; Wick
+  is about 32), mist instead of black past the map's edge, ambient motes for every deep biome,
+  and towns below known on the minimap from the start.
+* **Small things**: a brass pip over whatever the prompt is about, the speaker's name on a tab,
+  story cards with a slow breathing glow, key caps in the cut view, hover and tab sounds.

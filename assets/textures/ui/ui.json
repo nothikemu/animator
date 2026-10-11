@@ -6,6 +6,34 @@
    64
   ]
  },
+ "switch_on": {
+  "margin": 0,
+  "size": [
+   36,
+   20
+  ]
+ },
+ "switch_off": {
+  "margin": 0,
+  "size": [
+   36,
+   20
+  ]
+ },
+ "tick_on": {
+  "margin": 0,
+  "size": [
+   20,
+   20
+  ]
+ },
+ "tick_off": {
+  "margin": 0,
+  "size": [
+   20,
+   20
+  ]
+ },
  "button": {
   "margin": 10,
   "size": [

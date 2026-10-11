@@ -224,8 +224,47 @@ def gauge():
     save("gauge_fill", f, 3)
 
 
+def switch(on):
+    """A toggle: a recessed track, lit amber when on, with a brass knob."""
+    W, H = 18, 10
+    c = Canvas(W, H)
+    track = shade(AMBER, -0.35) if on else shade(BASALT, -0.25)
+    c.rect(1, 2, W - 2, H - 4, track)
+    c.hline(2, W - 3, 1, CHAR)
+    c.hline(2, W - 3, H - 2, CHAR)
+    c.vline(0, 3, H - 4, CHAR)
+    c.vline(W - 1, 3, H - 4, CHAR)
+    c.hline(2, W - 3, 2, shade(track, -0.3))
+    kx = W - 9 if on else 1
+    c.rect(kx, 0, 8, H, CHAR)
+    c.rect(kx + 1, 1, 6, H - 2, BRASS)
+    c.hline(kx + 1, kx + 6, 1, BRASS_L)
+    c.hline(kx + 1, kx + 6, H - 2, BRASS_D)
+    c.set(kx + 3, 4, BRASS_D)
+    c.set(kx + 4, 5, BRASS_D)
+    save("switch_on" if on else "switch_off", c, 0)
+
+
+def tickbox(on):
+    S = 10
+    c = Canvas(S, S, shade(BASALT, -0.3))
+    c.hline(0, S - 1, 0, CHAR)
+    c.vline(0, 0, S - 1, CHAR)
+    c.hline(0, S - 1, S - 1, BRASS_D)
+    c.vline(S - 1, 0, S - 1, BRASS_D)
+    if on:
+        for (x, y) in [(2, 5), (3, 6), (4, 7), (5, 6), (6, 5), (7, 4), (7, 3)]:
+            c.set(x, y, AMBER_L)
+            c.set(x, y + 1, shade(AMBER, -0.3))
+    save("tick_on" if on else "tick_off", c, 0)
+
+
 def build():
     panel()
+    switch(True)
+    switch(False)
+    tickbox(True)
+    tickbox(False)
     plate("button", (27, 26, 33, 236), pal("ash"), SLATE, shade(BASALT, -0.3))
     plate("button_hover", (42, 39, 51, 245), BRASS_L, BRASS, BRASS_D)
     plate("button_pressed", (16, 15, 20, 245), BRASS_D, BRASS, AMBER)

@@ -120,7 +120,7 @@ taken from other games.
 
 ```sh
 python3 tools/art/tiles.py && python3 tools/art/props.py && python3 tools/art/chars.py \
-  && python3 tools/art/icons.py && python3 tools/art/machines.py
+  && python3 tools/art/icons.py && python3 tools/art/machines.py && python3 tools/art/ui.py
 python3 tools/maps/build_maps.py && python3 tools/maps/build_deep.py
 python3 tools/audio/make_sfx.py && python3 tools/audio/make_music.py && python3 tools/audio/make_ambience.py
 godot --headless --path . --import
@@ -136,6 +136,7 @@ tools/capture.sh menu out.png                    # title screen
 tools/capture.sh menu out.png --menu_page=new    # the new-game page (or =almanac)
 tools/capture.sh midgame out.png --ui=board      # the notice board with requests
 tools/capture.sh reach:heart:18.5:16.5 out.png   # any area, standing anywhere
+tools/capture.sh card out.png --frames=150       # a story card, as in the epilogue
 tools/capture.sh cut_demo:power out.png          # the cut view with a powered circuit
 tools/capture.sh midgame out.png --ui=journal    # any panel over a day-3 world
 godot --path . -- --scene=res://scenes/test/audio_test.tscn    # audition every sound
@@ -145,7 +146,7 @@ godot --path . -- --scene=res://scenes/test/stress_test.tscn   # sim + render be
 The scenarios live in `src/debug/scenarios.gd`:
 - `wick_day`, `wick_night`, `commons`, `lake`, `opening`
 - `cut[:overlay[:tool[:machine]]]`, `cut_demo`, `cut_exit`
-- `midgame`, `talk:<npc>`, `quietlight`, `tremor`, `harvest`, `trunk`
+- `midgame`, `talk:<npc>`, `quietlight`, `tremor`, `harvest`, `trunk`, `card`
 - `reach:<id>[:x:z]` (Reach caverns, Lower Stations, `sallow`, `ways`, `heart`, `u1`…), `pos:x:z`
 
 ## Documentation
