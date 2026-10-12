@@ -316,17 +316,27 @@ func _show_almanac() -> void:
 	sub_box.add_child(l)
 	for id: String in Almanac.ENDINGS:
 		var seen := Almanac.seen(id)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		var ic := TextureRect.new()
+		ic.texture = UiTheme.icon("st_ok" if seen else "ui_book")
+		ic.custom_minimum_size = Vector2(24, 24)
+		ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		ic.modulate = Color.WHITE if seen else Color(1, 1, 1, 0.3)
+		row.add_child(ic)
 		var e := Label.new()
-		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if seen:
 			var n := int(Almanac.endings[id].get("count", 1))
-			e.text = "◆  %s%s" % [String(Almanac.ENDINGS[id]), "" if n < 2 else "  (×%d)" % n]
+			e.text = "%s%s" % [String(Almanac.ENDINGS[id]), "" if n < 2 else "  (×%d)" % n]
 			e.add_theme_color_override("font_color", UiTheme.ACCENT)
 		else:
-			e.text = "◇  ? ? ?"
+			e.text = "? ? ?"
 			e.add_theme_color_override("font_color", Color(UiTheme.DIM, 0.6))
 		e.add_theme_font_size_override("font_size", UiTheme.size(20))
-		sub_box.add_child(e)
+		row.add_child(e)
+		sub_box.add_child(row)
 	var hint := Label.new()
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hint.add_theme_color_override("font_color", Color(UiTheme.DIM, 0.8))

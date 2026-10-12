@@ -522,7 +522,7 @@ func _inventory() -> Control:
 		head.add_child(_slot(_selected_item, 0, true, 84))
 		var hv := VBoxContainer.new()
 		hv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		hv.add_child(_label(Content.item_name(_selected_item), 24, UiTheme.ACCENT))
+		hv.add_child(_label(Content.item_name(_selected_item), 24, UiTheme.ACCENT, false))
 		var tags := HBoxContainer.new()
 		tags.add_theme_constant_override("separation", 6)
 		var cat := String(it.get("category", ""))
@@ -935,7 +935,11 @@ func _journal() -> Control:
 		nv.add_child(_label(String(n.note), 17))
 		var where := _note_where(String(n.id))
 		if where != "":
-			nv.add_child(_label("→ " + where, 15, UiTheme.LIVING))
+			var wr := HBoxContainer.new()
+			wr.add_theme_constant_override("separation", 4)
+			wr.add_child(_icon("ui_map", 18))
+			wr.add_child(_label(where, 15, UiTheme.LIVING, false))
+			nv.add_child(wr)
 		row.add_child(nv)
 		card.add_child(row)
 		notes.add_child(card)

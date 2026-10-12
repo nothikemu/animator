@@ -189,3 +189,21 @@ cyan bar for air, and caverns too dark to read. What changed:
   and towns below known on the minimap from the start.
 * **Small things**: a brass pip over whatever the prompt is about, the speaker's name on a tab,
   story cards with a slow breathing glow, key caps in the cut view, hover and tab sounds.
+
+## 2026-10-12 — Playing it in the browser
+Playing the browser build the way a first-time player would (launcher, title, new game, the
+opening, walking, menus) found things screenshots of single screens had missed:
+* **The opening was twelve seconds of black.** It is now a short animated fall drawn in pixels on
+  the fade layer: the salvager hanging in a rock shaft under a coin of daylight, the cable
+  snapping and whipping away, a tumbling fall through streaking dust, then black and the thud.
+* **Four characters the pixel font doesn't have** (▾ → ◆ ◇) drew as empty boxes in the browser.
+  They are drawn icons now, and a new test fails if any data file or script uses a character the
+  font lacks.
+* **Gradients built with `add_point` then `set_color(1, …)`** recolour the wrong point once the
+  new point sorts in. The lampmoths' colour ramp ended opaque white because of it, so every moth
+  blinked out instead of fading. Fixed there and in the new opening.
+* **Toasts sat behind the dialogue box.** They rise above it while someone is talking. A new step
+  on the note already pinned top-right flashes that plaque instead of repeating its text.
+* **No in-game control hints.** One-time hint plaques now teach walking and running after the
+  fall, the pack on the first pickup, the plumb-glass when Barnaby hands it over (until it's
+  used), and the journal, map and pause keys.

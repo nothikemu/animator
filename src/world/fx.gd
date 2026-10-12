@@ -187,10 +187,11 @@ static func lampmoths(parent: Node3D, w: float, d: float, bright: bool) -> void:
 	pm.turbulence_noise_strength = 0.9
 	pm.turbulence_noise_scale = 3.0
 	var grad := Gradient.new()
-	grad.set_color(0, Color(0.34, 0.88, 0.83, 0.0))
-	grad.add_point(0.15, Color(0.34, 0.88, 0.83, 1.0))
-	grad.add_point(0.6, Color(0.96, 0.78, 0.46, 1.0))
-	grad.set_color(1, Color(0.96, 0.78, 0.46, 0.0))
+	# (Set all points at once: add_point re-sorts, so set_color(1, ...) afterwards would
+	# recolour the wrong point and leave the end opaque white.)
+	grad.offsets = PackedFloat32Array([0.0, 0.15, 0.6, 1.0])
+	grad.colors = PackedColorArray([Color(0.34, 0.88, 0.83, 0.0), Color(0.34, 0.88, 0.83, 1.0),
+		Color(0.96, 0.78, 0.46, 1.0), Color(0.96, 0.78, 0.46, 0.0)])
 	var gt := GradientTexture1D.new()
 	gt.gradient = grad
 	pm.color_ramp = gt

@@ -24,6 +24,14 @@ func count(id: String) -> int:
 	return n
 
 
+func used_slots() -> int:
+	var n := 0
+	for s in slots:
+		if not (s as Dictionary).is_empty():
+			n += 1
+	return n
+
+
 func has(id: String, n: int = 1) -> bool:
 	return count(id) >= n
 

@@ -11,7 +11,7 @@ var portrait: TextureRect
 var name_label: Label
 var text: RichTextLabel
 var choices: VBoxContainer
-var more: Label
+var more: TextureRect
 var name_tab: PanelContainer
 var _more_t := 0.0
 var _visible_chars := 0.0
@@ -70,10 +70,20 @@ func _ready() -> void:
 	choices = VBoxContainer.new()
 	choices.add_theme_constant_override("separation", 4)
 	v.add_child(choices)
-	more = Label.new()
-	more.text = "▾"
-	more.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	more.add_theme_color_override("font_color", UiTheme.ACCENT)
+	# "More to come": a small amber chevron, drawn (the pixel font has no arrow glyphs).
+	more = TextureRect.new()
+	var img := Image.create(9, 6, false, Image.FORMAT_RGBA8)
+	for y in 6:
+		for x in 9:
+			var half := 4 - y
+			if absi(x - 4) <= half:
+				img.set_pixel(x, y, UiTheme.ACCENT if y < 4 else UiTheme.ACCENT.darkened(0.3))
+	more.texture = ImageTexture.create_from_image(img)
+	more.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	more.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	more.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	more.custom_minimum_size = Vector2(18, 12)
+	more.size_flags_horizontal = Control.SIZE_SHRINK_END
 	v.add_child(more)
 	panel.visible = false
 	name_tab.visible = false

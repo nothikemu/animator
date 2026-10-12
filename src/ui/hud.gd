@@ -40,6 +40,11 @@ var _shown_money := -1.0
 var _note_id := ""
 var _phase := ""
 var _breath_t := 0.0
+var _pulse_note := false
+var hint_plate: PanelContainer
+var _hints: Array = []                   ## queued [id, keys, done Callable, seconds]
+var _hint_now: Array = []
+var _hint_t := 0.0
 
 
 func _ready() -> void:
@@ -57,6 +62,9 @@ func _ready() -> void:
 	Events.noticed.connect(func(_n: StringName, _t: String) -> void: Audio.ui("notice", -12.0))
 	Events.noticed.connect(func(_npc: StringName, text: String) -> void: notice(text))
 	Events.caption.connect(caption)
+	# Toasts rise above the dialogue box while someone is talking, and settle back after.
+	Events.dialogue_started.connect(func(_n: StringName) -> void: _lift_toasts(true))
+	Events.dialogue_ended.connect(func(_n: StringName) -> void: _lift_toasts(false))
 	Events.prompt_changed.connect(set_prompt)
 	# Panels cover the middle of the screen; keep the corners quiet while they're up.
 	Events.ui_open.connect(func(_p: StringName, _d: Dictionary) -> void:
@@ -236,6 +244,16 @@ func _build() -> void:
 	prompt_panel.add_child(ph)
 	prompt_panel.visible = false
 	prompt_strip.add_child(prompt_panel)
+	# First-time hints sit above the prompt: key caps and what they do.
+	var hint_strip := CenterContainer.new()
+	hint_strip.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	hint_strip.offset_top = -232
+	hint_strip.offset_bottom = -180
+	hint_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(hint_strip)
+	hint_plate = _plate()
+	hint_plate.visible = false
+	hint_strip.add_child(hint_plate)
 	caption_label = Label.new()
 	caption_label.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	caption_label.offset_top = -168
@@ -319,6 +337,7 @@ func _process(delta: float) -> void:
 		b = " · the Deep inhales"
 	phase_label.text = phase.capitalize() + b
 	_tick_money(delta)
+	_tick_hint(delta)
 	if _map_box.visible:
 		var a := GameState.current_area
 		area_label.text = "Wick" if a == "wick" else String(ReachGen.node_by_id(GameState.reach_graph, a).get("name", ""))
@@ -377,7 +396,15 @@ func _update_note() -> void:
 		return
 	note_title.text = String(notes[0].title)
 	note_text.text = String(notes[0].note)
-	if show:
+	if show and _pulse_note:
+		_pulse_note = false
+		note_plate.pivot_offset = note_plate.size * 0.5
+		note_plate.scale = Vector2(1.06, 1.06)
+		note_plate.modulate = Color(1.6, 1.3, 0.8)
+		var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tw.tween_property(note_plate, "scale", Vector2.ONE, 0.5)
+		tw.tween_property(note_plate, "modulate", Color.WHITE, 1.2)
+	elif show:
 		note_plate.modulate.a = 0.0
 		create_tween().tween_property(note_plate, "modulate:a", 1.0, 0.4)
 
@@ -433,6 +460,13 @@ func set_prompt(text: String) -> void:
 ## A toast slides in from the right edge. Repeats of the same pickup merge ("+1 Glowbeet",
 ## "+1 Glowbeet" becomes "+2 Glowbeet") and never more than four are up at once.
 func toast(text: String, kind: StringName = &"info") -> void:
+	# A new step on the note already pinned top-right: flash the plaque, don't repeat it.
+	if kind == &"thread" and GameState.view_mode != "cut":
+		var notes := Threads.active_notes()
+		if not notes.is_empty() and String(notes[0].note) == text:
+			_note_id = "~"
+			_pulse_note = true
+			return
 	var item := ""
 	var n := 0
 	if kind == &"item" and text.begins_with("+"):
@@ -489,6 +523,62 @@ func toast(text: String, kind: StringName = &"info") -> void:
 		var old := toast_box.get_child(0)
 		toast_box.remove_child(old)
 		old.queue_free()
+
+
+## Shows a hint once per save: `keys` is [[key, what it does], ...]. It stays until `done`
+## returns true (or for `seconds` if no test is given), one hint at a time.
+func hint(id: String, keys: Array, done: Callable = Callable(), seconds := 7.0) -> void:
+	if GameState.has_flag("hint_" + id):
+		return
+	for h: Array in _hints:
+		if String(h[0]) == id:
+			return
+	if not _hint_now.is_empty() and String(_hint_now[0]) == id:
+		return
+	_hints.append([id, keys, done, seconds])
+
+
+func _tick_hint(delta: float) -> void:
+	if _hint_now.is_empty():
+		if _hints.is_empty() or Dialogue.active or _panels_open():
+			return
+		_hint_now = _hints.pop_front()
+		_hint_t = 0.0
+		for c in hint_plate.get_children():
+			hint_plate.remove_child(c)
+			c.queue_free()
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 16)
+		for pair: Array in _hint_now[1]:
+			row.add_child(UiTheme.keycap(String(pair[0]), String(pair[1])))
+		hint_plate.add_child(row)
+		hint_plate.visible = true
+		hint_plate.modulate.a = 0.0
+		create_tween().tween_property(hint_plate, "modulate:a", 1.0, 0.4)
+		GameState.set_flag("hint_" + String(_hint_now[0]))
+		return
+	_hint_t += delta
+	var done: Callable = _hint_now[2]
+	var finished := (done.is_valid() and bool(done.call()) and _hint_t > 1.5) or (not done.is_valid() and _hint_t > float(_hint_now[3])) \
+		or _hint_t > 45.0
+	hint_plate.visible = not Dialogue.active and not _panels_open()
+	if finished:
+		_hint_now = []
+		var tw := create_tween()
+		tw.tween_property(hint_plate, "modulate:a", 0.0, 0.5)
+		tw.tween_callback(func() -> void:
+			if _hint_now.is_empty():
+				hint_plate.visible = false)
+
+
+func _lift_toasts(up: bool) -> void:
+	var bottom := -236.0 if up else -96.0
+	var d := bottom - toast_box.offset_bottom
+	if absf(d) < 0.5:
+		return
+	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(toast_box, "offset_bottom", bottom, 0.25)
+	tw.tween_property(toast_box, "offset_top", toast_box.offset_top + d, 0.25)
 
 
 func _physics_process(delta: float) -> void:

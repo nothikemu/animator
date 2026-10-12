@@ -57,6 +57,11 @@ static func run(game: Node, name: String) -> void:
 				game.get_tree().create_timer(0.1).timeout.connect(func() -> void:
 					if game.engineering:
 						game.engineering.overlay = parts[1])
+		"hints":
+			# The first-time control hints, as after the opening.
+			Clock.start(1, 7 * 60 + 20)
+			GameState.set_flag("intro_done")
+			game._queue_first_hints()
 		"card":
 			# A story card on black, as at a chapter's end or in the epilogue.
 			game.fade.black()

@@ -81,3 +81,33 @@ static func _duplicate_keys(text: String) -> PackedStringArray:
 			i = j
 		i += 1
 	return out
+
+
+## The pixel font has no arrows or dingbats; a character it lacks draws as an empty box in the
+## browser. Every character in the data and the scripts must be one it can draw.
+func test_every_character_is_in_the_font() -> void:
+	var font: FontFile = load(UiTheme.PIXEL_FONT)
+	var missing := {}
+	var files := _json_files("res://data")
+	files.append_array(_gd_files("res://src"))
+	for path in files:
+		var text := FileAccess.get_file_as_string(path)
+		for i in text.length():
+			var c := text.unicode_at(i)
+			if c > 126 and not font.has_char(c) and not missing.has(c):
+				missing[c] = path
+	for c: int in missing:
+		failures.append("%s: U+%04X '%s' (in %s) is not in the pixel font" % [current, c, String.chr(c), missing[c]])
+
+
+func _gd_files(dir_path: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		return out
+	for f in dir.get_files():
+		if f.ends_with(".gd"):
+			out.append(dir_path.path_join(f))
+	for d in dir.get_directories():
+		out.append_array(_gd_files(dir_path.path_join(d)))
+	return out

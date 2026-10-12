@@ -85,6 +85,8 @@ func _ready() -> void:
 		Scenarios.run(self, Dev.arg("scenario"))
 	elif not GameState.has_flag("intro_done"):
 		opening()
+	else:
+		_queue_first_hints()
 	_update_music()
 
 
@@ -723,14 +725,31 @@ func opening() -> void:
 	player.frozen = true
 	fade.black()
 	Clock.pause("opening")
+	# The fall, drawn on the fade layer behind the captions.
+	var fall := OpeningFall.new()
+	fade.add_child(fall)
+	fade.move_child(fall, 1)
+	fall.modulate.a = 0.0
+	create_tween().tween_property(fall, "modulate:a", 1.0, 1.2)
+	fade.title.offset_top = 420.0     # captions below the shaft, not over the salvager
 	await get_tree().create_timer(0.8).timeout
 	Audio.play("winch", -6.0)
-	await _black_caption("[a winch creaks, very far above]", 2.4)
+	await _black_caption("[a winch creaks, very far above]", 2.6)
+	fall.set_phase("snap")
 	Audio.play("cable_snap", -2.0)
 	Events.camera_impulse.emit(0.4)
-	await _black_caption("[a cable snaps]", 1.6)
+	Events.flash.emit(Color(0.95, 0.9, 0.8), 0.25)
+	await _black_caption("[a cable snaps]", 1.2)
+	fall.set_phase("fall")
 	Audio.play("fall", -4.0)
-	await _black_caption("[a long fall — then moss, softer than it has any right to be]", 3.0)
+	await get_tree().create_timer(1.6).timeout
+	# Impact: the shaft goes, and there is only the dark.
+	fall.queue_free()
+	Audio.play("thud", -4.0)
+	Events.camera_impulse.emit(0.6)
+	await get_tree().create_timer(0.5).timeout
+	fade.title.offset_top = 0.0
+	await _black_caption("[then moss, softer than it has any right to be]", 2.4)
 	Clock.resume("opening")
 	player.facing = Vector2(0, 1)
 	player.perform("getup")          # sprawled in the moss, then up onto unsteady feet
@@ -739,6 +758,33 @@ func opening() -> void:
 	player.frozen = false
 	_busy = false
 	monologue("Your headlamp flickers. Only one direction has any light in it.")
+	_queue_first_hints()
+
+
+## Controls, taught once and only when they matter: walking right after the fall, the pack
+## when something first goes in it, the plumb-glass when Barnaby hands it over, the journal and
+## map once there's a note to read.
+func _queue_first_hints() -> void:
+	var b := func(a: String) -> String: return Settings.binding_label(a)
+	var start := player.position
+	var moves := "%s %s %s %s" % [b.call("move_up"), b.call("move_left"), b.call("move_down"), b.call("move_right")] \
+		if Settings.last_device != "pad" else "Left stick"
+	if not GameState.has_flag("wick_revealed"):
+		hud.hint("move", [[moves, "walk"], [b.call("run"), "hold to run"]],
+			func() -> bool: return is_instance_valid(player) and player.position.distance_to(start) > 3.0)
+	hud.hint("journal", [[b.call("journal"), "journal"], [b.call("map"), "map"], [b.call("menu"), "pause"]], Callable(), 8.0)
+	if not Events.inventory_changed.is_connected(_hint_pack):
+		Events.inventory_changed.connect(_hint_pack)
+		Events.tool_changed.connect(func(_t: StringName) -> void: _hint_pack())
+
+
+func _hint_pack() -> void:
+	if GameState.inventory.used_slots() > 0:
+		hud.hint("pack", [[Settings.binding_label("inventory"), "your pack"]], Callable(), 6.0)
+	if GameState.has_tool("glass"):
+		hud.hint("glass", [[Settings.binding_label("cut_view"), "plumb-glass: look under the town"],
+			[Settings.binding_label("tool_next"), "change tool"]],
+			func() -> bool: return GameState.view_mode == "cut")
 
 
 ## A sound caption on the black opening card (the HUD caption line sits under the fade).
